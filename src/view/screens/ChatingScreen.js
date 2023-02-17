@@ -1,10 +1,11 @@
-import { SafeAreaView, StatusBar, StyleSheet, Text, View, Image, useWindowDimensions, TouchableOpacity, ActivityIndicator, Dimensions, Modal } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, View, Image, useWindowDimensions, TouchableOpacity, ActivityIndicator, Dimensions, Modal, ToastAndroid } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import COLORS from '../../consts/Colors';
 import HeaderTabOne from '../components/HeaderTabOne';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import GoogleMapKey from '../../consts/GoogleMapKey';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,36 +20,52 @@ import { IconButton, MD3Colors, TextInput } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import CustomeButton from '../components/CustomeButton';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useRef } from 'react';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapViewDirections from 'react-native-maps-directions';
+import { set } from 'immer/dist/internal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
+
 const ChatingScreen = ({ navigation, route }) => {
-    // console.log('==>' , route.params);
+    // console.log('==>' , GoogleMapKey);
     const userName = route.params.userName;
     const userImg = route.params.userImg;
     const uid = route.params.uid;
     const [messages, setMessages] = useState([]);
     const [imageData, setImageData] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
+    const [category, setCategory] = useState('');
     const [rendering, setRendering] = useState(false);
     const Currentuser = useSelector(selectUser);
     const [transferred, setTransferred] = useState(0);
     const [modal, setModal] = useState(false);
     const [sendPorposal, setSendPorposal] = useState();
     const [date, setDate] = useState();
-    const [time, setTime] = useState();
-    const [dateVisibility, setDateVisibility] = useState(false);
+    const [discountStartDate, setDiscountStartDate] = useState('');
+    const [DateVisibility, setDateVisibility] = useState(false);
+    const [isDiscountStartDatePickerVisible, setDiscountStartDatePickerVisibility] = useState(false);
+
+    const [time, setTime] = useState('');
+    const [address, setAddressText] = useState();
     const [TimeVisibility, setTimeVisibility] = useState(false);
-    const [location, setLocation] = useState(false);
-    const [description, setDescription] = useState(false);
+    const [location, setLocation] = useState('');
+    const [description, setDescription] = useState('');
     const [locationModalVisible, setLocationModalVisible] = useState(false);
     const [actionTriggered, setActionTriggered] = useState(false);
     const [pin, setPin] = useState({
-        latitude: 24.860966,
-        longitude: 66.990501,
+        latitude: 24.9026764,
+        longitude: 67.11445119999999,
     });
+    const [region, setRegion] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+    })
 
 
     // console.log('userName: ', userName);
@@ -95,7 +112,8 @@ const ChatingScreen = ({ navigation, route }) => {
 
     const onSend = useCallback((messages = []) => {
         let mymsg = null;
-        // console.log('test',imageUrl);
+        // console.log('test', category);
+        console.log('===>', category);
         // return
         if (imageUrl !== '') {
             const msg = messages[0]
@@ -105,6 +123,32 @@ const ChatingScreen = ({ navigation, route }) => {
                 sentTo: uid,
                 createdAt: new Date(),
                 image: imageUrl,
+                sent: true,
+                category: 'image',
+                ProposalDate: '',
+                ProposalTime: '',
+                ProposalAddress: '',
+                ProposalLocation: '',
+                ProposalDescription: '',
+                ProposalStatus: '',
+            };
+        }
+        else if (category !== '') {
+            const msg = messages[0]
+            mymsg = {
+                ...msg,
+                sentBy: Currentuser.uid,
+                sentTo: uid,
+                createdAt: new Date(),
+                image: imageUrl,
+                sent: true,
+                category: category,
+                ProposalDate: discountStartDate,
+                ProposalTime: time,
+                ProposalAddress: location,
+                ProposalLocation: pin,
+                ProposalDescription: description,
+                ProposalStatus: false,
             };
         }
         else {
@@ -115,6 +159,14 @@ const ChatingScreen = ({ navigation, route }) => {
                 sentTo: uid,
                 createdAt: new Date(),
                 image: '',
+                sent: true,
+                category: 'normal',
+                ProposalDate: '',
+                ProposalTime: '',
+                ProposalAddress: '',
+                ProposalLocation: '',
+                ProposalDescription: '',
+                ProposalStatus: '',
             };
         }
         // console.log(mymsg);
@@ -130,7 +182,39 @@ const ChatingScreen = ({ navigation, route }) => {
             .add({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
         setImageUrl('');
         setImageData(null);
+        setCategory('');
     }, [])
+
+    const onSendPorposal = () => {
+        if (!discountStartDate) {
+            // console.log('aklxjn');
+            ToastAndroid.show("Please select proposal Date!", ToastAndroid.SHORT);
+        }
+        else if (!time) {
+            ToastAndroid.show("Please select proposal time!", ToastAndroid.SHORT);
+        }
+        else if (!description) {
+            ToastAndroid.show("Please add proposal description!", ToastAndroid.SHORT);
+        }
+        else if (!pin) {
+            ToastAndroid.show("Please add your location!", ToastAndroid.SHORT);
+        }
+        else {
+            setCategory('Proposal')
+            // console.log(
+            //     'selected date', discountStartDate,
+            //     'selected time', time,
+            //     'selected address', location,
+            //     'selected location', pin,
+            //     'selected description', description,
+            // );
+            // onSend();
+
+            setModal(false)
+        }
+    }
+
+
 
     const openCamera = async () => {
         let result = await launchImageLibrary({
@@ -157,6 +241,44 @@ const ChatingScreen = ({ navigation, route }) => {
     };
 
     const renderBubble = (props) => {
+        // console.log(props.currentMessage.category);
+        const filter = props.currentMessage.category
+        // console.log(props.currentMessage.sentBy);
+        // // console.log(Currentuser.uid);
+        // console.log(props.currentMessage.text);
+        if (filter == 'Proposal') {
+            return (
+                <Bubble
+                    {...props}
+                    wrapperStyle={{
+                        right: {
+                            backgroundColor: COLORS.light,
+                            // elevation:3,
+                            borderBottomRightRadius: 0,
+                            borderBottomLeftRadius: 15,
+                            borderTopRightRadius: 15,
+                            borderTopLeftRadius: 15,
+                            height:170,
+                            width:250,
+                        },
+                        left: {
+                            borderBottomRightRadius: 15,
+                            borderBottomLeftRadius: 15,
+                            borderBottomRightRadius: 15,
+                            borderBottomLeftRadius: 0,
+                            height:170,
+                            width:250,
+                        }
+                    }}
+                    textStyle={{
+                        right: {
+                            color: COLORS.main
+                        },
+                    }}
+                />
+
+            )
+        }
         return (
             <Bubble
                 {...props}
@@ -167,7 +289,17 @@ const ChatingScreen = ({ navigation, route }) => {
                 }}
                 textStyle={{
                     right: {
-                        color: COLORS.white
+                        color: COLORS.white,
+                        borderBottomRightRadius: 0,
+                        borderBottomLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                        borderTopLeftRadius: 15,
+                    },
+                    left: {
+                        borderBottomRightRadius: 15,
+                        borderBottomLeftRadius: 15,
+                        borderBottomRightRadius: 15,
+                        borderBottomLeftRadius: 0,
                     }
                 }}
             />
@@ -194,17 +326,26 @@ const ChatingScreen = ({ navigation, route }) => {
 
     const showDateModal = () => {
         setDateVisibility(true);
+        // console.log('showdatemodal');
     }
-    const hideDatePicker = () => {
+    const hideDiscountStartDatePicker = () => {
         setDateVisibility(false);
     };
-    const handleConfirmDate = date => {
-        const test = moment(date).format('MM/DD/yy')
-        console.warn('A date has been picked: ', date);
-        console.log('date', test);
-        setDate(moment(date).format('MM/DD/yy'));
-        // hideDatePicker();
+    const handleDiscountConfirmStartDate = date => {
+        // console.warn('A date has been picked: ', date);
+        setDiscountStartDate(moment(date).format('MM/DD/yy'));
+        hideDiscountStartDatePicker();
     };
+    // const hideDatePicker = () => {
+    //     setDateVisibility(false);
+    // };
+    // const handleConfirmDate = date => {
+    //     setDate(moment(date).format('MM/DD/yy'));
+    //     // console.log('date', date);
+    //     // const test = moment(date).format('MM/DD/yy')
+    //     // console.warn('A date has been picked: ', date);
+    //     hideDatePicker();
+    // };
 
     const showTimeModal = () => {
         setTimeVisibility(true)
@@ -228,8 +369,17 @@ const ChatingScreen = ({ navigation, route }) => {
         setActionTriggered('ACTION_1');
     }
 
-    const onSendPorposal = () => {
-        console.log('send here!!');
+
+    const OnSetLocation = () => {
+        if (region) {
+            console.log('selected pin', region);
+            console.log('selected pin', location);
+            setLocation(location)
+            setLocationModalVisible(false)
+        }
+        else {
+            ToastAndroid.show("Please select location first!", ToastAndroid.SHORT);
+        }
     }
 
     const renderSend = props => {
@@ -329,8 +479,6 @@ const ChatingScreen = ({ navigation, route }) => {
             </View>
         );
     }
-
-
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -517,12 +665,19 @@ const ChatingScreen = ({ navigation, route }) => {
                 )}
 
 
-                <DateTimePickerModal
-                    isVisible={dateVisibility}
+                {/* <DateTimePickerModal
+                    isVisible={DateVisibility}
                     mode="date"
                     // display='spinner'
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
+                /> */}
+                <DateTimePickerModal
+                    isVisible={DateVisibility}
+                    mode="date"
+                    // display='spinner'
+                    onConfirm={handleDiscountConfirmStartDate}
+                    onCancel={hideDiscountStartDatePicker}
                 />
 
                 <DateTimePickerModal
@@ -548,7 +703,7 @@ const ChatingScreen = ({ navigation, route }) => {
                         animationType='fade'
                         transparent={false}
                         visible={locationModalVisible}>
-                        <View style={{ alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center', flex: 1 }}>
                             <View style={{ marginTop: 0 }}>
                                 <View style={{
                                     flexDirection: 'row',
@@ -577,21 +732,55 @@ const ChatingScreen = ({ navigation, route }) => {
                                 <View style={{
                                     justifyContent: 'flex-end',
                                     alignItems: 'center',
+                                    justifyContent: 'center'
                                 }}>
+                                    <GooglePlacesAutocomplete
+                                        placeholder='Search'
+                                        fetchDetails={true}
+                                        autoFocus={false}
+                                        GooglePlacesSearchQuery={{
+                                            rankby: "distance"
+                                        }}
+                                        onPress={(data, details = null) => {
+                                            // 'details' is provided when fetchDetails = true
+                                            console.log('data here ===>', data, 'details ===>', details);
+                                            setRegion({
+                                                latitude: details.geometry.location.lat,
+                                                longitude: details.geometry.location.lng,
+                                                latitudeDelta: 0.0922,
+                                                longitudeDelta: 0.0421
+                                            })
+                                            setLocation(data.description)
+                                        }}
+                                        query={{
+                                            key: 'AIzaSyADaEpiFSeltBH4uNI9aZaIM1XRXFfPvhs',
+                                            language: 'en',
+                                            components: "country:pk",
+                                            types: "establishment",
+                                            radius: 30000,
+                                            location: `${region.latitude}, ${region.longitude}`
+                                        }}
+                                        styles={{
+                                            container: { flex: 0, position: 'relative', width: "100%", zIndex: 1 },
+                                            listView: { backgroundColor: "white" }
+                                        }}
+                                    />
                                     <MapView
+                                        // ref={mapRef}
                                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                                         style={styles.map}
                                         initialRegion={{
-                                            latitude: 24.860966,
-                                            longitude: 66.990501,
+                                            latitude: 24.9026764,
+                                            longitude: 67.11445119999999,
                                             latitudeDelta: 0.0922,
                                             longitudeDelta: 0.0421,
                                         }}
                                     >
+                                        {/* <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} /> */}
                                         <Marker
                                             coordinate={{
-                                                latitude: 24.860966,
-                                                longitude: 66.990501,
+                                                latitude: region.latitude,
+                                                longitude: region.longitude,
                                             }}
                                             // image={require('../../../assets/map.png')}
                                             draggable={true}
@@ -610,7 +799,29 @@ const ChatingScreen = ({ navigation, route }) => {
                                                 resizeMode="contain"
                                             />
                                         </Marker>
-                                        <Circle center={pin} radius={1000} />
+                                        <Circle center={region} radius={1000} />
+                                        {/* <MapViewDirections
+                                            origin={pin}
+                                            destination={pin}
+                                            apikey={GoogleMapKey.GOOGLE_MAP_KEY}
+                                            strokeColor={COLORS.black}
+                                            strokeWidth={3}
+                                            optimizeWayPoints={true}
+                                            mode='DRIVING'
+                                            onReady={result => {
+                                                console.log('===>', result);
+                                                // setResult(result);
+                                                // calculateDistance(result);
+                                                // mapRef.current.fitToCoordinates(result.coordinates, {
+                                                //     edgePadding: {
+                                                //         right: 30,
+                                                //         bottom: 50,
+                                                //         left: 30,
+                                                //         top: 50
+                                                //     }
+                                                // })
+                                            }}
+                                        /> */}
                                     </MapView>
                                     <View
                                         style={{
@@ -619,7 +830,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                             alignSelf: 'center' //for align to right
                                         }}
                                     >
-                                        <CustomeButton title={'Add Location'} onpress={() => setLocation(pin)} />
+                                        <CustomeButton title={'Add Location'} onpress={() => OnSetLocation()} />
                                     </View>
                                 </View>
                             </View>
@@ -681,10 +892,10 @@ const ChatingScreen = ({ navigation, route }) => {
                                                 backgroundColor: COLORS.transparent,
                                             }}
                                             placeholder={'Select Date'}
-                                            value={date}
+                                            value={discountStartDate}
                                             placeholderTextColor={COLORS.gray}
                                             // error={dateOfBirthError}
-                                            onChangeText={setDate}
+                                            onChangeText={setDiscountStartDate}
                                             selectionColor={COLORS.black}
                                             underlineColor={COLORS.white}
                                             // activeOutlineColor={COLORS.fontColor}
@@ -692,13 +903,11 @@ const ChatingScreen = ({ navigation, route }) => {
                                             // onFocus={() => { setDateOfBirthError(false) }}
                                             onPressIn={showDateModal}
                                         />
-                                        <TouchableOpacity onPress={() => showDateModal()}>
-                                            <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
-                                                // tintColor: COLORS.black,
-                                                width: 25,
-                                                height: 25,
-                                            }} />
-                                        </TouchableOpacity>
+                                        <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
+                                            // tintColor: COLORS.black,
+                                            width: 25,
+                                            height: 25,
+                                        }} />
                                     </View>
                                 </View>
                             </View>
@@ -767,8 +976,9 @@ const ChatingScreen = ({ navigation, route }) => {
                                             underlineColor={COLORS.white}
                                             activeUnderlineColor={COLORS.white}
                                             style={{
-                                                padding: 0,
+                                                paddingLeft: 0,
                                                 backgroundColor: COLORS.transparent,
+                                                width: '85%'
                                             }}
                                             onPressIn={OpenLocationModalView}
                                             editable={true}
@@ -811,7 +1021,6 @@ const ChatingScreen = ({ navigation, route }) => {
                                             }}
                                             multiline
                                             numberOfLines={8}
-                                            onPressIn={OpenLocationModalView}
                                             editable={true}
                                         />
                                     </View>

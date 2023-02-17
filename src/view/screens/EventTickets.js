@@ -104,8 +104,8 @@ const Ticketsss = [
 
 
 const EventTickets = ({ navigation, route }) => {
-  // const details = route.params;
-  // console.log(details.details.item.Categories);
+  const details = route.params.details;
+  console.log(details);
   const [TicketsData, setTicketData] = useState([]);
   const [ticketindex, setTicketindex] = useState();
   const dispatch = useDispatch();
@@ -114,13 +114,12 @@ const EventTickets = ({ navigation, route }) => {
 
 
   const handleDecrement = (ticket_id) => {
-    // console.log(ticket_id);
+    console.log(ticket_id);
     // if (ticket_id > 1) {
       setTicketData(TicketsData =>
         TicketsData.map((item) =>
         // console.log(item.id),
-          ticket_id === item.id ? {
-            // console.log('test')
+          ticket_id === item.uid ? {
             ...item,
             qty: item.qty - (item.qty > 1 ? 1:0)
           } : item
@@ -129,11 +128,11 @@ const EventTickets = ({ navigation, route }) => {
     // console.log(TicketsData);
   }
   const handleIncrement = (ticket_id) => {
-    // console.log(ticket_id);
+    console.log('asd',ticket_id);
     // if (ticket_id < 10) {
       setTicketData(TicketsData =>
         TicketsData.map((item) =>
-          ticket_id === item.id ? {
+          ticket_id === item.uid ? {
             ...item,
             qty: item.qty + 1
           } : item
@@ -143,14 +142,16 @@ const EventTickets = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    setTicketData(Ticketsss)
-    console.log(TicketsData);
+    setTicketData(details?.TicketModaldata)
+    // console.log(TicketsData);
   }, [])
 
 
 
   const handleTicket = (index) => {
     const BuyTickets = TicketsData[ticketindex]
+    console.log(BuyTickets);
+    return
     if(BuyTickets){
       console.log(BuyTickets);
       navigation.navigate('PaymentOptionScreen', { BuyTickets: BuyTickets })
@@ -224,12 +225,12 @@ const EventTickets = ({ navigation, route }) => {
                         color: COLORS.black,
                         fontSize: 16,
                       }}>
-                        {item.Title}
+                        {item.ticketTitle}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <TouchableOpacity
-                        onPress={() => handleDecrement(item.id)}
+                        onPress={() => handleDecrement(item.uid)}
                         style={{
                           backgroundColor: COLORS.light,
                           alignItems: 'center',
@@ -250,7 +251,7 @@ const EventTickets = ({ navigation, route }) => {
                         fontSize: 15,
                       }}>{item.qty}</Text>
                       <TouchableOpacity
-                        onPress={() => handleIncrement(item.id)}
+                        onPress={() => handleIncrement(item.uid)}
                         style={{
                           backgroundColor: COLORS.light,
                           alignItems: 'center',
@@ -278,7 +279,7 @@ const EventTickets = ({ navigation, route }) => {
                         color: COLORS.green,
                         fontWeight: 'bold',
                       }}>
-                        ${item.price}
+                        ${item.pricePerTicket}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -296,20 +297,20 @@ const EventTickets = ({ navigation, route }) => {
                         marginRight: 5,
                         textDecorationLine: 'line-through',
                         textDecorationStyle: 'solid',
-                      }}>${item.cancleprice}</Text>
+                      }}>${item.discountPerTicket}</Text>
                     </TouchableOpacity>
                   </View>
                   <View>
                     <Text style={{
                       fontSize: 12
-                    }}>{item.SalesEnd}</Text>
+                    }}>{item.discountStartDate} , {item.discountendDate}</Text>
                   </View>
                   <View style={{
                     paddingVertical: 2
                   }}>
                     <Text style={{
                       fontSize: 12
-                    }}>Access to enter the between {item.SalesTime} </Text>
+                    }}>Access to enter the between {details.startTime}, {details.endTime} </Text>
                   </View>
 
                   <View style={{ flexDirection: 'row', paddingTop: 10, }}>
@@ -321,13 +322,13 @@ const EventTickets = ({ navigation, route }) => {
                           tintColor: 'red'
                         }} />
                       <View>
-                        <Text style={{ fontSize: 12, color: 'red' }}>{item.TicketLeft}Left</Text>
+                        <Text style={{ fontSize: 12, color: 'red' }}>{item.totalTickets}Left</Text>
                       </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10, }}>
                       <Text style={{ color: COLORS.black, fontSize: 12, marginRight: 5, }}>Time Left:</Text>
                       <View>
-                        <Text style={{ fontSize: 12, color: COLORS.black, fontWeight: 'bold' }}>{item.TimeLeft}</Text>
+                        <Text style={{ fontSize: 12, color: COLORS.black, fontWeight: 'bold' }}>{item.discountendTime}</Text>
                       </View>
                     </View>
                   </View>

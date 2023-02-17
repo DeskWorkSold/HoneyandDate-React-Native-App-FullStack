@@ -8,7 +8,7 @@ import { selectEvents } from '../../../redux/reducers/Reducers';
 
 const EventItems = ({ navigation, data, btn, width, onpress }) => {
     const events = useSelector(selectEvents);
-    console.log(events);
+    // console.log(events);
     const onEventDeatilsScreen = (item) => {
         // console.log('eventdeatils', item);
         navigation.navigate('EventDetails', { details : item })
@@ -16,7 +16,7 @@ const EventItems = ({ navigation, data, btn, width, onpress }) => {
     return (
         <>
             {events?.map((item, index) => (
-                // console.log(item.image1),
+                console.log(item.location?.latitude),
                 <TouchableOpacity key={index}
                     onPress={() => onEventDeatilsScreen({ item })}
                     // onPress={() => navigation.navigate('EventDetails', { detail: item })}
@@ -42,19 +42,25 @@ const EventItems = ({ navigation, data, btn, width, onpress }) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         padding: 10,
+                        flex:1
                     }}>
-                        <View>
+                        <View style={{
+                            flex:2
+                        }}>
                             <Text style={{
                                 fontSize: 16,
                                 color: COLORS.black,
+                                marginRight:10
                             }}>{item.Title}</Text>
                         </View>
-                        <View>
+                        <View style={{
+                            // flex:1
+                        }}>
                             <Text style={{
                                 fontSize: 16,
                                 color: COLORS.black,
                                 fontWeight: 'bold'
-                            }}>${item.totalTicketPrice}</Text>
+                            }}>{item.totalTicketPrice}</Text>
                         </View>
                     </View>
                     <View style={{
@@ -77,7 +83,7 @@ const EventItems = ({ navigation, data, btn, width, onpress }) => {
                             <View>
                                 <Text style={{
                                     color: COLORS.black,
-                                }}>{item.Location}</Text>
+                                }}>{item.location?.latitude}</Text>
                             </View>
                         </View>
                         {btn &&

@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import HeaderTabOne from '../components/HeaderTabOne';
 import { color } from 'react-native-reanimated';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
 const { width } = Dimensions.get("window");
 
 
@@ -45,8 +46,16 @@ export const CategoriesEvent = [
 
 const EventDetails = ({ navigation, route }) => {
   const details = route.params;
-  // console.log(details.details.item.Categories);
+  console.log(details.details.item.location.latitude);
   const [Events, setEvents] = useState('Explore');
+
+
+
+  const [scan, setScan] = useState(false);
+  const [result, setResult] = useState();
+
+
+
   const dispatch = useDispatch();
   const eventExist = useSelector(selectEvents);
 
@@ -59,6 +68,18 @@ const EventDetails = ({ navigation, route }) => {
     setEvents(viewPage);
   };
 
+  const ScanDoc = () => {
+    console.log('scan now');
+  }
+
+  const onSccess = (e) => {
+    setResult(e.data);
+    setScan(false)
+  }
+  const startScan = () => {
+    setScan(true)
+    setResult();
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -79,7 +100,7 @@ const EventDetails = ({ navigation, route }) => {
             <View style={{
               alignItems: 'center',
               paddingTop: 10,
-              paddingHorizontal:20,
+              paddingHorizontal: 20,
             }}>
               <Image source={{ uri: details.details.item.image1 }} resizeMode='cover'
                 style={{
@@ -115,7 +136,7 @@ const EventDetails = ({ navigation, route }) => {
                   fontSize: 16,
                   color: COLORS.black,
                   fontWeight: 'bold'
-                }}>${details.details.item.Startprice}</Text>
+                }}>${details.details.item.totalTicketPrice}</Text>
               </View>
             </View>
 
@@ -137,7 +158,7 @@ const EventDetails = ({ navigation, route }) => {
                 <Text style={{
                   fontSize: 13,
                   color: COLORS.black,
-                }}>{details.details.item.Location}</Text>
+                }}>{details.details.item.location.latitude}</Text>
               </View>
               <View style={{
                 alignItems: 'center',
@@ -170,7 +191,7 @@ const EventDetails = ({ navigation, route }) => {
             }}>
               <Text style={{
                 fontSize: 12,
-              }}>{details.details.item.Description}</Text>
+              }}>{details.details.item.description}</Text>
             </View>
 
             <View style={{
@@ -232,16 +253,19 @@ const EventDetails = ({ navigation, route }) => {
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity 
-                onPress={() => navigation.navigate('EventTickets')}
-                style={{
-                  backgroundColor: COLORS.main,
-                  width: '30%',
-                  alignItems: 'center',
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
-                  borderRadius: 5,
-                }}>
+                <TouchableOpacity
+                  onPress={() => 
+                    // navigation.navigate('EventTickets', { details: details.details.item })
+                    ScanDoc()
+                  }
+                  style={{
+                    backgroundColor: COLORS.main,
+                    width: '30%',
+                    alignItems: 'center',
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 5,
+                  }}>
                   <Text style={{
                     color: COLORS.black,
                     fontSize: 12

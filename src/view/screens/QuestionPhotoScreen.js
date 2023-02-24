@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { launchImageLibrary } from 'react-native-image-picker';
+import auth from '@react-native-firebase/auth';
 
 
 const QuestionPhotoScreen = ({ navigation }) => {
@@ -11,7 +12,8 @@ const QuestionPhotoScreen = ({ navigation }) => {
   const [image3, setImage3] = useState(null);
   const [image4, setImage4] = useState(null);
   const [image5, setImage5] = useState(null);
-
+//    
+// console.log(user);
   const onNamePress = () => {
     // console.log(image1, image2, image3, image4, image5);
     if (!image1 && !image2 && !image3 && !image4 && !image5) {

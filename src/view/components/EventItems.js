@@ -2,20 +2,22 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../consts/Colors';
-import { useSelector } from 'react-redux';
-import { selectEvents } from '../../../redux/reducers/Reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectEvents , events} from '../../../redux/reducers/Reducers';
 
 
 const EventItems = ({ navigation, data, btn, width, onpress }) => {
-    const events = useSelector(selectEvents);
+    const selectEventsss = useSelector(selectEvents);
+    const dispatch = useDispatch();
     // console.log(events);
     const onEventDeatilsScreen = (item) => {
         // console.log('eventdeatils', item);
+        dispatch(events(item))
         navigation.navigate('EventDetails', { details : item })
     }
     return (
         <>
-            {events?.map((item, index) => (
+            {data?.map((item, index) => (
                 console.log(item.location?.latitude),
                 <TouchableOpacity key={index}
                     onPress={() => onEventDeatilsScreen({ item })}

@@ -142,7 +142,7 @@ const QuestionFavFoodScreen = ({ navigation, route }) => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
 
-          <View style={{ paddingTop: 10 }}>
+          <View style={{ paddingTop: 10, paddingLeft:20 }}>
             <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
               setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
           </View>

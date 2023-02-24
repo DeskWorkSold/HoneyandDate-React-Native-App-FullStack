@@ -113,6 +113,7 @@ const QuestionBuildTypeScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 30,
+            alignItems:'center'
           }}>
             <Image source={require('../../assets/buildtype.png')} resizeMode='contain' style={{
               width: 240,
@@ -145,7 +146,9 @@ const QuestionBuildTypeScreen = ({ navigation, route }) => {
 
           <ScrollView showsVerticalScrollIndicator={false}>
 
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListEducation data={EducationData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   footer: {
     alignItems: 'center'

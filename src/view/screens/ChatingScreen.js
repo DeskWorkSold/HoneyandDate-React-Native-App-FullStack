@@ -1,11 +1,10 @@
-import { SafeAreaView, StatusBar, StyleSheet, Text, View, Image, useWindowDimensions, TouchableOpacity, ActivityIndicator, Dimensions, Modal, ToastAndroid } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, View, Image, useWindowDimensions, TouchableOpacity, ActivityIndicator, Dimensions, Modal, ToastAndroid, ScrollView, Pressable } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import COLORS from '../../consts/Colors';
 import HeaderTabOne from '../components/HeaderTabOne';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import GoogleMapKey from '../../consts/GoogleMapKey';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,7 +13,7 @@ import { Bubble, GiftedChat, InputToolbar, Send } from 'react-native-gifted-chat
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, selectStatus, selectUser, status } from '../../../redux/reducers/Reducers';
+import { login, PorposalCategory, selectPorposalCategory, selectStatus, selectUser, status } from '../../../redux/reducers/Reducers';
 import Notifictaions from '../components/Notifictaions';
 import { IconButton, MD3Colors, TextInput } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -24,6 +23,7 @@ import { useRef } from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
 import { set } from 'immer/dist/internal';
+import GoogleMapKey from '../../consts/GoogleMapKey';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -56,6 +56,7 @@ const ChatingScreen = ({ navigation, route }) => {
     const [description, setDescription] = useState('');
     const [locationModalVisible, setLocationModalVisible] = useState(false);
     const [actionTriggered, setActionTriggered] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
     const [pin, setPin] = useState({
         latitude: 24.9026764,
         longitude: 67.11445119999999,
@@ -65,7 +66,13 @@ const ChatingScreen = ({ navigation, route }) => {
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
-    })
+    });
+    const [acceptedProposal, setAcceptedProposal] = useState();
+
+    const api = GoogleMapKey.GOOGLE_MAP_KEY
+    const dispatch = useDispatch()
+    const cat = useSelector(selectPorposalCategory)
+    console.log('=====>', cat);
 
 
     // console.log('userName: ', userName);
@@ -77,6 +84,8 @@ const ChatingScreen = ({ navigation, route }) => {
     const SwitchMode = (value) => (
         setShowHide(value)
     );
+    const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
+
 
     useEffect(() => {
         // getAllMessages()
@@ -106,16 +115,20 @@ const ChatingScreen = ({ navigation, route }) => {
                 }
             })
             setMessages(allmsg)
-            // console.log('==>',allmsg.user);
+            // console.log('==>',allmsg);
         })
+
+        fetchDateModeProposals();
+
     }, [])
 
     const onSend = useCallback((messages = []) => {
         let mymsg = null;
-        // console.log('test', category);
-        console.log('===>', category);
+        console.log('category==>', cat);
+        console.log('imageUrl===>', imageUrl);
         // return
         if (imageUrl !== '') {
+            console.log('send imageUrl');
             const msg = messages[0]
             mymsg = {
                 ...msg,
@@ -133,25 +146,8 @@ const ChatingScreen = ({ navigation, route }) => {
                 ProposalStatus: '',
             };
         }
-        else if (category !== '') {
-            const msg = messages[0]
-            mymsg = {
-                ...msg,
-                sentBy: Currentuser.uid,
-                sentTo: uid,
-                createdAt: new Date(),
-                image: imageUrl,
-                sent: true,
-                category: category,
-                ProposalDate: discountStartDate,
-                ProposalTime: time,
-                ProposalAddress: location,
-                ProposalLocation: pin,
-                ProposalDescription: description,
-                ProposalStatus: false,
-            };
-        }
         else {
+            console.log('send proposal');
             const msg = messages[0]
             mymsg = {
                 ...msg,
@@ -160,32 +156,78 @@ const ChatingScreen = ({ navigation, route }) => {
                 createdAt: new Date(),
                 image: '',
                 sent: true,
-                category: 'normal',
-                ProposalDate: '',
-                ProposalTime: '',
-                ProposalAddress: '',
-                ProposalLocation: '',
-                ProposalDescription: '',
-                ProposalStatus: '',
+                category: cat,
+                ProposalDate: discountStartDate,
+                ProposalTime: time,
+                ProposalAddress: location,
+                ProposalLocation: pin,
+                ProposalDescription: description,
+                ProposalStatus: false,
             };
         }
+        // else {
+        //     const msg = messages[0]
+        //     mymsg = {
+        //         ...msg,
+        //         sentBy: Currentuser.uid,
+        //         sentTo: uid,
+        //         createdAt: new Date(),
+        //         image: '',
+        //         sent: true,
+        //         category: 'normal',
+        //         ProposalDate: '',
+        //         ProposalTime: '',
+        //         ProposalAddress: '',
+        //         ProposalLocation: '',
+        //         ProposalDescription: '',
+        //         ProposalStatus: '',
+        //     };
+        // }
         // console.log(mymsg);
         // return
         setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg))
-        // console.log('==>', uid);
         const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
-        // console.log('final', docid);
-        // return;
+        console.log(mymsg);
+        // return
         firestore().collection('chatrooms')
             .doc(docid)
             .collection('messages')
-            .add({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
-        setImageUrl('');
-        setImageData(null);
-        setCategory('');
+            .doc(mymsg._id)
+            .set({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
+            .then(() => {
+                setImageUrl('');
+                setImageData(null);
+                setCategory('');
+                dispatch(PorposalCategory(null))
+            })
     }, [])
 
+    const fetchDateModeProposals = async () => {
+
+        await
+            firestore().collection('chatrooms')
+                .doc(docid)
+                .collection('messages')
+                .where("category", '==', "Proposal")
+                .where("ProposalStatus", '==', true)
+                .onSnapshot(docSnapshot => {
+                    // console.log(docSnapshot.data());
+                    const Proposals = [];
+                    docSnapshot.forEach((documentSnapshot) => {
+                        // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                        Proposals.push(documentSnapshot.data());
+                        // modalDataUid.push(documentSnapshot.id);
+                    });
+                    // console.log(Proposals);
+                    setAcceptedProposal(Proposals)
+                })
+        // console.log(acceptedProposal);
+    }
+
     const onSendPorposal = () => {
+        // setCategory('Proposal')
+        const test = 'Proposal'
+        dispatch(PorposalCategory(test))
         if (!discountStartDate) {
             // console.log('aklxjn');
             ToastAndroid.show("Please select proposal Date!", ToastAndroid.SHORT);
@@ -200,7 +242,9 @@ const ChatingScreen = ({ navigation, route }) => {
             ToastAndroid.show("Please add your location!", ToastAndroid.SHORT);
         }
         else {
-            setCategory('Proposal')
+            // setInterval(() => {
+            //     setCategory('Proposal');
+            // })
             // console.log(
             //     'selected date', discountStartDate,
             //     'selected time', time,
@@ -212,6 +256,41 @@ const ChatingScreen = ({ navigation, route }) => {
 
             setModal(false)
         }
+    }
+    // useEffect(() => {
+    //     console.log('useeffect1', category);
+    //     console.log('useeffect2', imageUrl);
+    // }, [category || imageUrl])
+
+
+
+    const RejectProposal = (uid) => {
+        // console.log('reject', uid);
+        const userRef = firestore().collection('chatrooms')
+            .doc(docid)
+            .collection('messages')
+            .doc(uid)
+
+        userRef.delete()
+            .then(() => {
+                // RefereshForm();
+                // setDefaultAnimationDialog(false)
+                // navigation.goBack();
+                // console.log('Event deleted!');
+                ToastAndroid.show('Proposal Rejected!', ToastAndroid.SHORT)
+            });
+    }
+    const AcceptProposal = (uid) => {
+        // console.log('accept', uid);
+
+        const userRef = firestore().collection('chatrooms')
+            .doc(docid)
+            .collection('messages')
+            .doc(uid)
+
+        userRef.update({
+            'ProposalStatus': true,
+        })
     }
 
 
@@ -252,22 +331,24 @@ const ChatingScreen = ({ navigation, route }) => {
                     {...props}
                     wrapperStyle={{
                         right: {
-                            backgroundColor: COLORS.light,
-                            // elevation:3,
+                            backgroundColor: COLORS.white,
+                            elevation: 3,
                             borderBottomRightRadius: 0,
                             borderBottomLeftRadius: 15,
                             borderTopRightRadius: 15,
                             borderTopLeftRadius: 15,
-                            height:170,
-                            width:250,
+                            // height: 170,
+                            // width: 250,
                         },
                         left: {
-                            borderBottomRightRadius: 15,
-                            borderBottomLeftRadius: 15,
+                            backgroundColor: COLORS.white,
+                            elevation: 3,
                             borderBottomRightRadius: 15,
                             borderBottomLeftRadius: 0,
-                            height:170,
-                            width:250,
+                            borderTopRightRadius: 15,
+                            borderTopLeftRadius: 15,
+                            // height: 170,
+                            // width: 250,
                         }
                     }}
                     textStyle={{
@@ -333,7 +414,8 @@ const ChatingScreen = ({ navigation, route }) => {
     };
     const handleDiscountConfirmStartDate = date => {
         // console.warn('A date has been picked: ', date);
-        setDiscountStartDate(moment(date).format('MM/DD/yy'));
+        setDiscountStartDate(moment(date).format('MM/DD/yy'))
+        // setDiscountStartDate(moment(date).format('MM/DD/yy'));
         hideDiscountStartDatePicker();
     };
     // const hideDatePicker = () => {
@@ -374,7 +456,8 @@ const ChatingScreen = ({ navigation, route }) => {
         if (region) {
             console.log('selected pin', region);
             console.log('selected pin', location);
-            setLocation(location)
+            setLocation('location')
+            // setAddressText(location)
             setLocationModalVisible(false)
         }
         else {
@@ -478,6 +561,309 @@ const ChatingScreen = ({ navigation, route }) => {
                 <ActivityIndicator size='large' color={COLORS.main} />
             </View>
         );
+    }
+
+    function renderCustomePurposal(props) {
+        // console.log(props.currentMessage.category);
+        const uid = props.currentMessage._id;
+        const myid = props.currentMessage.sentBy;
+        const chatuserid = props.currentMessage.sentTo;
+        const filter = props.currentMessage.category;
+        const ProposalAddress = props.currentMessage.ProposalAddress;
+        const ProposalDate = props.currentMessage.ProposalDate;
+        const ProposalTime = props.currentMessage.ProposalTime;
+        const ProposalStatus = props.currentMessage.ProposalStatus;
+        // const filter = props.currentMessage.category;
+        // const filter = props.currentMessage.category;
+        // console.log(props.currentMessage.sentBy);a
+        // console.log(props.currentMessage.sentBy);
+        // console.log(props.currentMessage.text);
+        return (
+            <>
+                {filter == 'Proposal' && Currentuser.uid == myid &&
+                    <View style={{
+                        backgroundColor: COLORS.white,
+                        // elevation:3,
+                        borderBottomRightRadius: 0,
+                        borderBottomLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                        borderTopLeftRadius: 15,
+                        // height: 170,
+                        // width: 250,
+                        // width: 300,
+                        // height: 150,
+                        padding: 20,
+                    }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}>
+                            <View>
+                                <Text style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black,
+                                    paddingRight: 50
+                                }}>Dating Porposal</Text>
+                            </View>
+                            <View>
+                                <Text style={{
+                                    fontSize: 12,
+                                }}>6 days remaining</Text>
+                            </View>
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingTop: 10
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalDate}</Text>
+                                </View>
+                            </View>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalTime}</Text>
+                                </View>
+                            </View>
+
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingTop: 10
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalAddress}</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={{
+                                backgroundColor: COLORS.black,
+                                marginTop: 20,
+                                borderRadius: 10,
+                                padding: 10,
+                                alignItems: 'center',
+                            }}>
+                            <Text style={{
+                                color: COLORS.white
+                            }}>Withdraw purposal</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+
+                {filter == 'Proposal' && Currentuser.uid == chatuserid &&
+                    <View style={{
+                        backgroundColor: COLORS.white,
+                        borderRadius: 15,
+                        // elevation:3,
+                        // borderBottomRightRadius: 0,
+                        // borderBottomLeftRadius: 15,
+                        // borderTopRightRadius: 15,
+                        // borderTopLeftRadius: 15,
+                        // height: 170,
+                        // width: 250,
+                        // width: 300,
+                        // height: 150,
+                        padding: 20,
+                    }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}>
+                            <View>
+                                <Text style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black,
+                                    paddingRight: 50
+                                }}>Dating Porposal</Text>
+                            </View>
+                            <View>
+                                <Text style={{
+                                    fontSize: 12,
+                                }}>6 days remaining</Text>
+                            </View>
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingTop: 10
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalDate}</Text>
+                                </View>
+                            </View>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalTime}</Text>
+                                </View>
+                            </View>
+
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingTop: 10
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    paddingRight: 5
+                                }}>
+                                    <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                        width: 15,
+                                        height: 15,
+                                    }} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                    }}>{ProposalAddress}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        {ProposalStatus ?
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                style={{
+                                    backgroundColor: COLORS.black,
+                                    marginTop: 20,
+                                    borderRadius: 10,
+                                    padding: 10,
+                                    alignItems: 'center',
+                                }}>
+                                <Text style={{
+                                    color: COLORS.white
+                                }}>Cancle</Text>
+                            </TouchableOpacity>
+                            :
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <TouchableOpacity
+                                    onPress={() => RejectProposal(uid)}
+                                    activeOpacity={0.8}
+                                    style={{
+                                        backgroundColor: COLORS.transparent,
+                                        borderWidth: 1,
+                                        marginTop: 20,
+                                        borderRadius: 10,
+                                        padding: 10,
+                                        alignItems: 'center',
+                                        width: 120,
+                                        marginHorizontal: 10
+                                    }}>
+                                    <Text style={{
+                                        color: COLORS.black
+                                    }}>Reject</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => AcceptProposal(uid)}
+
+                                    activeOpacity={0.8}
+                                    style={{
+                                        backgroundColor: COLORS.black,
+                                        marginTop: 20,
+                                        borderRadius: 10,
+                                        padding: 10,
+                                        alignItems: 'center',
+                                        width: 120,
+                                        marginHorizontal: 10
+                                    }}>
+                                    <Text style={{
+                                        color: COLORS.white
+                                    }}>Accepte</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                    </View>
+                }
+            </>
+        )
     }
 
     return (
@@ -590,48 +976,195 @@ const ChatingScreen = ({ navigation, route }) => {
                 </View>
 
                 {showhide == true ? (
-                    <View style={{
-                        paddingHorizontal: 20,
-                        paddingVertical: 20,
-                        backgroundColor: COLORS.white,
-                        marginTop: 30,
-                        marginHorizontal: 20,
-                        borderRadius: 10,
-                        elevation: 3,
-                    }}>
+                    <View>
                         <View style={{
-                            alignItems: 'center',
-                            paddingVertical: 10
+                            paddingHorizontal: 20,
+                            paddingVertical: 20,
+                            backgroundColor: COLORS.white,
+                            marginTop: 30,
+                            marginHorizontal: 20,
+                            borderRadius: 10,
+                            elevation: 3,
+                        }}>
+                            <View style={{
+                                alignItems: 'center',
+                                paddingVertical: 10
+                            }}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black
+                                }}>Date mode</Text>
+                            </View>
+                            <View style={{
+                                alignItems: 'center',
+                            }}>
+                                <Text style={{ textAlign: 'center' }}>Text your trusted friend or family member a link to
+                                    your live Location During date mode</Text>
+                            </View>
+                            <View style={{
+                                alignItems: 'center'
+                            }}>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('DateModeScreen')}
+                                    style={{
+                                        marginVertical: 10,
+                                        backgroundColor: COLORS.main,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 5,
+                                        borderRadius: 5,
+                                        alignItems: 'center',
+                                        width: '50%',
+                                    }}>
+                                    <Text style={{ color: COLORS.black }}>Request tracking</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={{
+                            marginTop: 20,
+                            paddingHorizontal: 20
                         }}>
                             <Text style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: COLORS.black
-                            }}>Date mode</Text>
+                                fontSize: 20,
+                                color: COLORS.black,
+                                fontWeight: 'bold'
+                            }}>Dates</Text>
                         </View>
-                        <View style={{
-                            alignItems: 'center',
-                        }}>
-                            <Text style={{ textAlign: 'center' }}>Text your trusted friend or family member a link to
-                                your live Location During date mode</Text>
-                        </View>
-                        <View style={{
-                            alignItems: 'center'
-                        }}>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('DateModeScreen')}
-                                style={{
-                                    marginVertical: 10,
-                                    backgroundColor: COLORS.main,
-                                    paddingHorizontal: 10,
-                                    paddingVertical: 5,
-                                    borderRadius: 5,
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {!acceptedProposal?.length == 0 ?
+                                <>
+                                    {acceptedProposal?.map((item, index) => (
+                                        console.log('==============', item),
+                                        <View
+                                            key={index}
+                                            style={{
+                                                paddingHorizontal: 20,
+                                                paddingVertical: 20,
+                                                backgroundColor: COLORS.white,
+                                                marginVertical: 10,
+                                                marginHorizontal: 20,
+                                                borderRadius: 10,
+                                                elevation: 3,
+                                            }}>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between'
+                                            }}>
+                                                <View>
+                                                    <Text style={{
+                                                        fontSize: 20,
+                                                        fontWeight: 'bold',
+                                                        color: COLORS.black,
+                                                        paddingRight: 50
+                                                    }}>Dating Porposal</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={{
+                                                        fontSize: 12,
+                                                    }}>6 days remaining</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                paddingTop: 10
+                                            }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <View style={{
+                                                        paddingRight: 5
+                                                    }}>
+                                                        <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 12,
+                                                        }}>{item?.ProposalDate}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <View style={{
+                                                        paddingRight: 5
+                                                    }}>
+                                                        <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 12,
+                                                        }}>{item.ProposalTime}</Text>
+                                                    </View>
+                                                </View>
+
+                                            </View>
+
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                paddingTop: 10
+                                            }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <View style={{
+                                                        paddingRight: 5
+                                                    }}>
+                                                        <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 12,
+                                                        }}>{item.ProposalAddress}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <TouchableOpacity
+                                                onPress={() => { setModal(true), setDeleteModal('DeleteModal') }}
+                                                activeOpacity={0.8}
+                                                style={{
+                                                    backgroundColor: COLORS.black,
+                                                    marginTop: 20,
+                                                    borderRadius: 10,
+                                                    padding: 10,
+                                                    alignItems: 'center',
+                                                }}>
+                                                <Text style={{
+                                                    color: COLORS.white
+                                                }}>Cancle</Text>
+                                            </TouchableOpacity>
+
+                                        </View>
+                                    ))}
+                                </>
+                                :
+                                <View style={{
                                     alignItems: 'center',
-                                    width: '50%',
+                                    paddingTop: 20
                                 }}>
-                                <Text style={{ color: COLORS.black }}>Request tracking</Text>
-                            </TouchableOpacity>
-                        </View>
+                                    <Text>No Dates Proposal Found!</Text>
+                                </View>
+                            }
+
+                        </ScrollView>
+
                     </View>
                 ) : (
                     <View style={{
@@ -653,6 +1186,9 @@ const ChatingScreen = ({ navigation, route }) => {
                             // renderInputToolbar={renderInputToolbar}
                             scrollToBottomComponent={scrollToBottomComponent}
                             renderLoading={renderLoading}
+                            renderCustomView={props => (
+                                renderCustomePurposal(props)
+                            )}
                         // renderActions={() => (
                         //     <View style={{ height: '100%', justifyContent: 'center', left: 5 }}>
                         //         <Icon name="attachment" onPress={() => myAttachmentFunction()} style={{ color: COLORS.gray }}
@@ -699,7 +1235,7 @@ const ChatingScreen = ({ navigation, route }) => {
                     }}
                 >
                     {/* locationpopup  */}
-                    <Modal
+                    < Modal
                         animationType='fade'
                         transparent={false}
                         visible={locationModalVisible}>
@@ -710,6 +1246,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
                                     paddingHorizontal: 20,
+                                    flex: 0,
                                     height: 50
                                 }}>
                                     <TouchableOpacity
@@ -753,7 +1290,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                             setLocation(data.description)
                                         }}
                                         query={{
-                                            key: 'AIzaSyADaEpiFSeltBH4uNI9aZaIM1XRXFfPvhs',
+                                            key: api,
                                             language: 'en',
                                             components: "country:pk",
                                             types: "establishment",
@@ -761,7 +1298,11 @@ const ChatingScreen = ({ navigation, route }) => {
                                             location: `${region.latitude}, ${region.longitude}`
                                         }}
                                         styles={{
-                                            container: { flex: 0, position: 'relative', width: "100%", zIndex: 1 },
+                                            container: {
+                                                flex: 1, position: 'relative', width: "100%", zIndex: 1,
+                                                // marginHorizontal: 20,
+                                                marginTop: 10,
+                                            },
                                             listView: { backgroundColor: "white" }
                                         }}
                                     />
@@ -838,218 +1379,302 @@ const ChatingScreen = ({ navigation, route }) => {
                     </Modal>
 
 
-                    <View style={{
-                        marginTop: 109,
-                        borderTopRightRadius: 20,
-                        borderTopLeftRadius: 20,
-                        elevation: 5,
-                        // justifyContent:'flex-end',
-                        height: windowHeight / 1.2,
-                        backgroundColor: COLORS.white
-                    }}>
-                        <View>
+
+                    {modal && deleteModal == "DeleteModal" ?
+
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 22,
+                        }}>
                             <View style={{
-                                padding: 20,
-                                flexDirection: 'row',
-                                alignItems: 'center'
+                                margin: 20,
+                                backgroundColor: 'white',
+                                borderRadius: 20,
+                                padding: 35,
+                                alignItems: 'center',
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5,
                             }}>
-                                <View style={{
-                                    flex: 1
+                                <Text style={{
+                                    marginBottom: 10,
+                                    color: COLORS.black,
+                                    fontWeight: 'bold'
+                                    // textAlign: 'center',
+                                }}>Cancle Date!</Text>
+                                <Text style={{
+                                    marginBottom: 10,
+
                                 }}>
-                                    <Entypo name='cross' size={25} color={COLORS.black} onPress={() => setModal(false)} />
-                                </View>
+                                    If you cancel now, you will get flake on your profile. You can remove flakes for $10 pet flake. On your profile
+                                </Text>
                                 <View style={{
-                                    flex: 2
+                                    alignItems: 'center',
+                                    paddingHorizontal: 20,
+                                    flexDirection: 'row',
                                 }}>
-                                    <Text style={{
-                                        fontSize: 20,
-                                        fontWeight: 'bold',
-                                        color: COLORS.black
+                                    <TouchableOpacity
+                                        onPress={() => { setModal(false), setDeleteModal('') }}
+                                        style={{
+                                            width: '50%',
+                                            borderWidth: 1,
+                                            borderColor: COLORS.black,
+                                            borderRadius: 10,
+                                            marginHorizontal: 5,
+                                            paddingVertical: 10,
+                                            alignItems: 'center',
+                                        }}>
+                                        <Text style={{
+                                            color: COLORS.black
+                                        }}>
+                                            Back
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{
+                                        width: '50%',
+                                        borderWidth: 1,
+                                        borderColor: COLORS.black,
+                                        borderRadius: 10,
+                                        marginHorizontal: 5,
+                                        paddingVertical: 10,
+                                        alignItems: 'center',
+                                        backgroundColor: COLORS.black
                                     }}>
-                                        Create a Proposal
-                                    </Text>
+                                        <Text style={{
+                                            color: COLORS.white
+                                        }}>
+                                            Cancle Date
+                                        </Text>
+                                    </TouchableOpacity>
+
                                 </View>
                             </View>
-                            <View style={{
-                                alignItems: 'center'
-                            }}>
-                                <View style={{ marginTop: 10, width: '90%' }}>
-                                    <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Date </Text>
+                        </View>
+                        :
+                        <View style={{
+                            marginTop: 109,
+                            borderTopRightRadius: 20,
+                            borderTopLeftRadius: 20,
+                            elevation: 5,
+                            // justifyContent:'flex-end',
+                            height: windowHeight / 1.2,
+                            backgroundColor: COLORS.white
+                        }}>
+                            <View>
+                                <View style={{
+                                    padding: 20,
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}>
                                     <View style={{
-                                        height: 45,
-                                        backgroundColor: COLORS.white,
-                                        borderRadius: 10,
-                                        elevation: 4,
-                                        paddingRight: 10,
-                                        marginLeft: 2,
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
+                                        flex: 1
                                     }}>
-                                        <TextInput
-                                            style={{
-                                                padding: 0,
-                                                backgroundColor: COLORS.transparent,
-                                            }}
-                                            placeholder={'Select Date'}
-                                            value={discountStartDate}
-                                            placeholderTextColor={COLORS.gray}
-                                            // error={dateOfBirthError}
-                                            onChangeText={setDiscountStartDate}
-                                            selectionColor={COLORS.black}
-                                            underlineColor={COLORS.white}
-                                            // activeOutlineColor={COLORS.fontColor}
-                                            activeUnderlineColor={COLORS.white}
-                                            // onFocus={() => { setDateOfBirthError(false) }}
-                                            onPressIn={showDateModal}
-                                        />
-                                        <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
-                                            // tintColor: COLORS.black,
-                                            width: 25,
-                                            height: 25,
-                                        }} />
+                                        <Entypo name='cross' size={25} color={COLORS.black} onPress={() => setModal(false)} />
+                                    </View>
+                                    <View style={{
+                                        flex: 2
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 20,
+                                            fontWeight: 'bold',
+                                            color: COLORS.black
+                                        }}>
+                                            Create a Proposal
+                                        </Text>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={{
-                                alignItems: 'center'
-                            }}>
-                                <View style={{ marginTop: 10, width: '90%' }}>
-                                    <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Time </Text>
-                                    <View style={{
-                                        height: 45,
-                                        backgroundColor: COLORS.white,
-                                        borderRadius: 10,
-                                        elevation: 4,
-                                        paddingRight: 10,
-                                        marginLeft: 2,
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <TextInput
-                                            style={{
-                                                padding: 0,
-                                                backgroundColor: COLORS.transparent,
-                                            }}
-                                            placeholder={'Select Time'}
-                                            value={time}
-                                            placeholderTextColor={COLORS.gray}
-                                            // error={dateOfBirthError}
-                                            onChangeText={setTime}
-                                            selectionColor={COLORS.black}
-                                            underlineColor={COLORS.white}
-                                            // activeOutlineColor={COLORS.fontColor}
-                                            activeUnderlineColor={COLORS.white}
-                                            // onFocus={() => { setDateOfBirthError(false) }}
-                                            onPressIn={showTimeModal}
-                                        />
-                                        {/* <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
+                                <View style={{
+                                    alignItems: 'center'
+                                }}>
+                                    <View style={{ marginTop: 10, width: '90%' }}>
+                                        <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Date </Text>
+                                        <View style={{
+                                            height: 45,
+                                            backgroundColor: COLORS.white,
+                                            borderRadius: 10,
+                                            elevation: 4,
+                                            paddingRight: 10,
+                                            marginLeft: 2,
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <TextInput
+                                                style={{
+                                                    padding: 0,
+                                                    backgroundColor: COLORS.transparent,
+                                                }}
+                                                placeholder={'Select Date'}
+                                                value={discountStartDate}
+                                                placeholderTextColor={COLORS.gray}
+                                                // error={dateOfBirthError}
+                                                onChangeText={setDiscountStartDate}
+                                                selectionColor={COLORS.black}
+                                                underlineColor={COLORS.white}
+                                                // activeOutlineColor={COLORS.fontColor}
+                                                activeUnderlineColor={COLORS.white}
+                                                // onFocus={() => { setDateOfBirthError(false) }}
+                                                onPressIn={showDateModal}
+                                            // onPressIn={showTimeModal}
+
+                                            />
+                                            <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
+                                                // tintColor: COLORS.black,
+                                                width: 25,
+                                                height: 25,
+                                            }} />
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{
+                                    alignItems: 'center'
+                                }}>
+                                    <View style={{ marginTop: 10, width: '90%' }}>
+                                        <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Time </Text>
+                                        <View style={{
+                                            height: 45,
+                                            backgroundColor: COLORS.white,
+                                            borderRadius: 10,
+                                            elevation: 4,
+                                            paddingRight: 10,
+                                            marginLeft: 2,
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <TextInput
+                                                style={{
+                                                    padding: 0,
+                                                    backgroundColor: COLORS.transparent,
+                                                }}
+                                                placeholder={'Select Time'}
+                                                value={time}
+                                                placeholderTextColor={COLORS.gray}
+                                                // error={dateOfBirthError}
+                                                onChangeText={setTime}
+                                                selectionColor={COLORS.black}
+                                                underlineColor={COLORS.white}
+                                                // activeOutlineColor={COLORS.fontColor}
+                                                activeUnderlineColor={COLORS.white}
+                                                // onFocus={() => { setDateOfBirthError(false) }}
+                                                onPressIn={showTimeModal}
+                                            />
+                                            {/* <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
                                             // tintColor: COLORS.black,
                                             width: 25,
                                             height: 25,
                                         }}/> */}
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={{ alignItems: 'center' }}>
-                                <View style={{ marginTop: 10, width: '90%' }}>
-                                    <Text style={{ color: COLORS.black }}> Location </Text>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingRight: 10,
-                                        height: 50,
-                                        // width: 340,
-                                        backgroundColor: COLORS.white,
-                                        borderRadius: 10,
-                                        elevation: 4
-                                    }}>
-                                        <TextInput
-                                            value={location}
-                                            placeholder={'Add location of event'}
-                                            onChangeText={location => setLocation(location)
-                                            }
-                                            placeholderTextColor={COLORS.gray}
-                                            selectionColor={COLORS.black}
-                                            underlineColor={COLORS.white}
-                                            activeUnderlineColor={COLORS.white}
-                                            style={{
-                                                paddingLeft: 0,
-                                                backgroundColor: COLORS.transparent,
-                                                width: '85%'
-                                            }}
-                                            onPressIn={OpenLocationModalView}
-                                            editable={true}
-                                        />
-                                        <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
-                                            width: 25,
-                                            height: 25,
-                                        }} />
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ marginTop: 10, width: '90%' }}>
+                                        <Text style={{ color: COLORS.black }}> Location </Text>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            paddingRight: 10,
+                                            height: 50,
+                                            // width: 340,
+                                            backgroundColor: COLORS.white,
+                                            borderRadius: 10,
+                                            elevation: 4
+                                        }}>
+                                            <TextInput
+                                                value={location}
+                                                placeholder={'Add location of event'}
+                                                onChangeText={location => setLocation(location)
+                                                }
+                                                placeholderTextColor={COLORS.gray}
+                                                selectionColor={COLORS.black}
+                                                underlineColor={COLORS.white}
+                                                activeUnderlineColor={COLORS.white}
+                                                style={{
+                                                    paddingLeft: 0,
+                                                    backgroundColor: COLORS.transparent,
+                                                    width: '85%'
+                                                }}
+                                                onPressIn={OpenLocationModalView}
+                                                editable={true}
+                                            />
+                                            <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
+                                                width: 25,
+                                                height: 25,
+                                            }} />
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
 
-                            <View style={{ alignItems: 'center' }}>
-                                <View style={{ marginTop: 10, width: '90%' }}>
-                                    <Text style={{ color: COLORS.black }}> Description </Text>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingRight: 10,
-                                        // height: 50,
-                                        // width: 340,
-                                        backgroundColor: COLORS.white,
-                                        borderRadius: 10,
-                                        elevation: 4
-                                    }}>
-                                        <TextInput
-                                            value={description}
-                                            placeholder={'enter more details'}
-                                            onChangeText={description => setDescription(description)
-                                            }
-                                            placeholderTextColor={COLORS.gray}
-                                            selectionColor={COLORS.black}
-                                            underlineColor={COLORS.white}
-                                            activeUnderlineColor={COLORS.white}
-                                            style={{
-                                                padding: 0,
-                                                backgroundColor: COLORS.transparent,
-                                                // height: 200,
-                                            }}
-                                            multiline
-                                            numberOfLines={8}
-                                            editable={true}
-                                        />
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ marginTop: 10, width: '90%' }}>
+                                        <Text style={{ color: COLORS.black }}> Description </Text>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            paddingRight: 10,
+                                            // height: 50,
+                                            // width: 340,
+                                            backgroundColor: COLORS.white,
+                                            borderRadius: 10,
+                                            elevation: 4
+                                        }}>
+                                            <TextInput
+                                                value={description}
+                                                placeholder={'enter more details'}
+                                                onChangeText={description => setDescription(description)
+                                                }
+                                                placeholderTextColor={COLORS.gray}
+                                                selectionColor={COLORS.black}
+                                                underlineColor={COLORS.white}
+                                                activeUnderlineColor={COLORS.white}
+                                                style={{
+                                                    padding: 0,
+                                                    backgroundColor: COLORS.transparent,
+                                                    // height: 200,
+                                                }}
+                                                multiline
+                                                numberOfLines={8}
+                                                editable={true}
+                                            />
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={{
-                            alignItems: 'center'
-                        }}>
                             <View style={{
-                                paddingTop: 50,
-                                paddingBottom: 10,
-                                flexDirection: 'row',
+                                alignItems: 'center'
                             }}>
-                                <View style={{ marginHorizontal: 5 }}>
-                                    <CustomeButton width={130} onpress={() => setModal(false)}
-                                        title={'Cancle'} bcolor={COLORS.light} />
-                                </View>
-                                <View style={{ marginHorizontal: 5 }}>
-                                    <CustomeButton width={170} onpress={() => onSendPorposal()}
-                                        title={'Send Proposal'} />
-                                </View>
+                                <View style={{
+                                    paddingTop: 50,
+                                    paddingBottom: 10,
+                                    flexDirection: 'row',
+                                }}>
+                                    <View style={{ marginHorizontal: 5 }}>
+                                        <CustomeButton width={130} onpress={() => setModal(false)}
+                                            title={'Cancle'} bcolor={COLORS.light} />
+                                    </View>
+                                    <View style={{ marginHorizontal: 5 }}>
+                                        <CustomeButton width={170} onpress={() => onSendPorposal()}
+                                            title={'Send Proposal'} />
+                                    </View>
 
+                                </View>
                             </View>
                         </View>
-                    </View>
+                    }
+
+
                 </Modal>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
@@ -1087,5 +1712,22 @@ const styles = StyleSheet.create({
         height: windowHeight,
         width: windowWidth,
         borderRadius: 15,
+    },
+    containerStyle: {
+        backgroundColor: 'white',
+        zIndex: 1
+    },
+
+    textInputStyle: {
+        zIndex: 1,
+        width: '100%',
+        padding: 5,
+        color: COLORS.black,
+        fontSize: 14,
+        // backgroundColor: 'white',
+        borderColor: 'grey',
+        borderBottomWidth: 1.2,
+        marginVertical: 5,
+        // paddingHorizontal: 20,
     },
 })

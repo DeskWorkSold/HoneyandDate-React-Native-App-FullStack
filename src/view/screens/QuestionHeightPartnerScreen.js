@@ -63,7 +63,7 @@ const QuestionHeightPartnerScreen = ({ navigation, route }) => {
           }}>
             <Image source={require('../../assets/height.png')}
               resizeMode='contain' style={{
-                height: 230
+                height: 200
               }} />
           </View>
 
@@ -141,7 +141,7 @@ const QuestionHeightPartnerScreen = ({ navigation, route }) => {
         </View>
 
 
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}> */}
 
           <View style={{
             paddingTop: 20,
@@ -158,7 +158,7 @@ const QuestionHeightPartnerScreen = ({ navigation, route }) => {
               By continue you agree our Terms and Privacy Policy.
             </Text>
           </View>
-        </View>
+        {/* </View> */}
 
 
       </View>
@@ -175,11 +175,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: COLORS.white,
+    height:'100%'
 
   },
   contentContainer: {
     height: '80%',
     alignItems: 'center',
+    justifyContent:'center'
   },
   footer: {
     height: '20%'

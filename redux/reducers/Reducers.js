@@ -4,20 +4,29 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
     name: 'user',
     mediatoruser: 'mediatoruser',
+    ticketAddtoCard: 'ticketAddtoCard',
     status: 'status',
     packages: 'status',
     chatuser: 'chatuser',
+    itemsInCart: 'itemsInCart',
     events: 'events',
+    porposalCat:'porposalCat',
+    paymentMethod: 'paymentMethod',
+    paymentCardDetails: 'paymentCardDetails',
     ADD_ITEM: 'ADD_ITEM',
     REMOVE_ITEM: 'REMOVE_ITEM',
     cart: 'cart',
     initialState: {
         user: null,
         mediatoruser: null,
+        ticketAddtoCard: null,
         status: false,
+        porposalCat: null,
         packages: null,
         chatuser: null,
         events: null,
+        paymentMethod: null,
+        paymentCardDetails: null,
         hidden: true,
         cartItems: 0,
         itemsInCart: [],
@@ -35,10 +44,20 @@ export const userSlice = createSlice({
 
             state.mediatoruser = action.payload;
         },
+        ticketsAddtoCard: (state, action) => {
+            console.log(state.ticketAddtoCard, " : New Item");
+
+            state.ticketAddtoCard = action.payload;
+        },
         status: (state, action) => {
             console.log(state.status, " : New status");
 
             state.status = action.payload;
+        },
+        PorposalCategory: (state, action) => {
+            console.log(state.porposalCat, " : New category");
+
+            state.porposalCat = action.payload;
         },
         packages: (state, action) => {
             console.log(state.packages, " : New Packages");
@@ -57,12 +76,19 @@ export const userSlice = createSlice({
         },
         addToCart(state, action) {
             //   console.log(state.itemsInCart , ": ADD TO CART");
-            //   let newState = { ...state.itemsInCart };
-            if (action.payload) {
-                console.log("ADD TO CART")
-                state.itemsInCart = [...state.itemsInCart, action.payload]
-                // restaurantName :  action.payload.restaurantName,
+            const itemInCart = state.itemsInCart.find((item) => item.uid == action.payload.uid);
+            if (itemInCart) {
+                itemInCart.qty += action.payload.qty;
+                itemInCart.Totalprice = itemInCart.PricePerItem * itemInCart.qty;
             }
+            else {
+                state.itemsInCart.push({ ...action.payload })
+                // console.log(state.itemsInCart, "ADD TO CART")
+                // state.itemsInCart = [...state.itemsInCart, action.payload]
+            }
+            // if (action.payload) {
+            // restaurantName :  action.payload.restaurantName,
+            // }
             //   state.itemsInCart = payload;
             //   return[...state.itemsInCart,  action.payload];
             //uid is the unique id of the item
@@ -85,6 +111,38 @@ export const userSlice = createSlice({
             //     });
             // }
         },
+        removeFromCart: (state, action) => {
+            const removeFromCart = state.itemsInCart.filter((item) => item.uid !== action.payload.uid);
+            state.itemsInCart = removeFromCart;
+        },
+        incrementQty: (state, action) => {
+            const itemInCart = state.itemsInCart.find((item) => item.uid == action.payload.uid);
+            // itemInCart.qty++;
+            itemInCart.qty += 1;
+            itemInCart.Totalprice = itemInCart.PricePerItem * itemInCart.qty;
+        },
+        decrementQty: (state, action) => {
+            const itemInCart = state.itemsInCart.find((item) => item.uid == action.payload.uid);
+            if (itemInCart.qty == 1) {
+                const removeFromCart = state.itemsInCart.filter((item) => item.uid !== action.payload.uid);
+                state.itemsInCart = removeFromCart;
+            }
+            else {
+                itemInCart.qty -= 1;
+                itemInCart.Totalprice = itemInCart.PricePerItem * itemInCart.qty;
+            }
+        },
+        PaymentMethod: (state, action) => {
+            console.log(state.paymentMethod, " : New payment-Method");
+
+            state.paymentMethod = action.payload;
+        },
+        PaymentCardDetails: (state, action) => {
+            console.log(state.paymentCardDetails, " : New payment-Card-Details");
+
+            state.paymentCardDetails = action.payload;
+        },
+        
         logout: (state) => {
             console.log(state.user, " : Delete user");
 
@@ -97,15 +155,19 @@ export const userSlice = createSlice({
     },
 });
 
-export const { login, mediatorLogin, status, packages, logout, chatuser, events, addToCart } = userSlice.actions;
+export const { login, mediatorLogin, ticketsAddtoCard, status, packages, logout, chatuser, events, addToCart, removeFromCart, incrementQty, decrementQty, PaymentMethod, PaymentCardDetails, PorposalCategory } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectStatus = (state) => state.user.status;
 export const selectPackages = (state) => state.user.packages;
 export const selectChatuser = (state) => state.user.chatuser;
 export const selectEvents = (state) => state.user.events;
-export const selectaddToCart = (state) => state.user.addToCart;
+export const selectaddToCart = (state) => state.user.itemsInCart;
 export const selectMediatorUser = (state) => state.user.mediatoruser;
+export const selectTicketsAddToCard = (state) => state.user.ticketAddtoCard;
+export const selectPaymentMethod = (state) => state.user.paymentMethod;
+export const selectPaymentCardDetails = (state) => state.user.paymentCardDetails;
+export const selectPorposalCategory = (state) => state.user.porposalCat;
 
 
 export default userSlice.reducer;

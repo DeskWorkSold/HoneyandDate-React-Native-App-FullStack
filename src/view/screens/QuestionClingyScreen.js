@@ -24,7 +24,7 @@ const EducationData = [
 
 
 const QuestionClingyScreen = ({ navigation, route }) => {
-  const {RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Dates, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Dates, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   // console.log(image1);
   // console.log(Nature,PartnerNature);
 
@@ -33,6 +33,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
   const [checked, setChecked] = React.useState(''); //initial choice
   const [clingy, setclingy] = useState('');
   const CurrentUser = auth().currentUser.uid;
+  const userPhoneNumber = auth().currentUser.phoneNumber
   // const [image, setImage] = useState(image1);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
     if (clingy) {
       // return;
       try {
-        setUploading(true)
+        // setUploading(true)
         const imageUrl = await uploadImage();
         var Data = new Object();
         Data.Clingy = clingy;
@@ -80,7 +81,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         Data.Education = Education;
         Data.RelationshipType = RelationshipType;
         Data.Relagion = Relagion;
-        Data.KosherType = KosherType;
+        Data.KosherType = KosherType ? KosherType : null;
         Data.foodtype = foodtype;
         Data.religionType = religionType;
         Data.relationshipLookingType = RelationshipLookingType;
@@ -121,6 +122,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         Data.PositioninCompany = PositioninCompany;
         Data.CompanyName = CompanyName;
         Data.uid = CurrentUser
+        Data.PhoneNumber = userPhoneNumber
         // console.log('test data: ', Data);
         // return;
         // console.log(CurrentUser);
@@ -140,7 +142,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
       }
     }
     else {
-      ToastAndroid.show("Please select relationships!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select Clingy Type!", ToastAndroid.SHORT);
     }
   }
 

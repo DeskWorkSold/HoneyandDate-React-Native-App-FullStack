@@ -45,7 +45,8 @@ const RelationshipTypes = [
 
 
 const QuestionRelationshipLookingScreen = ({ navigation, route }) => {
-  const { Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Dates, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  console.log(Date);
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
@@ -55,7 +56,7 @@ const QuestionRelationshipLookingScreen = ({ navigation, route }) => {
     console.log(selectitem);
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionClingyScreen', { RelationshipLookingType: selectitem, Cuddling: Cuddling, InLife: InLife, InBed: InBed, MovieType: MovieType, NextLongestRelationship: NextLongestRelationship, LongestRelationship: LongestRelationship, OpenTo: OpenTo, DealBreaker: DealBreaker, DealMakers: DealMakers, Firstrefname: Firstrefname, FirstRefemail: FirstRefemail, FirstRefnumber: FirstRefnumber, Secrefname: Secrefname, SecRefemail: SecRefemail, SecRefnumber: SecRefnumber, PartnerBuildType: PartnerBuildType, BuildType: BuildType, PartnerMaxHeight: PartnerMaxHeight, PartnerMinHeight: PartnerMinHeight, Height: Height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionClingyScreen', { RelationshipLookingType: selectitem, Cuddling: Cuddling, InLife: InLife, InBed: InBed, MovieType: MovieType, NextLongestRelationship: NextLongestRelationship, LongestRelationship: LongestRelationship, OpenTo: OpenTo, DealBreaker: DealBreaker, DealMakers: DealMakers, Firstrefname: Firstrefname, FirstRefemail: FirstRefemail, FirstRefnumber: FirstRefnumber, Secrefname: Secrefname, SecRefemail: SecRefemail, SecRefnumber: SecRefnumber, PartnerBuildType: PartnerBuildType, BuildType: BuildType, PartnerMaxHeight: PartnerMaxHeight, PartnerMinHeight: PartnerMinHeight, Height: Height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Dates: Dates, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
@@ -65,7 +66,7 @@ const QuestionRelationshipLookingScreen = ({ navigation, route }) => {
   const ListRelationShips = ({ value, setValue }) => {
     return (
       <View>
-        {RelationshipType.map((TypeTestimonial, index) => (
+        {RelationshipTypes?.map((TypeTestimonial, index) => (
           <TouchableOpacity
             key={index}
             activeOpacity={0.8}
@@ -129,32 +130,37 @@ const QuestionRelationshipLookingScreen = ({ navigation, route }) => {
               color: COLORS.black
             }}>Select all that apply</Text>
           </View>
-          <View>
-            <ListRelationShips value={selectedCategoryIndex}
-              setValue={setSelectedCategoryIndex} />
-          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{
+              alignItems:'center'
+            }}>
+              <ListRelationShips value={selectedCategoryIndex}
+                setValue={setSelectedCategoryIndex} />
+            </View>
 
 
+
+            <View style={{
+              alignItems: 'center',
+              paddingBottom: 5,
+              paddingTop:40
+              // height: '15%'
+            }}>
+              <CustomeButton onpress={() => onReligionScreen()}
+                title={'Continue'} />
+
+              <View style={{
+                paddingTop: 5,
+                width: 310,
+              }}>
+                <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                  By continue you agree our Terms and Privacy Policy.
+                </Text>
+              </View>
+            </View>
+          </ScrollView>
         </View>
 
-
-        <View style={{
-          alignItems: 'center',
-          paddingBottom: 5,
-          height: '15%'
-        }}>
-          <CustomeButton onpress={() => onReligionScreen()}
-            title={'Continue'} />
-
-          <View style={{
-            paddingTop: 5,
-            width: 310,
-          }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
-          </View>
-        </View>
       </View>
 
 
@@ -169,11 +175,12 @@ export default QuestionRelationshipLookingScreen
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    height: '100%',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    alignItems: 'center',
-    height: '85%',
+    // alignItems: 'center',
+    height: '100%',
   },
   footer: {
     alignItems: 'center'

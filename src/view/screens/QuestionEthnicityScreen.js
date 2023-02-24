@@ -199,6 +199,7 @@ const QuestionEthnicityScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 30,
+            alignItems:'center'
           }}>
             <Image source={require('../../assets/ethnicity.png')} resizeMode='contain' style={{
               width: 220,
@@ -223,7 +224,9 @@ const QuestionEthnicityScreen = ({ navigation, route }) => {
 
         <View style={styles.footer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListEthnicity data={EthnicityData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -364,7 +367,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '64%',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   NumberInput: {
     flexDirection: 'row',

@@ -13,8 +13,8 @@ const { height, width } = Dimensions.get('window')
 function RenderCard({ data, navigation }) {
     return (
         <View style={{
-            marginTop: -40,
-            height: '80%',
+            marginTop: -50,
+            // height: '80%',
             backgroundColor: COLORS.white,
             elevation: 5,
             borderRadius: 25,
@@ -25,7 +25,7 @@ function RenderCard({ data, navigation }) {
             }}>
                 <Image source={{ uri: data.userDetails.image1 }} resizeMode='cover'
                     style={{
-                        height: 420,
+                        height: height / 1.7,
                         borderRadius: 20,
                         width: '100%',
                         paddingHorizontal: 10
@@ -64,7 +64,9 @@ function RenderCard({ data, navigation }) {
             </View>
 
 
-            <View>
+            <View style={{
+                paddingBottom:20
+            }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -400,10 +402,10 @@ const HomeScreen = ({ navigation }) => {
                                         // console.log('push: ',MatchedUser);
                                         // setChatUserId(chats.ChatuserDetails)
                                     })
-                                    // console.log('final', MatchedUser.slice(0, 5));
+                                    console.log('final', MatchedUser.slice(0, 5));
                                     // const finalMatch = MatchedUser.slice(0, 5)
-                                    setChatUserDetail(MatchedUser.slice(0, 5))
-                                    dispatch(chatuser(MatchedUser.slice(0, 5)))
+                                    setChatUserDetail(MatchedUser.slice(0, 25))
+                                    dispatch(chatuser(MatchedUser.slice(0, 25)))
                                 } else {
                                     console.log('data not found');
                                     setChatUserDetail('')
@@ -530,7 +532,7 @@ const HomeScreen = ({ navigation }) => {
                 await firestore()
                     .collection('Users')
                     .where("userDetails.Gender", '==', "Male")
-                    .limit(4)
+                    .limit(25)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
@@ -622,7 +624,7 @@ const HomeScreen = ({ navigation }) => {
                 await firestore()
                     .collection('Users')
                     .where("userDetails.Gender", '==', "Female")
-                    .limit(5)
+                    .limit(25)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
@@ -1603,7 +1605,7 @@ const HomeScreen = ({ navigation }) => {
                     // height: '35%',
                     height: '25%',
                     // position: 'absolute',
-                    marginTop: -10,
+                    marginTop: -5,
                     width: '100%',
                 }}>
                     <View style={{

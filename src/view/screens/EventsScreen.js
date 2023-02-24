@@ -7,7 +7,7 @@ import EventItems from '../components/EventItems';
 import EventsCategory from '../components/EventsCategory';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { events, selectEvents } from '../../../redux/reducers/Reducers'
+import { events, selectEvents, selectUser } from '../../../redux/reducers/Reducers'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 const { width } = Dimensions.get("window");
@@ -61,10 +61,58 @@ const EventsScreen = ({ navigation }) => {
 
   const [search, setSearch] = useState(0);
   const [xTabTwo, setxTabTwo] = useState(0);
+  const [myEvents, setMyEvents] = useState();
+  const [myEventsid, setMyEventsid] = useState();
+
   const dispatch = useDispatch();
   const eventExist = useSelector(selectEvents);
+  const user = useSelector(selectUser)
 
 
+  const fetchRecentTickets = () => {
+    // console.log('test');
+    firestore()
+      .collection('SellTickets')
+      .orderBy('createdAt', 'desc')
+      // .limit(1)
+      .onSnapshot(querySnapshot => {
+        const EveId = []
+        querySnapshot.forEach((documentSnapshot) => {
+          const recentdata = documentSnapshot.data();
+          // console.log('hello' , recentdata);
+          if (recentdata.useruid == user.uid) {
+            EveId.push(documentSnapshot.data().TicketAddToCard?.euid)
+            // console.log('doc',documentSnapshot.data());
+            // return;
+          }
+          // setRecentData(MatchedUser)
+        })
+        setMyEventsid(EveId)
+        fetchyEvents()
+        // console.log(myEventsid);
+      })
+  }
+  const fetchyEvents = () => {
+    // setLoading(true)
+    const data = [];
+    myEventsid?.map(item => {
+      firestore()
+        .collection('Events')
+        .doc(item).onSnapshot(docSnapshot => {
+          // console.log('=========>',docSnapshot.data());
+          data.push(docSnapshot.data());
+          // querySnapshot.forEach((documentSnapshot) => {
+          //   // console.log('User ID: ', documentSnapshot.data());
+          //   // modalDataUid.push(documentSnapshot.id);
+          // });
+          // dispatch(events(data))
+          // setAllEvents(data)
+          // console.log(data);
+        });
+      // setLoading(false)
+    })
+    setMyEvents(data)
+  }
 
   const handleSlide = (index) => {
     // console.log('slide');
@@ -94,6 +142,7 @@ const EventsScreen = ({ navigation }) => {
 
   useEffect(() => {
     FetchEvents();
+    fetchRecentTickets();
   }, [])
 
   return (
@@ -141,7 +190,7 @@ const EventsScreen = ({ navigation }) => {
             style={{
               paddingRight: 20
             }}>
-            <EventItems width={'100%'} data={allEvents} btn={'Detail'} />
+            <EventItems  navigation={navigation} width={'100%'} data={allEvents} btn={'Detail'} />
           </ScrollView>
           :
           <View>
@@ -155,7 +204,7 @@ const EventsScreen = ({ navigation }) => {
                 <View style={{
                   flexDirection: 'row',
                   paddingHorizontal: 20,
-                  paddingTop:10,
+                  paddingTop: 10,
                   justifyContent: 'space-between',
                 }}>
                   <View>

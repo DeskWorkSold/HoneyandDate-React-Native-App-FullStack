@@ -80,11 +80,11 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
             flexDirection: 'row'
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={160} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => onMusicSelect()}
+              <CustomeButton width={160} onpress={() => onMusicSelect()}
                 title={'Continue'} />
             </View>
           </View>

@@ -130,7 +130,7 @@ const QuestionMoreAboutChristianScreen = ({ navigation, route }) => {
     console.log(religionType, ParentReligion);
 
     if (ParentReligion || religionType) {
-      navigation.navigate('QuestionDietScreen', { ParentReligion: ParentReligion, religionType: religionType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionDietScreen', { ParentReligion: ParentReligion, religionType: religionType, KosherType: null, foodtype: null, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Religion!", ToastAndroid.SHORT);
@@ -234,7 +234,7 @@ const QuestionMoreAboutChristianScreen = ({ navigation, route }) => {
             paddingHorizontal: 20,
             flexDirection: 'row',
           }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}  style={{ width: '10%' }}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: '10%' }}>
               <Image source={require('../../assets/arrowleft.png')} resizeMode='contain' />
             </TouchableOpacity>
             <View style={{ width: '80%' }}>

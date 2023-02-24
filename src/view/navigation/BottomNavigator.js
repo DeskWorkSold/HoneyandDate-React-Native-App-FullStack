@@ -132,11 +132,15 @@ const EventStack = ({ }) => (
         <Tab.Screen name='EventsScreen' component={EventsScreen} />
         <Tab.Screen name='EventDetails' component={EventDetails} />
         <Tab.Screen name='EventTickets' component={EventTickets} />
-        <Tab.Screen name='PaymentOptionScreen' component={PaymentOptionScreen} />
         <Tab.Screen name='EventTicketsBuy' component={EventTicketsBuy} />
         <Tab.Screen name='Foodmenu' component={Foodmenu} />
         <Tab.Screen name='FoodmenuDetail' component={FoodmenuDetail} />
         <Tab.Screen name='CartItems' component={CartItems} />
+        <Tab.Screen name='PaymentOptionScreen' component={PaymentOptionScreen} />
+        <Tab.Screen name='AddCardScreen' component={AddCardScreen} />
+        <Tab.Screen name='PaymentOptionTwoScreen' component={PaymentOptionTwoScreen} />
+        <Tab.Screen name='CheckoutScreen' component={CheckoutScreen} />
+        <Tab.Screen name='CheckoutTwoScreen' component={CheckoutTwoScreen} />
     </Tab.Navigator>
 )
 

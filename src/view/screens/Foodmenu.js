@@ -2,7 +2,7 @@ import { ActivityIndicator, Image, ImageBackground, SafeAreaView, ScrollView, St
 import React from 'react'
 import COLORS from '../../consts/Colors'
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/reducers/Reducers';
+import { selectEvents, selectUser } from '../../../redux/reducers/Reducers';
 import SearchTab from '../components/SearchTab';
 import firestore from '@react-native-firebase/firestore';
 import { useState } from 'react';
@@ -54,47 +54,54 @@ const data = [
 ]
 
 const Foodmenu = ({ navigation, route }) => {
-    // const { BuyTickets, paymentCard } = route.params;
+    // const { EventsId } = route.params;
+    const SelectedEvent = useSelector(selectEvents)
+    const EventsId = SelectedEvent.item.uid
+    // console.log('Selected' , Events);
+    // const EventsId = '742729abfb82b' 
     const [search, setSearch] = useState();
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState()
     const [foods, setFoods] = useState()
+    const [foodsTemp, setFoodsTemp] = useState()
     const user = useSelector(selectUser);
+    // console.log(user.uid);
 
     const fectchMenu = async () => {
         try {
             setLoading(true)
             await firestore()
                 .collection('Foods')
-                .get()
-                .then(querySnapshot => {
-                    // console.log('Total user: ', querySnapshot.size);
+                .onSnapshot(querySnapshot => {
                     const menu = [];
                     const categoryfilter = [];
                     querySnapshot.forEach((documentSnapshot) => {
-                        // console.log(documentSnapshot.data().menu);
-                        const arrydata = documentSnapshot.data().menu;
-                        // const all2 = [].concat(arrydata);
-                        // console.log(arrydata);
-                        // const res = documentSnapshot.data().menu;
-                        // res.map(())
-                        menu.push(documentSnapshot.data().menu);
-                        categoryfilter.push(documentSnapshot.data());
-                        // categoryfilter.push(documentSnapshot.data().);
-                        // menuid.push(documentSnapshot.id);
+                        const menufilter = documentSnapshot.data()
+                        if (menufilter.Eventid == EventsId) {
+                            menu.push(documentSnapshot.data());
+                        }
                     });
-                    const merge3 = menu.flat(1);
-
-                    // merge3.map(res => {
-                    //     if (res.category == 'Burgers' || res.category == 'Pizzas' || res.category == 'Cakes') {
-                    //         // console.log('===>',res);
-                    //         categoryfilter.push(res);
-                    //     }
-                    // })
-                    // console.log(categoryfilter);
-                    setCategory(categoryfilter)
-                    setFoods(merge3)
-                    // setMembershipUid(membershipsuid)
+                    setFoods(menu)
+                    setFoodsTemp(menu)
+                })
+            setLoading(false)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    const fectchCategroy = async () => {
+        try {
+            setLoading(true)
+            await firestore()
+                .collection('FoodsCategory')
+                .onSnapshot(querySnapshot => {
+                    const menu = [];
+                    const categoryfilter = [];
+                    querySnapshot.forEach((documentSnapshot) => {
+                        menu.push(documentSnapshot.data());
+                    });
+                    setCategory(menu)
                 })
             setLoading(false)
         }
@@ -103,9 +110,46 @@ const Foodmenu = ({ navigation, route }) => {
         }
     }
 
+    const filterMenu = (id) => {
+        console.log(id);
+        if (id) {
+            const test = [];
+            const newData = foods.filter((item) => {
+                if (item.categoryid == id) {
+                    console.log(item);
+                    test.push(item);
+                }
+            });
+            setFoodsTemp(test)
+        } else {
+            setFoodsTemp(foods)
+        }
+    }
+
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+            const newData = foods.filter((item) => {
+                const itemData = item.name ? item.name.toUpperCase()
+                    : ''.toUpperCase();
+                const textData = text.toUpperCase();
+                return itemData.indexOf(textData) > -1;
+            });
+            // setFilteredDataSource(newData);
+            setFoodsTemp(newData);
+            setSearch(text);
+        } else {
+            // Inserted text is blank
+            // Update FilteredDataSource with masterDataSource
+            setFoodsTemp(foods);
+            setSearch(text);
+        }
+    };
+
 
     useEffect(() => {
         fectchMenu();
+        fectchCategroy();
         // console.log('test efftec', foods);
     }, [])
     return (
@@ -173,7 +217,7 @@ const Foodmenu = ({ navigation, route }) => {
                         <TextInput
                             value={search}
                             placeholder={'Search'}
-                            onChangeText={search => setSearch(search)
+                            onChangeText={search => searchFilterFunction(search)
                             }
                             style={styles.TextInput}
                         />
@@ -196,21 +240,22 @@ const Foodmenu = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                {foods ?
-                    <ScrollView verticcal showsVerticalScrollIndicator={false}>
-                        <View style={{
-                            flexDirection: 'row',
-                            paddingHorizontal: 20,
-                            alignItems: 'center',
-                            paddingTop: 10,
-                            paddingBottom: 20
-                        }}>
-                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                {category ?
-                                    <>
-                                        {category.map((item, index) => (
-                                            // console.log(item.menu),
-                                            <TouchableOpacity key={index} style={{
+                <ScrollView verticcal showsVerticalScrollIndicator={false}>
+                    <View style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        alignItems: 'center',
+                        paddingTop: 10,
+                        paddingBottom: 20
+                    }}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {category ?
+                                <>
+                                    {category?.map((item, index) => (
+                                        // console.log(item.menu),
+                                        <TouchableOpacity
+                                            onPress={() => filterMenu(item.uid)}
+                                            key={index} style={{
                                                 marginRight: 10,
                                                 borderRadius: 10,
                                                 backgroundColor: '#FFE8E0',
@@ -222,145 +267,141 @@ const Foodmenu = ({ navigation, route }) => {
                                                 width: 120,
                                                 justifyContent: 'space-between'
                                             }}>
-                                                <Text style={{ color: '#FF4201', fontSize: 12, fontWeight: 'bold' }}>{item.category}</Text>
-                                                <Image source={{ uri: item.image }} resizeMode="cover" style={{
-                                                    width: 40,
-                                                    height: 40,
-                                                    borderRadius: 10,
-                                                    // padding:15,
-                                                    justifyContent: 'center',
-                                                }} />
-                                            </TouchableOpacity>
-                                        ))}
-                                    </>
-                                    :
-                                    null}
-                            </ScrollView>
-                        </View>
-
-
-                        <View style={{
-                            paddingHorizontal: 20,
-                        }}>
-                            <Text style={{
-                                fontSize: 16,
-                                fontWeight: 'bold',
-                                color: COLORS.black
-                            }}>Menu</Text>
-                        </View>
-
-                        <View style={{ paddingHorizontal: 20, }}>
-                            {foods ?
-                                <View style={{
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    justifyContent: "space-between",
-                                    width: '100%',
-                                    marginBottom: 50
-                                }}>
-                                    {foods.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            style={{
-                                                marginTop: 20,
-                                                width: '45%',
-                                                backgroundColor: COLORS.white,
-                                                marginBottom: 5,
+                                            <Text style={{ color: '#FF4201', fontSize: 12, fontWeight: 'bold' }}>{item?.category}</Text>
+                                            <Image source={{ uri: item?.image }} resizeMode="cover" style={{
+                                                width: 40,
+                                                height: 40,
                                                 borderRadius: 10,
-                                                // elevation:8
-                                            }}>
-                                            <TouchableOpacity
-                                                onPress={() => navigation.navigate('FoodmenuDetail', { details: item })}
-                                                style={{
-                                                    width: '100%',
-                                                }}>
-                                                <Image source={{ uri: item.image }} resizeMode='contain' style={{
-                                                    width: '100%',
-                                                    height: 120
-                                                }} />
-                                            </TouchableOpacity>
-                                            <View style={{
+                                                // padding:15,
+                                                justifyContent: 'center',
+                                            }} />
+                                        </TouchableOpacity>
+                                    ))}
+                                </>
+                                :
+                                null}
+                        </ScrollView>
+                    </View>
+
+
+                    <View style={{
+                        paddingHorizontal: 20,
+                    }}>
+                        <Text style={{
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                            color: COLORS.black
+                        }}>Menu</Text>
+                    </View>
+                    <View style={{ paddingHorizontal: 20, }}>
+                        {!foodsTemp?.length == 0 ?
+                            <View style={{
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                justifyContent: "space-between",
+                                width: '100%',
+                                marginBottom: 50
+                            }}>
+                                {foodsTemp?.map((item, index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            marginTop: 20,
+                                            width: '45%',
+                                            backgroundColor: COLORS.white,
+                                            marginBottom: 5,
+                                            borderRadius: 10,
+                                            // elevation:8
+                                        }}>
+                                        <TouchableOpacity
+                                            onPress={() => navigation.navigate('FoodmenuDetail', { details: item })}
+                                            style={{
                                                 width: '100%',
-                                                // backgroundColor:COLORS.main,
-                                                paddingLeft: 20,
-                                                marginVertical: 3,
                                             }}>
-                                                <Text style={{
-                                                    color: COLORS.black,
-                                                    fontSize: 15
-                                                }}>{item.name}</Text>
-                                            </View>
+                                            <Image source={{ uri: item?.image1 }} resizeMode='contain' style={{
+                                                width: '100%',
+                                                height: 120
+                                            }} />
+                                        </TouchableOpacity>
+                                        <View style={{
+                                            width: '100%',
+                                            // backgroundColor:COLORS.main,
+                                            paddingLeft: 20,
+                                            marginVertical: 3,
+                                        }}>
+                                            <Text style={{
+                                                color: COLORS.black,
+                                                fontSize: 15
+                                            }}>{item?.name}</Text>
+                                        </View>
+                                        <View style={{
+                                            width: '70%',
+                                            paddingHorizontal: 20,
+                                            flexDirection: 'row',
+                                            marginBottom: 3,
+                                            alignItems: 'center'
+                                        }}>
+                                            <Text style={{ paddingRight: 5, fontSize: 12, }}>15min</Text>
                                             <View style={{
-                                                width: '70%',
-                                                paddingHorizontal: 20,
                                                 flexDirection: 'row',
-                                                marginBottom: 3,
                                                 alignItems: 'center'
                                             }}>
-                                                <Text style={{ paddingRight: 5, fontSize: 12, }}>15min</Text>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center'
-                                                }}>
-                                                    <Image source={require('../../assets/star.png')} style={{
-                                                        width: 15,
-                                                        height: 15,
-                                                        tintColor: COLORS.main,
-                                                        marginRight: 3
-                                                    }} />
-                                                    <Text style={{ fontSize: 12 }}>{item.stars}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{
-                                                width: '100%',
-                                                flexDirection: 'row',
-                                                marginBottom: 3,
-                                                paddingHorizontal: 20
-                                            }}>
-                                                <View style={{
-                                                    width: '70%',
-                                                    // backgroundColor: COLORS.gray
-                                                }}>
-                                                    <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>${item.price}</Text>
-                                                </View>
-                                                <TouchableOpacity style={{
-                                                    width: '30%',
-                                                    backgroundColor: COLORS.main,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    paddingVertical: 5,
-                                                    borderRadius: 5,
-                                                    marginTop: -10
-                                                }}>
-                                                    <Image source={require('../../assets/whishlist.png')} style={{
-                                                        width: 15,
-                                                        height: 15,
-                                                        tintColor: COLORS.black,
-                                                        marginRight: 3
-                                                    }} />
-                                                </TouchableOpacity>
+                                                <Image source={require('../../assets/star.png')} style={{
+                                                    width: 15,
+                                                    height: 15,
+                                                    tintColor: COLORS.main,
+                                                    marginRight: 3
+                                                }} />
+                                                <Text style={{ fontSize: 12 }}>{item?.stars}</Text>
                                             </View>
                                         </View>
+                                        <View style={{
+                                            width: '100%',
+                                            flexDirection: 'row',
+                                            marginBottom: 3,
+                                            paddingHorizontal: 20,
+                                        }}>
+                                            <View style={{
+                                                width: '70%',
+                                                // backgroundColor: COLORS.gray
+                                            }}>
+                                                <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>${item?.PricePerItem}</Text>
+                                            </View>
+                                            <TouchableOpacity style={{
+                                                width: '30%',
+                                                backgroundColor: COLORS.main,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                paddingVertical: 5,
+                                                borderRadius: 5,
+                                                marginTop: -10
+                                            }}>
+                                                <Image source={require('../../assets/whishlist.png')} style={{
+                                                    width: 15,
+                                                    height: 15,
+                                                    tintColor: COLORS.black,
+                                                    marginRight: 3
+                                                }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
 
-                                    ))}
+                                ))}
 
-                                </View>
-                                :
-                                <Text>loading...</Text>
-                            }
-                        </View>
-
-                    </ScrollView>
-                    :
-                    <View style={{
-                        borderRadius: 10,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                    }}>
-                        <ActivityIndicator size="small" color={COLORS.main} animating={loading} />
+                            </View>
+                            :
+                            <View style={{
+                                flex:1,
+                                justifyContent: 'center',
+                                alignItems:'center',
+                                height:'100%'
+                            }}>
+                                <ActivityIndicator size="large" color={COLORS.main} animating={true} />
+                            </View>
+                        }
                     </View>
-                }
+
+                </ScrollView>
             </View>
         </SafeAreaView>
     )

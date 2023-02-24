@@ -160,7 +160,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
     const fectchCategroy = async () => {
         try {
             await firestore()
-                .collection('Foods')
+                .collection('FoodsCategory')
                 .onSnapshot(querySnapshot => {
                     const categoryfilter = [];
                     querySnapshot.forEach((documentSnapshot) => {
@@ -394,7 +394,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
             TicketModaldata.push(Data);
 
             // console.log('final data', nopeee);
-            setLocationModalVisible(false);
+            // setLocationModalVisible(false);
         }
 
     }
@@ -453,11 +453,24 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
     }
 
     const OnSubmitEvents = async () => {
-        const category = FoodType[foodTypeindex].category
-        const categoryImage = FoodType[foodTypeindex].image
-        const Event = yourEvents[selectEvent].uid
+        const categoryName = FoodType[foodTypeindex].category
+        const categoryid = FoodType[foodTypeindex].uid
+        // const categoryImage = FoodType[foodTypeindex].image
+        const Eventid = yourEvents[selectEvent].uid
+        // console.log(
+        //     category,
+        //     'id here',categoryid,
+        //     categoryImage,
+        //     Eventid,
+        //     image1,
+        //     name,
+        //     description,
+        //     PricePerItem,
+        //     DeliveryTime,
+        // );
+        // return;
         try {
-            // setUploading(true)
+            setUploading(true)
             const imageUrl = await uploadImage();
             const secimageUrl = await uploadSecondImage();
             const thirdimageUrl = await uploadThirdImage();
@@ -465,9 +478,9 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
             const fifthimageUrl = await uploadFifthImage();
             const sixthimageUrl = await uploadSixthImage();
             var Data = new Object();
-            Data.category = category;
-            Data.categoryImage = categoryImage;
-            Data.EventUid = Event;
+            Data.categoryid = categoryid;
+            Data.categoryName = categoryName;
+            Data.Eventid = Eventid;
             Data.name = name;
             Data.description = description;
             Data.PricePerItem = PricePerItem;
@@ -475,7 +488,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
             Data.owneruid = currentuser.uid;
             Data.ownerName = currentuser.Name;
             Data.owneremail = currentuser.email;
-            const uid = Math.random().toString(16).slice(2);
+            Data.uid = Math.random().toString(16).slice(2);
             Data.image1 = imageUrl;
             Data.secimageUrl = secimageUrl;
             Data.thirdimageUrl = thirdimageUrl;
@@ -484,45 +497,16 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
             Data.sixthimageUrl = sixthimageUrl;
             // console.log(Data.category);
             // return;
-            if (category == 'Burgers') {
-                try {
-                    firestore()
-                        .collection('Foods').doc(123).set({
-                            menu: firestore.FieldValue.arrayUnion('Data'),
-                        }, { merge: true })
-                        .then(() => {
-                            ToastAndroid.show('Food Added Successfully', ToastAndroid.SHORT)
-                            RefereshForm();
-                        });
-                }
-                catch (e) {
-                    console.log('burger error', e);
-                }
-            }
-            // else if (category == 'Pizzas') {
-            //     firestore()
-            //         .collection('Foods')
-            //         .doc(456)
-            //         .set({
-            //             menu: firestore.FieldValue.arrayUnion(Data),
-
-            //         }, { merge: true })
-            //         .then(() => {
-            //             ToastAndroid.show('Food Added Successfully', ToastAndroid.SHORT)
-            //             RefereshForm();
-            //         })
-            // }
-            // firestore()
-            //     .collection('Foods')
-            //     .doc(789)
-            //     .update({
-            //         menu: firestore.FieldValue.arrayUnion({ Data })
-            //     })
-            //     .then(() => {
-            //         ToastAndroid.show('Food Added Successfully', ToastAndroid.SHORT)
-            //         RefereshForm();
-            //     })
-            // setUploading(false)
+            firestore()
+                .collection('Foods')
+                .doc(Data.uid)
+                .set(Data)
+                .then(() => {
+                    ToastAndroid.show('Food created successfully', ToastAndroid.SHORT)
+                    RefereshForm();
+                })
+            // // setImage(null)
+            setUploading(false)
         } catch (error) {
             console.log('error test1', error);
         }
@@ -718,16 +702,17 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
 
     const RefereshForm = () => {
         // setUploading(false)
-        setName()
-        setDescription()
-        setPricePerItem()
-        setDeliveryTime()
+        setName('')
+        setDescription('')
+        setPricePerItem('')
+        setDeliveryTime('')
         setImage1(null)
         setImage2(null)
         setImage3(null)
         setImage4(null)
         setImage5(null)
         setImage6(null)
+        // setYourEvents('')
         // console.log('change location ==>', location.latitude);
     }
 
@@ -1812,7 +1797,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
 
                 </ScrollView>
             </View >
-        </SafeAreaView >
+        </SafeAreaView>
     )
 }
 

@@ -9,14 +9,17 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
+import { useEffect } from 'react';
 
 
 
 const CELL_COUNT = 6
 
-const LoginWithOTPScreen = ({ navigation , route }) => {
-  const {confirmation, phoneNum} = route.params;
+const LoginWithOTPScreen = ({ navigation, route }) => {
+  const { confirmation, phoneNum } = route.params;
   // console.log('secscreen==>',confirmation);
+  const [authUser, setAuthUser] = useState('');
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -28,11 +31,11 @@ const LoginWithOTPScreen = ({ navigation , route }) => {
 
 
   const getCodeHandler = () => {
-    if(value == ''){
-      ToastAndroid.show("Code cannot be empty" , ToastAndroid.SHORT);
+    if (value == '') {
+      ToastAndroid.show("Code cannot be empty", ToastAndroid.SHORT);
       return false;
     }
-    else{
+    else {
       onConfirmPressed();
       // console.log(value);
     }
@@ -40,19 +43,35 @@ const LoginWithOTPScreen = ({ navigation , route }) => {
 
 
   const onConfirmPressed = async () => {
-    try{
-      const response = await confirmation.confirm(value)
+    try {
+      const response = await confirmation?.confirm(value)
       .then((data) => {
-        // console.log('==>',data);
+        console.log('==>', data);
       })
-      ToastAndroid.show('User Sign In Succesfully' , ToastAndroid.SHORT);
       navigation.navigate('QuestionPhotoScreen')
+      ToastAndroid.show('User Sign In Succesfully', ToastAndroid.SHORT);
     }
-    catch(error){
-      console.log('Invalid code: ' + error);
+    catch (error) {
       ToastAndroid.show('Invalid code' + ToastAndroid.SHORT)
+      console.log('Invalid code: ' + error);
     }
   }
+
+  function onAuthStateChanged(user) {
+    // console.log('user: ', user);
+    setAuthUser(user)
+    if (user) {
+      console.log('user login Succesfully', user);
+      ToastAndroid.show('User Sign In Succesfully', ToastAndroid.SHORT);
+      navigation.navigate('QuestionPhotoScreen')
+    }
+
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   return (
     <SafeAreaView>
@@ -291,7 +310,7 @@ const styles = StyleSheet.create({
     height: 40,
     lineHeight: 38,
     fontSize: 24,
-    marginHorizontal:4,
+    marginHorizontal: 4,
     borderBottomWidth: 1,
     borderColor: COLORS.gray,
     textAlign: 'center',

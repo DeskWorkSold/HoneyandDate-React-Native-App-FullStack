@@ -116,14 +116,15 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
           <View style={{
             paddingTop: 20,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            marginHorizontal:20
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={160} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => onBioPress()}
+              <CustomeButton width={160} onpress={() => onBioPress()}
                 title={'Continue'} />
             </View>
 
@@ -159,7 +160,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '20%',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal:20
   },
   NumberInput: {
     flexDirection: 'row',

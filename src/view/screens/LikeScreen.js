@@ -76,7 +76,7 @@ const LikeScreen = ({ navigation }) => {
           paddingTop: 80
         }}>
           <View style={{ paddingVertical: 5 }}>
-            <CustomeButton title={'Get extra match'}
+            <CustomeButton title={'Get extra match'} width={329}
               onpress={() => navigation.navigate('LikeDetailScreen')}
             />
           </View>

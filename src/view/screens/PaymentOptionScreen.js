@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { RadioButton } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { PaymentMethod } from '../../../redux/reducers/Reducers';
 
 const PaymentType = [
     {
@@ -27,18 +29,21 @@ const PaymentType = [
     },
 ]
 const PaymentOptionScreen = ({ navigation, route }) => {
-    const { BuyTickets } = route.params;
+    // const { BuyTickets } = route.params;
     const [name, setName] = useState();
     const [checked, setChecked] = useState(false); //initial choice
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+    const dispatch = useDispatch()
 
-    const onCongratsBuyTickets = () => {
+    const AddYourCard = () => {
         const paymentCard = PaymentType[selectedCategoryIndex].name
-        if(paymentCard){
-            console.log(paymentCard, BuyTickets);
-            navigation.navigate('EventTicketsBuy', { BuyTickets: BuyTickets, paymentCard: paymentCard })
+        if (paymentCard) {
+            dispatch(PaymentMethod(paymentCard))
+            // console.log(paymentCard, BuyTickets);
+            navigation.navigate('AddCardScreen');
+            // navigation.navigate('AddCardScreen')
         }
-        else{
+        else {
             ToastAndroid.show("Please select payment type!", ToastAndroid.SHORT);
         }
     }
@@ -91,115 +96,132 @@ const PaymentOptionScreen = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{
+            flex: 1, backgroundColor: COLORS.white
+        }}>
             <StatusBar backgroundColor={COLORS.black} />
-            <View style={{
-                backgroundColor: COLORS.white
-            }}>
-                <View style={styles.container}>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        height: 80,
-                        paddingHorizontal: 20,
-                    }}>
-                        <View style={{ width: '20%' }}>
-                            <TouchableOpacity>
-                                <Image source={require('../../assets/arrowleft.png')} resizeMode='contain'
-                                    style={{
-                                        height: 45,
-                                        color: COLORS.black
-                                    }} />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ width: '60%', alignItems: 'center', }}>
-                            <Text style={{
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                color: COLORS.black
-                            }}>Checkout</Text>
-                        </View>
-
-                        <View style={{ width: '20%', alignItems: 'flex-end', paddingHorizontal: 20 }}>
-                        </View>
-                    </View>
-
-
-                    <View style={{
-                        paddingHorizontal: 20
-                    }}>
-                        <Text style={{
-                            fontSize: 18,
-                            color: COLORS.black,
-                            fontWeight: 'bold'
-                        }}>
-                            Save Cards
-                        </Text>
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        backgroundColor: COLORS.white,
-                        height: 80,
-                        paddingHorizontal: 20,
-                    }}>
+            <View>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.container}>
                         <View style={{
-                            width: '70%',
-
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            height: 80,
+                            paddingHorizontal: 20,
                         }}>
-                            <Text>
-                                Add a card to proceed payment through credit card
+                            <View style={{ width: '20%' }}>
+                                <TouchableOpacity>
+                                    <Image source={require('../../assets/arrowleft.png')} resizeMode='contain'
+                                        style={{
+                                            height: 45,
+                                            color: COLORS.black
+                                        }} />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={{ width: '60%', alignItems: 'center', }}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black
+                                }}>Checkout</Text>
+                            </View>
+
+                            <View style={{ width: '20%', alignItems: 'flex-end', paddingHorizontal: 20 }}>
+                            </View>
+                        </View>
+
+
+                        <View style={{
+                            paddingHorizontal: 20
+                        }}>
+                            <Text style={{
+                                fontSize: 18,
+                                color: COLORS.black,
+                                fontWeight: 'bold'
+                            }}>
+                                Save Cards
                             </Text>
                         </View>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('AddCardScreen')}
-                            style={{
-                                width: '30%',
-                            }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: COLORS.white,
+                            height: 80,
+                            paddingHorizontal: 20,
+                        }}>
                             <View style={{
-                                paddingHorizontal: 10,
-                                padding: 10,
+                                width: '70%',
+                            }}>
+                                <Text>
+                                    Add a card to proceed payment through credit card
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => AddYourCard()}
+                                style={{
+                                    width: '30%',
+                                }}>
+                                <View style={{
+                                    paddingHorizontal: 10,
+                                    padding: 10,
+                                    backgroundColor: COLORS.main,
+                                    borderRadius: 10,
+                                    alignItems: 'center',
+                                }}>
+                                    <Text style={{
+                                        color: COLORS.black
+                                    }}>Add card</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{
+                            paddingHorizontal: 20
+                        }}>
+                            <Text style={{
+                                fontSize: 18,
+                                color: COLORS.black,
+                                fontWeight: 'bold'
+                            }}>
+                                Other ways to pay
+                            </Text>
+                        </View>
+
+                        <View>
+                            <ListPaymentTypes value={selectedCategoryIndex}
+                                setValue={setSelectedCategoryIndex} />
+                        </View>
+
+
+                    </View>
+
+                    <View style={{
+                        paddingTop: 20,
+                        alignItems: 'center',
+                        // height: '15%'
+                    }}>
+                        <TouchableOpacity disabled activeOpacity={0.7}>
+                            <View style={{
                                 backgroundColor: COLORS.main,
+                                width: 350,
+                                height: 50,
                                 borderRadius: 10,
                                 alignItems: 'center',
+                                justifyContent: 'center',
+                                borderWidth: 1,
+                                borderColor: COLORS.transparent
                             }}>
                                 <Text style={{
-                                    color: COLORS.black
-                                }}>Add card</Text>
+                                    color: COLORS.black,
+                                }}>Check Out</Text>
                             </View>
                         </TouchableOpacity>
+                        {/* <CustomeButton
+                            title={'Check Out'} bcolor={COLORS.main} onpress={() => onCongratsBuyTickets()} /> */}
                     </View>
-                    <View style={{
-                        paddingHorizontal: 20
-                    }}>
-                        <Text style={{
-                            fontSize: 18,
-                            color: COLORS.black,
-                            fontWeight: 'bold'
-                        }}>
-                            Other ways to pay
-                        </Text>
-                    </View>
-
-                    <View>
-                        <ListPaymentTypes value={selectedCategoryIndex}
-                            setValue={setSelectedCategoryIndex} />
-                    </View>
-
-
-                </View>
-
-                <View style={{
-                    paddingTop: 20,
-                    alignItems: 'center',
-                    height: '15%'
-                }}>
-                    <CustomeButton
-                        title={'Check Out'} bcolor={COLORS.main} onpress={() => onCongratsBuyTickets()} />
-                </View>
+                </ScrollView>
 
             </View>
         </SafeAreaView>
@@ -211,7 +233,7 @@ export default PaymentOptionScreen
 const styles = StyleSheet.create({
     container: {
         backgroundColor: COLORS.white,
-        height: '85%'
+        // height: '85%'
     },
     NumberInput: {
         flexDirection: 'row',

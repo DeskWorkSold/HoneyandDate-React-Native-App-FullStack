@@ -99,8 +99,6 @@ const QuestionMusicScreen = ({ navigation, route }) => {
     <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
-
-
         <View style={styles.contentContainer}>
 
           <View style={{
@@ -139,7 +137,9 @@ const QuestionMusicScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View>
+            <View style={{
+              alignItems: 'center'
+            }}>
               <ListMusic data={MusicData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '60%',
-    alignItems: 'center'
+    // alignItems: 'center'
   },
   NumberInput: {
     flexDirection: 'row',

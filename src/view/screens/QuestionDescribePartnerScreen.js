@@ -192,6 +192,7 @@ const QuestionDescribePartnerScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 30,
+            alignItems:'center'
           }}>
             <Image source={require('../../assets/describe2.png')} resizeMode='contain' style={{
               width: 250,
@@ -228,7 +229,9 @@ const QuestionDescribePartnerScreen = ({ navigation, route }) => {
 
         <View style={styles.footer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListDiscribePartner data={DescribeyouData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -405,12 +408,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: '36%',
-    alignItems: 'center',
+    // alignItems: 'center',
     // backgroundColor:'red'
   },
   footer: {
     height: '64%',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   NumberInput: {
     flexDirection: 'row',

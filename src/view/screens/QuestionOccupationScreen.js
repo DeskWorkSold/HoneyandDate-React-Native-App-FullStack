@@ -137,96 +137,114 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.Options}>
-            <Text>(Optionals)</Text>
-          </View>
-
-          <View style={[styles.NumberInput, { marginTop: -0 }]}>
-            <TextInput
-              value={occupation}
-              placeholder={'Company name or type'}
-              // error={inputfirstName}
-              onChangeText={occupation => setoccupation(occupation)
-              }
-              style={styles.TextInput}
-            />
-          </View>
-
-          <View style={styles.NumberInput}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
-                marginRight: 5
-              }} />
-              <TextInput
-                value={type}
-                placeholder={'Type of Company'}
-                onChangeText={type => setType(type)
-                }
-                style={styles.TextInput}
-              />
-            </View>
-            <View style={{
-              alignItems: 'flex-end'
-            }}>
-              <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
-                width: 20,
-                height: 20
-              }} />
-            </View>
-          </View>
-
-          <View>
-            <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
-              setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
-          </View>
-
-
-
-          <View style={styles.NumberInput}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
-                marginRight: 5
-              }} />
-              <TextInput
-                value={position}
-                placeholder={'Position in Company'}
-                onChangeText={position => setposition(position)
-                }
-                style={styles.TextInput}
-              />
-            </View>
-            <View style={{
-              alignItems: 'flex-end'
-            }}>
-              <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
-                width: 20,
-                height: 20
-              }} />
-            </View>
-          </View>
-
-          <View>
-            <ListTestimonial data={PositionTestimonial} value={selectedPositionIndex}
-              setValue={setSelectedPositionIndex} cancle={require('../../assets/cross.png')} />
-          </View>
-
-
           <View style={{
-            paddingTop: 50,
-            paddingBottom: 10,
-            flexDirection: 'row'
+            // alignItems: 'center',
+            // paddingHorizontal:20
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => SkipScreen()}
-                title={'Skip'} bcolor={COLORS.light} />
+            <View style={styles.Options}>
+              <Text>(Optionals)</Text>
             </View>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => onInterestScreen()}
-                title={'Continue'} />
+            <View style={{
+              alignItems: 'center',
+            }}>
+              <View style={[styles.NumberInput, { marginTop: -0, }]}>
+                <TextInput
+                  value={occupation}
+                  placeholder={'Company name or type'}
+                  // error={inputfirstName}
+                  onChangeText={occupation => setoccupation(occupation)
+                  }
+                  style={styles.TextInput}
+                />
+              </View>
+            </View>
+            <View style={{
+              alignItems: 'center',
+            }}>
+            <View style={styles.NumberInput}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
+                  marginRight: 5
+                }} />
+                <TextInput
+                  value={type}
+                  placeholder={'Type of Company'}
+                  onChangeText={type => setType(type)
+                  }
+                  style={styles.TextInput}
+                />
+              </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
+                  width: 20,
+                  height: 20
+                }} />
+              </View>
+            </View>
+            </View>
+
+            <View style={{
+              paddingLeft:20
+            }}>
+              <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
+                setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
+            </View>
+
+
+            <View style={{
+              alignItems: 'center',
+            }}>
+            <View style={styles.NumberInput}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
+                  marginRight: 5
+                }} />
+                <TextInput
+                  value={position}
+                  placeholder={'Position in Company'}
+                  onChangeText={position => setposition(position)
+                  }
+                  style={styles.TextInput}
+                />
+              </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
+                  width: 20,
+                  height: 20
+                }} />
+              </View>
+            </View>
+            </View>
+
+            <View style={{
+              paddingLeft:20
+            }}>
+              <ListTestimonial data={PositionTestimonial} value={selectedPositionIndex}
+                setValue={setSelectedPositionIndex} cancle={require('../../assets/cross.png')} />
+            </View>
+
+
+            <View style={{
+              paddingTop: 50,
+              paddingBottom: 10,
+              flexDirection: 'row'
+            }}>
+              <View style={{ marginHorizontal: 5 }}>
+                <CustomeButton width={170} onpress={() => SkipScreen()}
+                  title={'Skip'} bcolor={COLORS.light} />
+              </View>
+              <View style={{ marginHorizontal: 5 }}>
+                <CustomeButton width={170} onpress={() => onInterestScreen()}
+                  title={'Continue'} />
+              </View>
+
             </View>
 
           </View>
-
         </ScrollView>
       </View>
 
@@ -239,7 +257,7 @@ export default QuestionOccupationScreen
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor: COLORS.white,
     height: '100%',
   },
@@ -263,7 +281,8 @@ const styles = StyleSheet.create({
   },
   Options: {
     marginTop: 0,
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    paddingLeft:20,
     width: 340,
     borderRadius: 5,
   },

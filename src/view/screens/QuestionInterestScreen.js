@@ -136,7 +136,9 @@ const QuestionInterestScreen = ({ navigation, route }) => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
 
-          <View >
+          <View style={{
+            paddingLeft:20
+          }}>
             <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
               setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
           </View>

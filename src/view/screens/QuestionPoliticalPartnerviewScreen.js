@@ -135,7 +135,9 @@ const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
 
           <ScrollView showsVerticalScrollIndicator={false}>
 
-            <View>
+            <View style={{
+              alignItems: 'center'
+            }}>
               <ListPolitics data={PoliticalData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '60%',
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingTop: 20,
   },
   NumberInput: {

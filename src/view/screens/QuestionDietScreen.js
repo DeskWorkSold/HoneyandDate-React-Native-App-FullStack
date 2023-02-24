@@ -103,6 +103,7 @@ const QuestionDietScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
+            alignItems:'center'
           }}>
             <Image source={require('../../assets/diet.png')} resizeMode='contain' style={{
               width: 220,
@@ -131,7 +132,9 @@ const QuestionDietScreen = ({ navigation, route }) => {
 
           <ScrollView showsVerticalScrollIndicator={false}>
 
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListEducation data={dietData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   footer: {
     alignItems: 'center'

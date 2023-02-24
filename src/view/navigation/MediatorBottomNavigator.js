@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MediatorEditEventScreen from '../screens/MediatorLogin/MediatorEditEventScreen';
 import MediatorCreateServices from '../screens/MediatorLogin/MediatorCreateServices';
 import MediatorCreateFoodScreen from '../screens/MediatorLogin/MediatorCreateFoodScreen';
+import MediatorEditFoodScreen from '../screens/MediatorLogin/MediatorEditFoodScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -51,7 +52,7 @@ const HomeStack = ({ navigation }) => (
     }}>
         <Tab.Screen name='MediatorDashboardScreen' component={MediatorDashboardScreen} />
         <Tab.Screen name='MediatorEditEventScreen' component={MediatorEditEventScreen} />
-        {/* <Tab.Screen name='MessageScreen' component={MessageScreen} /> */}
+        <Tab.Screen name='MediatorEditFoodScreen' component={MediatorEditFoodScreen} />
     </Tab.Navigator>
 )
 const MediatorCreateStack = ({ navigation }) => (

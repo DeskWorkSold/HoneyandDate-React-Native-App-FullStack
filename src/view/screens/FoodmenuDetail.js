@@ -1,14 +1,15 @@
-import { ActivityIndicator, Image, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import COLORS from '../../consts/Colors'
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, ADD_ITEM, selectUser } from '../../../redux/reducers/Reducers';
+import { addToCart, selectaddToCart, selectUser } from '../../../redux/reducers/Reducers';
 import SearchTab from '../components/SearchTab';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import CustomeButton from '../components/CustomeButton';
+import { addItemToCart } from '../../../redux/reducers/actions/action';
 
 const data = [
     {
@@ -65,6 +66,16 @@ const FoodmenuDetail = ({ navigation, route }) => {
     const [foods, setFoods] = useState()
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
+    const AddToCard = useSelector(selectaddToCart)
+    console.log(AddToCard);
+
+    //for checked if food is already check 
+    // const cartItems = useSelector(selectaddToCart);
+
+
+    // const isFoodInCart = (food, cartItems) => Boolean(cartItems.find((item) => item.title == food.title));
+
+
 
 
 
@@ -148,7 +159,7 @@ const FoodmenuDetail = ({ navigation, route }) => {
             Data.Totalprice = totalprice
         }
         // console.log(Data);
-        navigation.navigate('CartItems')
+        // navigation.navigate('CartItems')
         // dispatch(addToCart(Data))
         // const selectItem = (item , checkboxValue) => dispatch({
         //     type: 'ADD_TO_CART',
@@ -158,6 +169,61 @@ const FoodmenuDetail = ({ navigation, route }) => {
         //   })
     }
 
+    const selectItem = (qty) => {
+        var Data = new Object();
+        Data.uid = details.uid;
+        Data.DeliveryTime = details.DeliveryTime;
+        Data.Eventid = details.Eventid;
+        Data.PricePerItem = details.PricePerItem;
+        Data.categoryName = details.categoryName;
+        Data.categoryid = details.categoryid;
+        Data.description = details.description;
+        Data.image1 = details.image1;
+        Data.name = details.name;
+        Data.owneruid = details.owneruid;
+        // console.log('=====',details);
+        // Data.ad28b0cbfc7218 = details.ad28b0cbfc7218;
+        Data.qty = qty;
+        if (qty > 1) {
+            const totalprice = details.PricePerItem * qty
+            // console.log(totalprice.toFixed(2));
+            Data.Totalprice = totalprice.toFixed(0)
+        }
+        else {
+            const totalprice = details.PricePerItem
+            // console.log(totalprice);
+            Data.Totalprice = totalprice
+        }
+        console.log(Data);
+        dispatch(addToCart(Data))
+        ToastAndroid.show('Your Cart Updated Check Out', ToastAndroid.SHORT)
+
+        // if (!AddToCard.length == 0) {
+        //     let mutatedArr = AddToCard.map((item) => {
+        //         // console.log(item);
+        //         if (item.uid == Data.uid) {
+        //             item.qty += qty;
+        //             // item.Totalprice = item.PricePerItem * item.PricePerItem;
+        //             // item.qty += qty;
+        //         }
+        //         return item
+        //     })
+        //     mutatedArr.forEach((item) => {
+        //         item.Totalprice = (item.PricePerItem * item.qty)
+        //     })
+        //     console.log('======>',mutatedArr);
+        // }
+        // else {
+        //     dispatch(addToCart(Data))
+        // }
+        // dispatch(addToCart(mutatedArr))
+        // console.log('======>', qtyupdate)
+        // let Totalprice = 0;
+
+
+        // let PricePerItem = 0;
+    }
+
 
     useEffect(() => {
         // fectchMenu();
@@ -165,14 +231,47 @@ const FoodmenuDetail = ({ navigation, route }) => {
     }, [])
     return (
         <SafeAreaView style={{ backgroundColor: COLORS.white }}>
-            <View style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '40%',
-            }}>
-                <ImageBackground source={{ uri: details.image }} resizeMode="cover" style={{ height: '100%', width: '100%' }}>
-                    <View style={{ flexDirection: 'row', paddingLeft: 10, paddingVertical: 10, }}>
-                        <Icon name='arrow-back' size={20} onPress={navigation.goBack} color={COLORS.main} />
+            <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '40%',
+                }}
+            >
+                <ImageBackground source={{ uri: details.image1 }} resizeMode="cover" style={{ height: '100%', width: '100%' }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        paddingVertical: 20,
+                        justifyContent: 'space-between',
+                        paddingHorizontal: 20,
+                    }}>
+                        <Icon name='arrow-back' size={20} onPress={() => navigation.navigate('Foodmenu')} color={COLORS.main} />
+
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('CartItems')}
+                            style={{
+                                padding: 10,
+                                backgroundColor: COLORS.main,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                paddingVertical: 5,
+                                borderRadius: 5,
+                                marginTop: -10,
+                            }}>
+                            <View style={{ flexDirection: 'row', }}>
+                                <View style={{ fontSize: 20, lineHeight: 30, color: '#000', alignItems: 'flex-start' }}>
+                                    <Image source={require('../../assets/whishlist.png')} style={{
+                                        width: 15,
+                                        height: 15,
+                                        tintColor: COLORS.black,
+                                        marginRight: 3
+                                    }} />
+                                </View>
+                                {!AddToCard?.length == 0 &&
+                                    <Text style={{ fontSize: 11, lineHeight: 18, color: '#000' }}>{AddToCard?.length}</Text>
+                                }
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </ImageBackground>
             </View>
@@ -192,7 +291,7 @@ const FoodmenuDetail = ({ navigation, route }) => {
                     alignItems: 'center',
                     paddingTop: 5
                 }}>
-                    <Text style={{ fontSize: 12, paddingRight: 5, }}>24min</Text>
+                    <Text style={{ fontSize: 12, paddingRight: 5, }}>{details.DeliveryTime}</Text>
                     <View style={{
                         flexDirection: 'row',
                         // alignItems: 'center'
@@ -299,18 +398,19 @@ const FoodmenuDetail = ({ navigation, route }) => {
                             }}>+</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                    <View style={{ width: '50%', alignItems: 'flex-end', }}>
                         <Text style={{
                             fontWeight: 'bold',
                             fontSize: 20,
                             color: COLORS.black
                         }}>
-                            ${details.price}
+                            ${qty > 0  ? details.PricePerItem * qty : details.PricePerItem}
+                            <Text style={{color:COLORS.gray2}}>.00</Text>
                         </Text>
                     </View>
                 </View>
                 <View style={{ marginVertical: 40, alignItems: 'center' }}>
-                    <CustomeButton title={'ADD TO CARD'} onpress={() => onOrderMenu()} />
+                    <CustomeButton title={'ADD TO CARD'} onpress={() => selectItem(qty)} />
                 </View>
             </View>
             {/* </ScrollView> */}

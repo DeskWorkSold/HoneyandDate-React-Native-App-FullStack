@@ -100,6 +100,7 @@ const QuestionExersizePartnerScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 30,
+            alignItems:'center'
           }}>
             <Image source={require('../../assets/exersize2.png')} resizeMode='contain' style={{
               width: 220,
@@ -134,7 +135,9 @@ const QuestionExersizePartnerScreen = ({ navigation, route }) => {
 
           <ScrollView showsVerticalScrollIndicator={false}>
 
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListEducation data={ExerciseData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   footer: {
     alignItems: 'center'

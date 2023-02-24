@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View } from 'react-native'
+import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View } from 'react-native'
 import React from 'react'
 import COLORS from '../../../consts/Colors'
 import { useState } from 'react';
@@ -7,6 +7,8 @@ import { logout, mediatorLogin, selectMediatorUser } from '../../../../redux/red
 import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 const MediatorProfileScreen = ({navigation}) => {
     const mediator = useSelector(selectMediatorUser);
@@ -48,7 +50,7 @@ const MediatorProfileScreen = ({navigation}) => {
                     }}>
                         <View style={{
                             flexDirection: 'row',
-                            paddingHorizontal: 20,
+                            paddingLeft: 20,
                             paddingBottom: 20
                         }}>
                             <View style={{
@@ -185,6 +187,8 @@ export default MediatorProfileScreen
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        width:width,
+        height:height,
     },
     NumberInput: {
         flexDirection: 'row',

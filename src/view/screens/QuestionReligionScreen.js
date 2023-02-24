@@ -102,7 +102,6 @@ const QuestionReligionScreen = ({ navigation, route }) => {
   const [showtick7, setShowtick7] = useState('');
   const [Christian, setChristian] = useState('');
   const [Jewaish, setJewaish] = useState('');
-  // console.log(Experince,Nature, PartnerNature);
 
 
 

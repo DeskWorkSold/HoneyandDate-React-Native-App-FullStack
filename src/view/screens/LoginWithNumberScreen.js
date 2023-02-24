@@ -44,12 +44,12 @@ const LoginWithNumberScreen = ({ navigation }) => {
     // return;
     try {
       setUploading(true);
-      const response = await auth().signInWithPhoneNumber(phoneNumber).then((res) => {
-        // console.log('===>', res);
-        navigation.navigate('LoginWithOTPScreen', { confirmation: res, phoneNum: phoneNumber });
-      });
-      ToastAndroid.show("OTP Send Successfully!", ToastAndroid.SHORT);
+      const response = await auth().signInWithPhoneNumber(phoneNumber);
+      // console.log('Phone Number', response);
       setUploading(false)
+
+      navigation.navigate('LoginWithOTPScreen', { confirmation: response, phoneNum: phoneNumber });
+      ToastAndroid.show("OTP Send Successfully!", ToastAndroid.SHORT);
     } catch (error) {
       console.log("OTP SEND ERROR" + error);
       ToastAndroid.show("OTP SEND ERROR" + error, ToastAndroid.SHORT);

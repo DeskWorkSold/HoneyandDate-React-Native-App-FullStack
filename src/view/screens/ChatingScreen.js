@@ -24,6 +24,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import MapViewDirections from 'react-native-maps-directions';
 import { set } from 'immer/dist/internal';
 import GoogleMapKey from '../../consts/GoogleMapKey';
+import moment from 'moment';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -37,17 +38,18 @@ const ChatingScreen = ({ navigation, route }) => {
     const uid = route.params.uid;
     const [messages, setMessages] = useState([]);
     const [imageData, setImageData] = useState(null);
-    const [imageUrl, setImageUrl] = useState('');
-    const [category, setCategory] = useState('');
+    const [imageUrl, setImageUrl] = useState(null);
+    const [category, setCategory] = useState(null);
+
     const [rendering, setRendering] = useState(false);
     const Currentuser = useSelector(selectUser);
     const [transferred, setTransferred] = useState(0);
     const [modal, setModal] = useState(false);
     const [sendPorposal, setSendPorposal] = useState();
-    const [date, setDate] = useState();
-    const [discountStartDate, setDiscountStartDate] = useState('');
-    const [DateVisibility, setDateVisibility] = useState(false);
-    const [isDiscountStartDatePickerVisible, setDiscountStartDatePickerVisibility] = useState(false);
+    const [dates, setDates] = useState('');
+    const [tempDates, setTempDates] = useState('');
+    // console.log('tempDates ==> ', tempDates);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const [time, setTime] = useState('');
     const [address, setAddressText] = useState();
@@ -68,11 +70,16 @@ const ChatingScreen = ({ navigation, route }) => {
         longitudeDelta: 0.0421
     });
     const [acceptedProposal, setAcceptedProposal] = useState();
+    const [processDate, setProcessDate] = useState();
+    const [yourArrival, setYourArrival] = useState();
+    const [yourArrivalStatus, setYourArrivalStatus] = useState(true);
+    const [nextTime, setNextTime] = useState();
+    const [CurrentTime, setCurrentTime] = useState();
 
     const api = GoogleMapKey.GOOGLE_MAP_KEY
     const dispatch = useDispatch()
-    const cat = useSelector(selectPorposalCategory)
-    console.log('=====>', cat);
+    // const cat = useSelector(selectPorposalCategory)
+    // console.log('=====>', cat);
 
 
     // console.log('userName: ', userName);
@@ -119,16 +126,79 @@ const ChatingScreen = ({ navigation, route }) => {
         })
 
         fetchDateModeProposals();
+        YourArrival();
 
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        // filterProposals();
+    }, [acceptedProposal])
+
+
+    const YourArrival = async () => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        const ptime = Math.round(d.getTime() / hour) + 1;
+        // console.log('asdcasd',d);
+        await
+            firestore().collection('Proposals')
+                .doc(Currentuser.uid)
+                .onSnapshot((querySnap) => {
+                    // console.log(docSnapshot.data());
+                    const Proposals = [];
+                    const yourArrivald = []
+                    if (querySnap.data()) {
+                        querySnap.data().Proposals?.map(item => {
+                            // console.log('===>',item);
+                            if (item.YourArrival == false) {
+                                Proposals.push(item);
+
+                                var date = item.ProposalTempDate;
+                                const hour = 1000 * 60 * 60;
+                                const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                                const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+                                const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+                                // console.log(datetostring.toDateString() , date);
+                                console.log('====>', Proposaltime,
+                                    ptime,
+                                    ctime);
+                                if (Proposaltime >= ctime && Proposaltime <= ptime && !item.YourArrival && !item.CancleDate && d.toDateString() == item.ProposalDate) {
+                                    // const data = item;
+                                    console.log(Proposaltime,
+                                        ptime,
+                                        ctime);
+                                    dataupdated = {
+                                        ...item,
+                                        remainingTime: (Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime,
+                                        // remainingTime: ((Proposaltime - ctime >= 1 ? ctime : ctime - 1) - Proposaltime),
+                                        // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
+                                    }
+                                    // console.log(dataupdated);
+                                    yourArrivald?.push(dataupdated);
+                                }
+                                else {
+                                    console.log('===> codition false');
+                                }
+                            }
+                        });
+
+                    }
+                    console.log(yourArrivald);
+                    setYourArrival(yourArrivald)
+                    // setProcessDate(DatesProcess)
+                    // setAcceptedProposal(Proposals)
+                })
+    }
+
 
     const onSend = useCallback((messages = []) => {
         let mymsg = null;
-        console.log('category==>', cat);
-        console.log('imageUrl===>', imageUrl);
+        console.log('category==>', category);
+        // console.log('imageUrl===>', imageUrl);
         // return
-        if (imageUrl !== '') {
-            console.log('send imageUrl');
+        if (imageUrl) {
+            console.log('send image');
             const msg = messages[0]
             mymsg = {
                 ...msg,
@@ -146,26 +216,8 @@ const ChatingScreen = ({ navigation, route }) => {
                 ProposalStatus: '',
             };
         }
-        else {
-            console.log('send proposal');
-            const msg = messages[0]
-            mymsg = {
-                ...msg,
-                sentBy: Currentuser.uid,
-                sentTo: uid,
-                createdAt: new Date(),
-                image: '',
-                sent: true,
-                category: cat,
-                ProposalDate: discountStartDate,
-                ProposalTime: time,
-                ProposalAddress: location,
-                ProposalLocation: pin,
-                ProposalDescription: description,
-                ProposalStatus: false,
-            };
-        }
-        // else {
+        // else if (category == 'Proposal') {
+        //     console.log('send proposal');
         //     const msg = messages[0]
         //     mymsg = {
         //         ...msg,
@@ -174,20 +226,39 @@ const ChatingScreen = ({ navigation, route }) => {
         //         createdAt: new Date(),
         //         image: '',
         //         sent: true,
-        //         category: 'normal',
-        //         ProposalDate: '',
-        //         ProposalTime: '',
-        //         ProposalAddress: '',
-        //         ProposalLocation: '',
-        //         ProposalDescription: '',
-        //         ProposalStatus: '',
+        //         category: category,
+        //         ProposalDate: dates,
+        //         ProposalTime: time,
+        //         ProposalAddress: location,
+        //         ProposalLocation: pin,
+        //         ProposalDescription: description,
+        //         ProposalStatus: false,
         //     };
         // }
+        else {
+            console.log('send text');
+            const msg = messages[0]
+            mymsg = {
+                ...msg,
+                sentBy: Currentuser.uid,
+                sentTo: uid,
+                createdAt: new Date(),
+                image: '',
+                sent: true,
+                category: category,
+                ProposalDate: dates,
+                ProposalTime: time,
+                ProposalAddress: location,
+                ProposalLocation: pin,
+                ProposalDescription: description,
+                ProposalStatus: false,
+            };
+        }
         // console.log(mymsg);
         // return
         setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg))
         const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
-        console.log(mymsg);
+        // console.log(mymsg);
         // return
         firestore().collection('chatrooms')
             .doc(docid)
@@ -195,40 +266,98 @@ const ChatingScreen = ({ navigation, route }) => {
             .doc(mymsg._id)
             .set({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
             .then(() => {
-                setImageUrl('');
+                setImageUrl(null);
                 setImageData(null);
-                setCategory('');
-                dispatch(PorposalCategory(null))
+                setCategory(null);
+                // dispatch(PorposalCategory(null))
             })
     }, [])
 
     const fetchDateModeProposals = async () => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        const ptime = Math.round(d.getTime() / hour) + 1;
+        // console.log('asdcasd',d);
 
         await
-            firestore().collection('chatrooms')
-                .doc(docid)
-                .collection('messages')
-                .where("category", '==', "Proposal")
-                .where("ProposalStatus", '==', true)
-                .onSnapshot(docSnapshot => {
-                    // console.log(docSnapshot.data());
-                    const Proposals = [];
-                    docSnapshot.forEach((documentSnapshot) => {
-                        // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                        Proposals.push(documentSnapshot.data());
-                        // modalDataUid.push(documentSnapshot.id);
-                    });
-                    // console.log(Proposals);
-                    setAcceptedProposal(Proposals)
+            firestore().collection('Proposals')
+                .doc(Currentuser.uid)
+                .onSnapshot((querySnap) => {
+                    // const data = docSnapshot.data()
+                    if (querySnap.exists) {
+                        const Proposals = [];
+                        const DatesProcess = [];
+                        querySnap.data().Proposals?.map(item => {
+                            // console.log('===>',item);
+                            Proposals.push(item);
+                            var date = item.ProposalTempDate;
+                            const hour = 1000 * 60 * 60;
+                            const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                            const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+                            const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+
+                            // console.log(Proposaltime, ptime, ctime,)
+
+                            if (Proposaltime >= ctime && !item.CancleDate && item.YourArrival == true && !item.PartnerArrival && Proposaltime <= ptime && d.toDateString() == item.ProposalDate) {
+                                // console.log('====>', item);
+                                // const data = item;
+                                dataupdated = {
+                                    ...item,
+                                    remainingTime: ((Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime),
+
+                                    // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
+                                }
+                                console.log(dataupdated);
+                                DatesProcess?.push(dataupdated);
+                            }
+                            else {
+                                console.log('===> codition false');
+                            }
+                        })
+                        console.log('==========>', DatesProcess);
+                        setProcessDate(DatesProcess)
+                        setAcceptedProposal(Proposals)
+                    }
+                    else {
+                        console.log('Test');
+                        // setNoticeData('')
+                    }
+                    // return
+                    // const Proposals = [];
+                    // const DatesProcess = []
+                    // docSnapshot.forEach((documentSnapshot) => {
+                    //     Proposals?.push(documentSnapshot?.data());
+                    //     var date = documentSnapshot?.data().ProposalTempDate;
+                    //     const hour = 1000 * 60 * 60;
+                    //     const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                    //     // console.log(datetostring.toDateString() , date);
+                    //     if (Proposaltime <= ptime && Proposaltime >= ctime && d.toDateString() == documentSnapshot?.data().ProposalDate) {
+                    //         // console.log('====>', Proposaltime, ptime, ctime);
+                    //         const data = documentSnapshot?.data();
+                    //         dataupdated = {
+                    //             ...data,
+                    //             remainingTime: (Proposaltime - (Proposaltime - ctime >= 1 ? ctime : ctime - 1)),
+                    //         }
+                    //         // console.log(dataupdated);
+                    //         DatesProcess?.push(dataupdated);
+                    //     }
+                    //     else {
+                    //         console.log('===> codition false');
+                    //     }
+                    // });
+                    // // console.log(DatesProcess);
+                    // setProcessDate(DatesProcess)
+                    // setAcceptedProposal(Proposals)
                 })
         // console.log(acceptedProposal);
     }
 
     const onSendPorposal = () => {
-        // setCategory('Proposal')
         const test = 'Proposal'
-        dispatch(PorposalCategory(test))
-        if (!discountStartDate) {
+        // setCategory('Proposal')
+        // dispatch(PorposalCategory(test))
+        if (!dates && !tempDates) {
             // console.log('aklxjn');
             ToastAndroid.show("Please select proposal Date!", ToastAndroid.SHORT);
         }
@@ -241,26 +370,279 @@ const ChatingScreen = ({ navigation, route }) => {
         else if (!pin) {
             ToastAndroid.show("Please add your location!", ToastAndroid.SHORT);
         }
+        else if (!category) {
+            ToastAndroid.show("Please your time again!", ToastAndroid.SHORT);
+        }
         else {
-            // setInterval(() => {
-            //     setCategory('Proposal');
-            // })
-            // console.log(
-            //     'selected date', discountStartDate,
-            //     'selected time', time,
-            //     'selected address', location,
-            //     'selected location', pin,
-            //     'selected description', description,
-            // );
-            // onSend();
+            let mymsg = null;
 
+            // console.log('======>', category);
+            if (category == 'Proposal') {
+                let pUid = Math.random().toString(16).slice(2);
+
+                const msg = messages[0]
+                mymsg = {
+                    ...msg,
+                    _id: pUid,
+                    sentBy: Currentuser.uid,
+                    sentTo: uid,
+                    createdAt: new Date(),
+                    image: '',
+                    sent: true,
+                    category: category,
+                    ProposalDate: dates,
+                    ProposalTempDate: tempDates,
+                    ProposalTime: time,
+                    ProposalAddress: location,
+                    ProposalLocation: pin,
+                    ProposalDescription: description,
+                    ProposalStatus: false,
+                    text: null,
+                    user: {
+                        _id: Currentuser.uid,
+                        avatar: Currentuser.image1,
+                    }
+                };
+                setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg))
+                const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
+                console.log(mymsg);
+
+                firestore().collection('chatrooms')
+                    .doc(docid)
+                    .collection('messages')
+                    .doc(mymsg._id)
+                    .set({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
+                    .then(() => {
+                        setImageUrl(null);
+                        setImageData(null);
+                        setCategory(null);
+                        console.log('proposal send');
+                        // dispatch(PorposalCategory(null))
+                    })
+            }
             setModal(false)
         }
     }
-    // useEffect(() => {
-    //     console.log('useeffect1', category);
-    //     console.log('useeffect2', imageUrl);
-    // }, [category || imageUrl])
+
+    useEffect(() => {
+
+    }, [category])
+
+    const YouArrived = (item, index) => {
+        // console.log(item);
+        // return;
+        // acceptedProposal[index] = updateAccepted;
+        const test = [];
+        acceptedProposal.map(a => {
+            if (a._id != item._id) {
+                test.push(a);
+            }
+        })
+
+        const data = yourArrival[index];
+        const updateAccepted = { ...data, YourArrival: true }
+        test.push(updateAccepted);
+        // console.log('===>', test);
+        // return;
+        if (!test.length == 0) {
+            firestore()
+                .collection('Proposals')
+                .doc(Currentuser.uid)
+                .set({
+                    Proposals: test,
+                }, { merge: true })
+                .then(() => {
+                    console.log('Proposal Updated!');
+                    // console.log(item);
+                });
+        }
+
+        // return
+
+        // if (!item == '') {
+        //     const updatedata = { ...item, YourArrival: true }
+
+
+        //     console.log(updatedata);
+        //     return;
+        //     firestore().collection('notification').doc(currentUser).update({
+        //         Notices: updatedata
+        //     }, { merge: true })
+        // } else {
+        //     console.log('noticeStatus not update');
+        // }
+        // return;
+        // const userRef = firestore().collection('chatrooms')
+        //     .doc(Currentuser.uid)
+
+        // userRef.set({
+        //     'YourArrival': true,
+        // })
+    }
+    const YouNotArrived = (item, index) => {
+        // console.log(item);
+        const data = yourArrival[index];
+        const updateAccepted = { ...data, YourArrival: false, CancleDate: true }
+        yourArrival[index] = updateAccepted;
+
+        // console.log(yourArrival);
+        if (!yourArrival.length == 0) {
+            try {
+                firestore()
+                    .collection('Proposals')
+                    .doc(Currentuser.uid)
+                    .set({
+                        Proposals: yourArrival,
+                    }, { merge: true })
+
+                const userRef = firestore().collection('Users')
+                    .doc(Currentuser.uid)
+                userRef.update({
+                    'userDetails.Flake': + 1,
+                })
+            }
+            catch (e) {
+                console.log('Error', e);
+            }
+        }
+    }
+
+    const PNoArrived = (item, index) => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        const ntime = Math.round(d.getTime() / hour) + 1;
+
+
+        // const itemDate = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour);
+        // const itemDate2 = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour) + 1;
+        var date = item.ProposalTempDate;
+        const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        // console.log(ntime, Proposaltime);
+
+        if (NProposaltime == ctime) {
+            const data = processDate[index];
+            const updateAccepted = { ...data, PartnerArrival: false, CancleDate: true }
+            yourArrival[index] = updateAccepted;
+
+            console.log(yourArrival);
+            // return
+            // if (!processDate.length == 0) {
+            //     try {
+            //         firestore()
+            //             .collection('Proposals')
+            //             .doc(Currentuser.uid)
+            //             .set({
+            //                 Proposals: yourArrival,
+            //             }, { merge: true })
+
+            //         const userRef = firestore().collection('Users')
+            //             .doc(Currentuser.uid)
+            //         userRef.update({
+            //             'userDetails.Flake': + 1,
+            //         })
+            //     }
+            //     catch (e) {
+            //         console.log('Error', e);
+            //     }
+            // }
+
+        }
+        else {
+            ToastAndroid.show(`Please wait for ${NProposaltime - ctime} hr to perform any action.`, ToastAndroid.SHORT)
+            // console.log(item);
+        }
+    };
+    const PArrived = (item, index) => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        // const ntime = Math.round(d.getTime() / hour) + 1;
+
+        var date = item.ProposalTempDate;
+        // const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        // console.log(ntime, Proposaltime);
+
+        if (NProposaltime != ctime) {
+            // yourArrival[index] = updateAccepted;
+            // console.log(yourArrival)
+
+            const test = [];
+            acceptedProposal.map(a => {
+                if (a._id != item._id) {
+                    test.push(a);
+                }
+            })
+    
+            const data = processDate[index];
+            const updateAccepted = { ...data, PartnerArrival: true, CancleDate: false }
+            test.push(updateAccepted);
+
+            // console.log(test);
+            // return;
+            if (!test.length == 0) {
+                try {
+                    firestore()
+                        .collection('Proposals')
+                        .doc(Currentuser.uid)
+                        .set({
+                            Proposals: test,
+                        }, { merge: true })
+                        .then(() => {
+                            setTimeout(() => {
+                                navigation.navigate('DateServayScreen' , {ProposalId : item._id } );
+                                console.log('DateServayScreen');
+                              }, 1000
+                            //   1000 * 60 * 60
+                              );
+                        })
+                    // const userRef = firestore().collection('Users')
+                    //     .doc(Currentuser.uid)
+                    // userRef.update({
+                    //     'userDetails.Flake': + 1,
+                    // })
+                }
+                catch (e) {
+                    console.log('Error', e);
+                }
+            }
+        }
+        else {
+            ToastAndroid.show(`Please wait for ${NProposaltime - ctime} hr to perform any action.`, ToastAndroid.SHORT)
+            // return
+        }
+
+        // const itemDate = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour);
+        // const itemDate2 = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour) + 1;
+    }
+
+    const sendPorposalFuction = (pUid) => {
+        let mymsg = null;
+        console.log('send image');
+        const msg = messages[0]
+        mymsg = {
+            ...msg._id = msg._id + 1,
+            sentBy: Currentuser.uid,
+            sentTo: uid,
+            createdAt: new Date(),
+            image: '',
+            sent: true,
+            category: category,
+            ProposalDate: dates,
+            ProposalTime: time,
+            ProposalAddress: location,
+            ProposalLocation: pin,
+            ProposalDescription: description,
+            ProposalStatus: false,
+        };
+        setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg))
+        const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
+        console.log(mymsg);
+        return;
+    }
+
 
 
 
@@ -280,17 +662,59 @@ const ChatingScreen = ({ navigation, route }) => {
                 ToastAndroid.show('Proposal Rejected!', ToastAndroid.SHORT)
             });
     }
-    const AcceptProposal = (uid) => {
-        // console.log('accept', uid);
+    const AcceptProposal = (uids) => {
+        const date = new Date();
+        // setCurrentTime(ctime)
 
-        const userRef = firestore().collection('chatrooms')
+        const userReftwo = firestore().collection('chatrooms')
             .doc(docid)
             .collection('messages')
-            .doc(uid)
+            .doc(uids)
 
-        userRef.update({
+        userReftwo.update({
+            // 'YourArrival': true,
             'ProposalStatus': true,
+            'AcceptTime': date,
+        }).then(() => {
+
+            firestore().collection('chatrooms')
+                .doc(docid)
+                .collection('messages')
+                .doc(uids)
+                .onSnapshot(docSnapshot => {
+                    const data = docSnapshot.data()
+                    // console.log('==============>',docSnapshot.data());
+                    // return;
+                    try {
+                        firestore()
+                            .collection('Proposals')
+                            .doc(Currentuser.uid)
+                            .set({
+                                Proposals: firestore.FieldValue.arrayUnion(data),
+                            }, { merge: true })
+                            .then(() => {
+                                // console.log('Proposal submit!');
+                                // console.log(item);
+                            });
+                        // for chat user 
+                        firestore()
+                            .collection('Proposals')
+                            .doc(uid)
+                            .set({
+                                Proposals: firestore.FieldValue.arrayUnion(data),
+                            }, { merge: true })
+                            .then(() => {
+                                // console.log('Proposal submit!');
+                                // console.log(item);
+                            });
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                })
         })
+        // console.log('accept', uid);
+        // return;
     }
 
 
@@ -405,19 +829,33 @@ const ChatingScreen = ({ navigation, route }) => {
         );
     };
 
-    const showDateModal = () => {
-        setDateVisibility(true);
-        // console.log('showdatemodal');
-    }
-    const hideDiscountStartDatePicker = () => {
-        setDateVisibility(false);
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
     };
-    const handleDiscountConfirmStartDate = date => {
-        // console.warn('A date has been picked: ', date);
-        setDiscountStartDate(moment(date).format('MM/DD/yy'))
-        // setDiscountStartDate(moment(date).format('MM/DD/yy'));
-        hideDiscountStartDatePicker();
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
     };
+
+    const handleConfirm = (date) => {
+        // console.warn("A date has been picked: ", date.toDateString());
+        setDates(date.toDateString())
+        hideDatePicker();
+    };
+
+    // const showDateModal = () => {
+    //     setDateVisibility(true);
+    //     // console.log('showdatemodal');
+    // }
+    // const hideDiscountStartDatePicker = () => {
+    //     setDateVisibility(false);
+    // };
+    // const handleDiscountConfirmStartDate = date => {
+    //     // console.warn('A date has been picked: ', date);
+    //     setDiscountStartDate(moment(date).format('MM/DD/yy'))
+    //     // setDiscountStartDate(moment(date).format('MM/DD/yy'));
+    //     hideDiscountStartDatePicker();
+    // };
     // const hideDatePicker = () => {
     //     setDateVisibility(false);
     // };
@@ -431,12 +869,14 @@ const ChatingScreen = ({ navigation, route }) => {
 
     const showTimeModal = () => {
         setTimeVisibility(true)
+        setCategory('Proposal')
     }
     const hideTimePicker = () => {
         setTimeVisibility(false);
     };
     const handleConfirmTime = date => {
         // console.warn('A date has been picked: ', date);
+        setTempDates(date)
         const final = date.toLocaleString('en-UK', {
             hour: 'numeric',
             minute: 'numeric',
@@ -478,7 +918,7 @@ const ChatingScreen = ({ navigation, route }) => {
                     }}>
                     <Entypo name='attachment' size={20} color={COLORS.black} />
                 </TouchableOpacity>
-                {imageUrl !== '' ? (
+                {imageUrl ? (
                     <View
                         style={{
                             width: 40,
@@ -588,11 +1028,8 @@ const ChatingScreen = ({ navigation, route }) => {
                         borderBottomLeftRadius: 15,
                         borderTopRightRadius: 15,
                         borderTopLeftRadius: 15,
-                        // height: 170,
-                        // width: 250,
-                        // width: 300,
-                        // height: 150,
-                        padding: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 20,
                     }}>
                         <View style={{
                             flexDirection: 'row',
@@ -604,7 +1041,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                     fontSize: 20,
                                     fontWeight: 'bold',
                                     color: COLORS.black,
-                                    paddingRight: 50
+                                    paddingRight: 20
                                 }}>Dating Porposal</Text>
                             </View>
                             <View>
@@ -685,6 +1122,7 @@ const ChatingScreen = ({ navigation, route }) => {
                         </View>
 
                         <TouchableOpacity
+                            onPress={() => RejectProposal(uid)}
                             activeOpacity={0.8}
                             style={{
                                 backgroundColor: COLORS.black,
@@ -713,7 +1151,8 @@ const ChatingScreen = ({ navigation, route }) => {
                         // width: 250,
                         // width: 300,
                         // height: 150,
-                        padding: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 20,
                     }}>
                         <View style={{
                             flexDirection: 'row',
@@ -725,7 +1164,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                     fontSize: 20,
                                     fontWeight: 'bold',
                                     color: COLORS.black,
-                                    paddingRight: 50
+                                    paddingRight: 20
                                 }}>Dating Porposal</Text>
                             </View>
                             <View>
@@ -976,196 +1415,557 @@ const ChatingScreen = ({ navigation, route }) => {
                 </View>
 
                 {showhide == true ? (
-                    <View>
+                    <ScrollView showsVerticalScrollIndicator={true}>
                         <View style={{
-                            paddingHorizontal: 20,
-                            paddingVertical: 20,
-                            backgroundColor: COLORS.white,
-                            marginTop: 30,
-                            marginHorizontal: 20,
-                            borderRadius: 10,
-                            elevation: 3,
+                            paddingBottom: 100
                         }}>
-                            <View style={{
-                                alignItems: 'center',
-                                paddingVertical: 10
-                            }}>
-                                <Text style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: COLORS.black
-                                }}>Date mode</Text>
-                            </View>
-                            <View style={{
-                                alignItems: 'center',
-                            }}>
-                                <Text style={{ textAlign: 'center' }}>Text your trusted friend or family member a link to
-                                    your live Location During date mode</Text>
-                            </View>
-                            <View style={{
-                                alignItems: 'center'
-                            }}>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('DateModeScreen')}
-                                    style={{
-                                        marginVertical: 10,
-                                        backgroundColor: COLORS.main,
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 5,
-                                        borderRadius: 5,
-                                        alignItems: 'center',
-                                        width: '50%',
-                                    }}>
-                                    <Text style={{ color: COLORS.black }}>Request tracking</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{
-                            marginTop: 20,
-                            paddingHorizontal: 20
-                        }}>
-                            <Text style={{
-                                fontSize: 20,
-                                color: COLORS.black,
-                                fontWeight: 'bold'
-                            }}>Dates</Text>
-                        </View>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {!acceptedProposal?.length == 0 ?
-                                <>
-                                    {acceptedProposal?.map((item, index) => (
-                                        console.log('==============', item),
-                                        <View
-                                            key={index}
-                                            style={{
-                                                paddingHorizontal: 20,
-                                                paddingVertical: 20,
-                                                backgroundColor: COLORS.white,
-                                                marginVertical: 10,
-                                                marginHorizontal: 20,
-                                                borderRadius: 10,
-                                                elevation: 3,
-                                            }}>
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between'
-                                            }}>
-                                                <View>
-                                                    <Text style={{
-                                                        fontSize: 20,
-                                                        fontWeight: 'bold',
-                                                        color: COLORS.black,
-                                                        paddingRight: 50
-                                                    }}>Dating Porposal</Text>
-                                                </View>
-                                                <View>
-                                                    <Text style={{
-                                                        fontSize: 12,
-                                                    }}>6 days remaining</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                paddingTop: 10
-                                            }}>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center'
-                                                }}>
-                                                    <View style={{
-                                                        paddingRight: 5
-                                                    }}>
-                                                        <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
-                                                            width: 15,
-                                                            height: 15,
-                                                        }} />
-                                                    </View>
-                                                    <View>
-                                                        <Text style={{
-                                                            fontSize: 12,
-                                                        }}>{item?.ProposalDate}</Text>
-                                                    </View>
-                                                </View>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center'
-                                                }}>
-                                                    <View style={{
-                                                        paddingRight: 5
-                                                    }}>
-                                                        <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
-                                                            width: 15,
-                                                            height: 15,
-                                                        }} />
-                                                    </View>
-                                                    <View>
-                                                        <Text style={{
-                                                            fontSize: 12,
-                                                        }}>{item.ProposalTime}</Text>
-                                                    </View>
-                                                </View>
-
-                                            </View>
-
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                paddingTop: 10
-                                            }}>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center'
-                                                }}>
-                                                    <View style={{
-                                                        paddingRight: 5
-                                                    }}>
-                                                        <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
-                                                            width: 15,
-                                                            height: 15,
-                                                        }} />
-                                                    </View>
-                                                    <View>
-                                                        <Text style={{
-                                                            fontSize: 12,
-                                                        }}>{item.ProposalAddress}</Text>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                            <TouchableOpacity
-                                                onPress={() => { setModal(true), setDeleteModal('DeleteModal') }}
-                                                activeOpacity={0.8}
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {!yourArrival?.length == 0 ?
+                                    <>
+                                        {yourArrival?.map((item, index) => (
+                                            // console.log('==============', item),
+                                            <View
+                                                key={index}
                                                 style={{
-                                                    backgroundColor: COLORS.black,
-                                                    marginTop: 20,
+                                                    paddingHorizontal: 20,
+                                                    paddingVertical: 10,
+                                                    backgroundColor: COLORS.white,
+                                                    marginVertical: 10,
+                                                    marginHorizontal: 20,
                                                     borderRadius: 10,
-                                                    padding: 10,
-                                                    alignItems: 'center',
+                                                    elevation: 3,
                                                 }}>
-                                                <Text style={{
-                                                    color: COLORS.white
-                                                }}>Cancle</Text>
-                                            </TouchableOpacity>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 20,
+                                                            fontWeight: 'bold',
+                                                            color: COLORS.black,
+                                                        }}>Are you Arrived?</Text>
+                                                    </View>
+                                                </View>
+                                                {!yourArrivalStatus ?
+                                                    <>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            paddingTop: 10,
+                                                            // paddingHorizontal:10,
+                                                        }}>
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}>
+                                                                <View>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                        paddingVertical: 15,
+                                                                    }}>Do you want to cancle this date?</Text>
+                                                                </View>
+                                                            </View>
 
-                                        </View>
-                                    ))}
-                                </>
-                                :
+                                                        </View>
+
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center'
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                onPress={() => setYourArrivalStatus(true)}
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    backgroundColor: COLORS.transparent,
+                                                                    borderWidth: 1,
+                                                                    marginTop: 20,
+                                                                    borderRadius: 10,
+                                                                    padding: 10,
+                                                                    alignItems: 'center',
+                                                                    paddingHorizontal: 30,
+                                                                    marginHorizontal: 10
+                                                                }}>
+                                                                <Text style={{
+                                                                    color: COLORS.black
+                                                                }}>No</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                onPress={() => YouNotArrived(item, index)}
+
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    backgroundColor: COLORS.black,
+                                                                    marginTop: 20,
+                                                                    borderRadius: 10,
+                                                                    padding: 10,
+                                                                    alignItems: 'center',
+                                                                    paddingHorizontal: 30,
+                                                                    marginHorizontal: 10
+                                                                }}>
+                                                                <Text style={{
+                                                                    color: COLORS.white
+                                                                }}>Yes</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            paddingTop: 10
+                                                        }}>
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                paddingRight: 10
+                                                            }}>
+                                                                <View style={{
+                                                                    paddingRight: 5
+                                                                }}>
+                                                                    <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                                                        width: 15,
+                                                                        height: 15,
+                                                                    }} />
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                    }}>{item?.ProposalDate}</Text>
+                                                                </View>
+                                                            </View>
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}>
+                                                                <View style={{
+                                                                    paddingRight: 5
+                                                                }}>
+                                                                    <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                                                        width: 15,
+                                                                        height: 15,
+                                                                    }} />
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                    }}>{item.remainingTime}hr remaining</Text>
+                                                                </View>
+                                                            </View>
+
+                                                        </View>
+
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            paddingTop: 10
+                                                        }}>
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}>
+                                                                <View style={{
+                                                                    paddingRight: 5
+                                                                }}>
+                                                                    <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                                                        width: 15,
+                                                                        height: 15,
+                                                                    }} />
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                    }}>{item.ProposalAddress}</Text>
+                                                                </View>
+                                                            </View>
+                                                        </View>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center'
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                onPress={() => setYourArrivalStatus(false)}
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    backgroundColor: COLORS.transparent,
+                                                                    borderWidth: 1,
+                                                                    marginTop: 20,
+                                                                    borderRadius: 10,
+                                                                    padding: 10,
+                                                                    alignItems: 'center',
+                                                                    paddingHorizontal: 30,
+                                                                    marginHorizontal: 10
+                                                                }}>
+                                                                <Text style={{
+                                                                    color: COLORS.black
+                                                                }}>No</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                onPress={() => YouArrived(item, index)}
+
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    backgroundColor: COLORS.black,
+                                                                    marginTop: 20,
+                                                                    borderRadius: 10,
+                                                                    padding: 10,
+                                                                    alignItems: 'center',
+                                                                    paddingHorizontal: 30,
+                                                                    marginHorizontal: 10
+                                                                }}>
+                                                                <Text style={{
+                                                                    color: COLORS.white
+                                                                }}>Yes</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </>
+                                                }
+                                            </View>
+                                        ))}
+                                    </>
+                                    :
+                                    <>
+                                        {processDate?.map((item, index) => (
+                                            // console.log('==============', item),
+                                            <View
+                                                key={index}
+                                                style={{
+                                                    paddingHorizontal: 20,
+                                                    paddingVertical: 10,
+                                                    backgroundColor: COLORS.white,
+                                                    marginVertical: 10,
+                                                    marginHorizontal: 20,
+                                                    borderRadius: 10,
+                                                    elevation: 3,
+                                                }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 20,
+                                                            fontWeight: 'bold',
+                                                            color: COLORS.black,
+                                                        }}>Your Partner Arrived?</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    paddingTop: 10
+                                                }}>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        paddingRight: 10
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item?.ProposalDate}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item.remainingTime}hr remaining</Text>
+                                                        </View>
+                                                    </View>
+
+                                                </View>
+
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    paddingTop: 10
+                                                }}>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item.ProposalAddress}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}>
+                                                    <TouchableOpacity
+                                                        onPress={() => PNoArrived(item, index)}
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            backgroundColor: COLORS.transparent,
+                                                            borderWidth: 1,
+                                                            marginTop: 20,
+                                                            borderRadius: 10,
+                                                            padding: 10,
+                                                            alignItems: 'center',
+                                                            paddingHorizontal: 30,
+                                                            marginHorizontal: 10
+                                                        }}>
+                                                        <Text style={{
+                                                            color: COLORS.black
+                                                        }}>No</Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        onPress={() => PArrived(item, index)}
+
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            backgroundColor: COLORS.black,
+                                                            marginTop: 20,
+                                                            borderRadius: 10,
+                                                            padding: 10,
+                                                            alignItems: 'center',
+                                                            paddingHorizontal: 30,
+                                                            marginHorizontal: 10
+                                                        }}>
+                                                        <Text style={{
+                                                            color: COLORS.white
+                                                        }}>Yes</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        ))}
+                                    </>
+                                }
+
+                            </ScrollView>
+                            <View style={{
+                                paddingHorizontal: 20,
+                                paddingVertical: 20,
+                                backgroundColor: COLORS.white,
+                                marginTop: 30,
+                                marginHorizontal: 20,
+                                borderRadius: 10,
+                                elevation: 3,
+                            }}>
                                 <View style={{
                                     alignItems: 'center',
-                                    paddingTop: 20
+                                    paddingVertical: 10
                                 }}>
-                                    <Text>No Dates Proposal Found!</Text>
+                                    <Text style={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        color: COLORS.black
+                                    }}>Date mode</Text>
                                 </View>
-                            }
+                                <View style={{
+                                    alignItems: 'center',
+                                }}>
+                                    <Text style={{ textAlign: 'center' }}>Text your trusted friend or family member a link to
+                                        your live Location During date mode</Text>
+                                </View>
+                                <View style={{
+                                    alignItems: 'center'
+                                }}>
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate('DateModeScreen')}
+                                        style={{
+                                            marginVertical: 10,
+                                            backgroundColor: COLORS.main,
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 5,
+                                            borderRadius: 5,
+                                            alignItems: 'center',
+                                            width: '50%',
+                                        }}>
+                                        <Text style={{ color: COLORS.black }}>Request tracking</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
 
-                        </ScrollView>
 
-                    </View>
+                            <View style={{
+                                marginTop: 20,
+                                paddingHorizontal: 20
+                            }}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    color: COLORS.black,
+                                    fontWeight: 'bold'
+                                }}>Dates</Text>
+                            </View>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {!acceptedProposal?.length == 0 ?
+                                    <>
+                                        {acceptedProposal?.map((item, index) => (
+                                            // console.log('==============', item),
+                                            <View
+                                                key={index}
+                                                style={{
+                                                    paddingHorizontal: 20,
+                                                    paddingVertical: 20,
+                                                    backgroundColor: COLORS.white,
+                                                    marginVertical: 10,
+                                                    marginHorizontal: 20,
+                                                    borderRadius: 10,
+                                                    elevation: 3,
+                                                }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 20,
+                                                            fontWeight: 'bold',
+                                                            color: COLORS.black,
+                                                            paddingRight: 50
+                                                        }}>Dating Porposal</Text>
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{
+                                                            fontSize: 12,
+                                                        }}>6 days remaining</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    paddingTop: 10
+                                                }}>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item?.ProposalDate}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item.ProposalTime}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    paddingTop: 10
+                                                }}>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <View style={{
+                                                            paddingRight: 5
+                                                        }}>
+                                                            <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                                                width: 15,
+                                                                height: 15,
+                                                            }} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 12,
+                                                            }}>{item.ProposalAddress}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                <TouchableOpacity
+                                                    onPress={() => { setModal(true), setDeleteModal('DeleteModal') }}
+                                                    activeOpacity={0.8}
+                                                    style={{
+                                                        backgroundColor: COLORS.black,
+                                                        marginTop: 20,
+                                                        borderRadius: 10,
+                                                        padding: 10,
+                                                        alignItems: 'center',
+                                                    }}>
+                                                    <Text style={{
+                                                        color: COLORS.white
+                                                    }}>Cancle</Text>
+                                                </TouchableOpacity>
+
+                                            </View>
+                                        ))}
+                                    </>
+                                    :
+                                    <View style={{
+                                        alignItems: 'center',
+                                        paddingTop: 20,
+                                        paddingHorizontal: 20
+                                    }}>
+                                        <Text>No Dates Proposal Found!</Text>
+                                    </View>
+                                }
+
+                            </ScrollView>
+
+                        </View>
+                    </ScrollView>
                 ) : (
                     <View style={{
                         flex: 1,
@@ -1209,11 +2009,10 @@ const ChatingScreen = ({ navigation, route }) => {
                     onCancel={hideDatePicker}
                 /> */}
                 <DateTimePickerModal
-                    isVisible={DateVisibility}
+                    isVisible={isDatePickerVisible}
                     mode="date"
-                    // display='spinner'
-                    onConfirm={handleDiscountConfirmStartDate}
-                    onCancel={hideDiscountStartDatePicker}
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
                 />
 
                 <DateTimePickerModal
@@ -1494,7 +2293,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                     alignItems: 'center'
                                 }}>
                                     <View style={{ marginTop: 10, width: '90%' }}>
-                                        <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Date </Text>
+                                        <Text style={{ color: COLORS.black, paddingBottom: 5 }}>Date</Text>
                                         <View style={{
                                             height: 45,
                                             backgroundColor: COLORS.white,
@@ -1507,23 +2306,18 @@ const ChatingScreen = ({ navigation, route }) => {
                                             alignItems: 'center'
                                         }}>
                                             <TextInput
+                                                value={dates}
                                                 style={{
                                                     padding: 0,
                                                     backgroundColor: COLORS.transparent,
                                                 }}
                                                 placeholder={'Select Date'}
-                                                value={discountStartDate}
                                                 placeholderTextColor={COLORS.gray}
-                                                // error={dateOfBirthError}
-                                                onChangeText={setDiscountStartDate}
+                                                onChangeText={setDates}
                                                 selectionColor={COLORS.black}
                                                 underlineColor={COLORS.white}
-                                                // activeOutlineColor={COLORS.fontColor}
                                                 activeUnderlineColor={COLORS.white}
-                                                // onFocus={() => { setDateOfBirthError(false) }}
-                                                onPressIn={showDateModal}
-                                            // onPressIn={showTimeModal}
-
+                                                onPressIn={showDatePicker}
                                             />
                                             <Image source={require('../../assets/selectdate.png')} resizeMode='contain' style={{
                                                 // tintColor: COLORS.black,

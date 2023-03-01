@@ -175,7 +175,7 @@ const CongratsServayScreen = ({ navigation }) => {
           paddingTop: 80,
           height: '45%'
         }}>
-          <CustomeButton onpress={() => navigation.navigate('')}
+          <CustomeButton onpress={() => navigation.navigate('HomeScreen')}
             title={'Done'} />
         </View>
 

@@ -81,53 +81,6 @@ const CongratsServayScreen = ({ navigation }) => {
   };
 
 
-  const renderDropdown = () => {
-    if (showOptions) {
-      return (
-        <View>
-          <View style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <View>
-              <View style={{
-                paddingTop: 20,
-                alignItems: 'center'
-              }}>
-                <Text style={{
-                  color: COLORS.black
-                }}>Please (Only concierge See’s this your
-                  Date will Never informed as to who gave
-                  this feedback)</Text>
-              </View>
-
-              <View style={{
-                paddingTop: 20,
-              }}>
-                <Text style={{ color: COLORS.black }}>List Pros</Text>
-                <TextInput
-                  placeholder='Type Here!'
-                  multiline
-                  numberOfLines={8}
-                  style={styles.TextInput} />
-              </View>
-              <View style={{
-                paddingTop: 20,
-              }}>
-                <Text style={{ color: COLORS.black }}>List Cons</Text>
-                <TextInput
-                  placeholder='Type Here!'
-                  multiline
-                  numberOfLines={8}
-                  style={styles.TextInput} />
-              </View>
-            </View>
-          </View>
-        </View>
-      );
-    }
-  };
-
   return (
     <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
@@ -156,7 +109,7 @@ const CongratsServayScreen = ({ navigation }) => {
             }}>Congratulations
             </Text>
           </View>
-
+ 
           <View style={{
             alignItems: 'center',
             paddingTop: 20,

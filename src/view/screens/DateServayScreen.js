@@ -220,7 +220,9 @@ const DateServayScreen = ({ navigation, route }) => {
   const renderDropdown = () => {
     if (showOptions) {
       return (
-        <View>
+        <View style={{
+          paddingHorizontal: 20
+        }}>
           <View style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -341,9 +343,12 @@ const DateServayScreen = ({ navigation, route }) => {
                 </View>
               </View>
             </TouchableOpacity>
+            <View style={{
+              marginHorizontal: 20
+            }}>
+              {renderDropdown()}
 
-            {renderDropdown()}
-
+            </View>
 
             <View style={{
               alignItems: 'center',

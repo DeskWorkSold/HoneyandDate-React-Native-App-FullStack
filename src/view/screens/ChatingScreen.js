@@ -75,6 +75,7 @@ const ChatingScreen = ({ navigation, route }) => {
     const [yourArrivalStatus, setYourArrivalStatus] = useState(true);
     const [nextTime, setNextTime] = useState();
     const [CurrentTime, setCurrentTime] = useState();
+    const [SecondUserProposal, setSecondUserProposal] = useState();
 
     const api = GoogleMapKey.GOOGLE_MAP_KEY
     const dispatch = useDispatch()
@@ -125,22 +126,103 @@ const ChatingScreen = ({ navigation, route }) => {
             // console.log('==>',allmsg);
         })
 
-        fetchDateModeProposals();
-        YourArrival();
 
     }, []);
 
     useEffect(() => {
         // filterProposals();
-    }, [acceptedProposal])
+        // fetchDateModeProposals();
+        YourArrival();
+        ChatUserProposals()
+        DatesServay();
+    }, [messages])
+
+    const DatesServay = () => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        const ptime = Math.round(d.getTime() / hour) + 3;
+        firestore()
+            .collection('Proposals')
+            // .orderBy('createdAt', 'desc')
+            .doc(Currentuser.uid)
+            // .limit(1)
+            .onSnapshot(querySnapshot => {
+                const test3 = [];
+                // console.log(querySnapshot.data());
+                if (querySnapshot.data()) {
+                    querySnapshot.data().Proposals?.map(item => {
+                        test3?.push(item);
+                        // console.log('===zscas>', item);
+                    })
+                }
+                test3.sort(function (a, b) {
+                    return new Date(b.createdAt?.toDate().toDateString() + " " + b.createdAt.toDate().toTimeString()) + new Date(a.createdAt?.toDate().toDateString() + " " + a.createdAt.toDate().toTimeString());
+                });
+
+                // console.log(test3);
+
+                test3.map(a => {
+                    // console.log(a);
+                    var date = a.ProposalTempDate;
+                    const hour = 1000 * 60 * 60;
+                    const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                    // console.log('adlj');
+                    if (Proposaltime >= ctime && Proposaltime <= ptime && a.PartnerArrival == true && a.YourArrival == true && a.active == 0 && !a.Reviews) {
+                        console.log('====>', a);
+                        setTimeout(() => {
+                            navigation.navigate('DateServayScreen', { ProposalId: a._id });
+                            console.log('DateServayScreen');
+                        }, 3000
+                            //   1000 * 60 * 60
+                        );
+                    }
+                })
+            })
+    }
 
 
     const YourArrival = async () => {
         const d = new Date();
         const hour = 1000 * 60 * 60;
         const ctime = Math.round(d.getTime() / hour);
-        const ptime = Math.round(d.getTime() / hour) + 1;
+        const ptime = Math.round(d.getTime() / hour) + 3;
         // console.log('asdcasd',d);
+
+        // const Proposals = [];
+        // const yourArrivald = []
+        // messages.map(item => {
+        //     if (item.category && item.ProposalStatus) {
+        //         // console.log(item);
+        //         Proposals.push(item);
+        //         var date = item.ProposalTempDate;
+        //         const hour = 1000 * 60 * 60;
+        //         const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        //         const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        //         const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+        //         if (NProposaltime >= ctime && Proposaltime <= ptime && !item.CancleDate && d.toDateString() == item.ProposalDate) {
+        //             // const data = item;
+        //             console.log(Proposaltime,
+        //                 ptime,
+        //                 ctime);
+        //             dataupdated = {
+        //                 ...item,
+        //                 remainingTime: (NProposaltime - ctime >= 1 ? NProposaltime : NProposaltime) - ctime,
+        //                 // remainingTime: ((Proposaltime - ctime >= 1 ? ctime : ctime - 1) - Proposaltime),
+        //                 // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
+        //             }
+        //             console.log(dataupdated);
+        //             yourArrivald?.push(dataupdated);
+        //         }
+        //         else {
+        //             console.log('===> your arrival codition false');
+        //         }
+        //     }
+        // })
+        // setYourArrival(yourArrivald)
+        // setAcceptedProposal(Proposals)
+
+
         await
             firestore().collection('Proposals')
                 .doc(Currentuser.uid)
@@ -151,43 +233,64 @@ const ChatingScreen = ({ navigation, route }) => {
                     if (querySnap.data()) {
                         querySnap.data().Proposals?.map(item => {
                             // console.log('===>',item);
-                            if (item.YourArrival == false) {
-                                Proposals.push(item);
+                            Proposals.push(item);
 
-                                var date = item.ProposalTempDate;
-                                const hour = 1000 * 60 * 60;
-                                const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
-                                const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
-                                const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
-                                // console.log(datetostring.toDateString() , date);
-                                console.log('====>', Proposaltime,
-                                    ptime,
-                                    ctime);
-                                if (Proposaltime >= ctime && Proposaltime <= ptime && !item.YourArrival && !item.CancleDate && d.toDateString() == item.ProposalDate) {
-                                    // const data = item;
-                                    console.log(Proposaltime,
-                                        ptime,
-                                        ctime);
-                                    dataupdated = {
-                                        ...item,
-                                        remainingTime: (Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime,
-                                        // remainingTime: ((Proposaltime - ctime >= 1 ? ctime : ctime - 1) - Proposaltime),
-                                        // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
-                                    }
-                                    // console.log(dataupdated);
-                                    yourArrivald?.push(dataupdated);
+                            var date = item.ProposalTempDate;
+                            const hour = 1000 * 60 * 60;
+                            const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                            const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+                            const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+                            // console.log(datetostring.toDateString() , date);
+                            // console.log('====>', Proposaltime,
+                            //     ptime,
+                            //     ctime);
+                            if (Proposaltime >= ctime && Proposaltime <= ptime && item.active == 1 && !item.CancleDate && d.toDateString() == item.ProposalDate) {
+                                // const data = item;
+                                // console.log(Proposaltime,
+                                //     ptime,
+                                //     ctime);
+                                dataupdated = {
+                                    ...item,
+                                    remainingTime: (Proposaltime - ctime >= 1 ? Proposaltime : ctime) - ctime,
+                                    // remainingTime: ((Proposaltime - ctime >= 1 ? ctime : ctime - 1) - Proposaltime),
+                                    // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
                                 }
-                                else {
-                                    console.log('===> codition false');
-                                }
+                                // console.log(dataupdated);
+                                yourArrivald?.push(dataupdated);
+                            }
+                            else {
+                                console.log('===> your arrival codition false');
                             }
                         });
 
                     }
-                    console.log(yourArrivald);
+                    // console.log(yourArrivald);
                     setYourArrival(yourArrivald)
                     // setProcessDate(DatesProcess)
-                    // setAcceptedProposal(Proposals)
+                    setAcceptedProposal(Proposals)
+                })
+    }
+
+    const ChatUserProposals = async () => {
+        const d = new Date();
+        const hour = 1000 * 60 * 60;
+        const ctime = Math.round(d.getTime() / hour);
+        const ptime = Math.round(d.getTime() / hour) + 3;
+        await
+            firestore().collection('Proposals')
+                .doc(uid)
+                .onSnapshot((querySnap) => {
+                    // console.log(docSnapshot.data());
+                    const Proposals = [];
+                    const yourArrivald = []
+                    if (querySnap.data()) {
+                        querySnap.data().Proposals?.map(item => {
+                            // console.log('===>',item);
+                            Proposals.push(item);
+                        });
+
+                    }
+                    setSecondUserProposal(Proposals)
                 })
     }
 
@@ -195,7 +298,7 @@ const ChatingScreen = ({ navigation, route }) => {
     const onSend = useCallback((messages = []) => {
         let mymsg = null;
         console.log('category==>', category);
-        // console.log('imageUrl===>', imageUrl);
+        console.log('imageUrl===>', imageUrl);
         // return
         if (imageUrl) {
             console.log('send image');
@@ -277,79 +380,108 @@ const ChatingScreen = ({ navigation, route }) => {
         const d = new Date();
         const hour = 1000 * 60 * 60;
         const ctime = Math.round(d.getTime() / hour);
-        const ptime = Math.round(d.getTime() / hour) + 1;
+        const ptime = Math.round(d.getTime() / hour) + 3;
         // console.log('asdcasd',d);
 
-        await
-            firestore().collection('Proposals')
-                .doc(Currentuser.uid)
-                .onSnapshot((querySnap) => {
-                    // const data = docSnapshot.data()
-                    if (querySnap.exists) {
-                        const Proposals = [];
-                        const DatesProcess = [];
-                        querySnap.data().Proposals?.map(item => {
-                            // console.log('===>',item);
-                            Proposals.push(item);
-                            var date = item.ProposalTempDate;
-                            const hour = 1000 * 60 * 60;
-                            const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
-                            const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
-                            const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+        // const Proposals = [];
+        const DatesProcess = [];
 
-                            // console.log(Proposaltime, ptime, ctime,)
-
-                            if (Proposaltime >= ctime && !item.CancleDate && item.YourArrival == true && !item.PartnerArrival && Proposaltime <= ptime && d.toDateString() == item.ProposalDate) {
-                                // console.log('====>', item);
-                                // const data = item;
-                                dataupdated = {
-                                    ...item,
-                                    remainingTime: ((Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime),
-
-                                    // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
-                                }
-                                console.log(dataupdated);
-                                DatesProcess?.push(dataupdated);
-                            }
-                            else {
-                                console.log('===> codition false');
-                            }
-                        })
-                        console.log('==========>', DatesProcess);
-                        setProcessDate(DatesProcess)
-                        setAcceptedProposal(Proposals)
+        messages.map(item => {
+            if (item.category && item.ProposalStatus) {
+                // console.log(item);
+                // Proposals.push(item);
+                var date = item.ProposalTempDate;
+                const hour = 1000 * 60 * 60;
+                const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+                const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+                const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+                if (NProposaltime >= ctime && !item.CancleDate && item.YourArrival == true && !item.PartnerArrival && Proposaltime <= ptime && d.toDateString() == item.ProposalDate) {
+                    dataupdated = {
+                        ...item,
+                        remainingTime: ((Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime),
+                        // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
                     }
-                    else {
-                        console.log('Test');
-                        // setNoticeData('')
-                    }
-                    // return
-                    // const Proposals = [];
-                    // const DatesProcess = []
-                    // docSnapshot.forEach((documentSnapshot) => {
-                    //     Proposals?.push(documentSnapshot?.data());
-                    //     var date = documentSnapshot?.data().ProposalTempDate;
-                    //     const hour = 1000 * 60 * 60;
-                    //     const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
-                    //     // console.log(datetostring.toDateString() , date);
-                    //     if (Proposaltime <= ptime && Proposaltime >= ctime && d.toDateString() == documentSnapshot?.data().ProposalDate) {
-                    //         // console.log('====>', Proposaltime, ptime, ctime);
-                    //         const data = documentSnapshot?.data();
-                    //         dataupdated = {
-                    //             ...data,
-                    //             remainingTime: (Proposaltime - (Proposaltime - ctime >= 1 ? ctime : ctime - 1)),
-                    //         }
-                    //         // console.log(dataupdated);
-                    //         DatesProcess?.push(dataupdated);
-                    //     }
-                    //     else {
-                    //         console.log('===> codition false');
-                    //     }
-                    // });
-                    // // console.log(DatesProcess);
-                    // setProcessDate(DatesProcess)
-                    // setAcceptedProposal(Proposals)
-                })
+                    console.log(dataupdated);
+                    DatesProcess?.push(dataupdated);
+                }
+                else {
+                    console.log('===> codition false');
+                }
+            }
+        })
+        setProcessDate(DatesProcess)
+        // setAcceptedProposal(Proposals)
+
+        // await
+        //     firestore().collection('Proposals')
+        //         .doc(Currentuser.uid)
+        //         .onSnapshot((querySnap) => {
+        //             // const data = docSnapshot.data()
+        //             if (querySnap.exists) {
+        //                 const Proposals = [];
+        //                 const DatesProcess = [];
+        //                 querySnap.data().Proposals?.map(item => {
+        //                     // console.log('===>',item);
+        //                     Proposals.push(item);
+        //                     var date = item.ProposalTempDate;
+        //                     const hour = 1000 * 60 * 60;
+        //                     const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        //                     const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        //                     const PProposaltime = Math?.round(date?.toDate().getTime() / hour) - 3;
+
+        //                     // console.log(Proposaltime, ptime, ctime,)
+
+        //                     if (Proposaltime >= ctime && !item.CancleDate && item.YourArrival == true && !item.PartnerArrival && Proposaltime <= ptime && d.toDateString() == item.ProposalDate) {
+        //                         // console.log('====>', item);
+        //                         // const data = item;
+        //                         dataupdated = {
+        //                             ...item,
+        //                             remainingTime: ((Proposaltime - ctime >= 1 ? Proposaltime : Proposaltime) - ctime),
+
+        //                             // remainingTime: Proposaltime - (Proposaltime - NProposaltime >= 1 ? NProposaltime : Proposaltime),
+        //                         }
+        //                         console.log(dataupdated);
+        //                         DatesProcess?.push(dataupdated);
+        //                     }
+        //                     else {
+        //                         console.log('===> codition false');
+        //                     }
+        //                 })
+        //                 console.log('==========>', DatesProcess);
+        //                 setProcessDate(DatesProcess)
+        //                 setAcceptedProposal(Proposals)
+        //             }
+        //             else {
+        //                 console.log('Test');
+        //                 // setNoticeData('')
+        //             }
+        //             // return
+        //             // const Proposals = [];
+        //             // const DatesProcess = []
+        //             // docSnapshot.forEach((documentSnapshot) => {
+        //             //     Proposals?.push(documentSnapshot?.data());
+        //             //     var date = documentSnapshot?.data().ProposalTempDate;
+        //             //     const hour = 1000 * 60 * 60;
+        //             //     const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        //             //     // console.log(datetostring.toDateString() , date);
+        //             //     if (Proposaltime <= ptime && Proposaltime >= ctime && d.toDateString() == documentSnapshot?.data().ProposalDate) {
+        //             //         // console.log('====>', Proposaltime, ptime, ctime);
+        //             //         const data = documentSnapshot?.data();
+        //             //         dataupdated = {
+        //             //             ...data,
+        //             //             remainingTime: (Proposaltime - (Proposaltime - ctime >= 1 ? ctime : ctime - 1)),
+        //             //         }
+        //             //         // console.log(dataupdated);
+        //             //         DatesProcess?.push(dataupdated);
+        //             //     }
+        //             //     else {
+        //             //         console.log('===> codition false');
+        //             //     }
+        //             // });
+        //             // // console.log(DatesProcess);
+        //             // setProcessDate(DatesProcess)
+        //             // setAcceptedProposal(Proposals)
+        //         })
         // console.log(acceptedProposal);
     }
 
@@ -428,40 +560,164 @@ const ChatingScreen = ({ navigation, route }) => {
 
     }, [category])
 
-    const YouArrived = (item, index) => {
-        // console.log(item);
-        // return;
-        // acceptedProposal[index] = updateAccepted;
+    const YouArrivedTwo = (item, index) => {
+        // console.log('testdfvsd');
+        // return
         const test = [];
         acceptedProposal.map(a => {
             if (a._id != item._id) {
                 test.push(a);
             }
+            else {
+                const data = yourArrival[index];
+                const updateAccepted = {
+                    ...data,
+                    YourArrival: true,
+                    active: 0
+                }
+                test.push(updateAccepted);
+            }
         })
 
-        const data = yourArrival[index];
-        const updateAccepted = { ...data, YourArrival: true }
-        test.push(updateAccepted);
-        // console.log('===>', test);
-        // return;
-        if (!test.length == 0) {
-            firestore()
-                .collection('Proposals')
-                .doc(Currentuser.uid)
-                .set({
-                    Proposals: test,
-                }, { merge: true })
-                .then(() => {
-                    console.log('Proposal Updated!');
-                    // console.log(item);
-                });
-        }
+        // for chatuserproposal 
+        const chatUser = [];
+        SecondUserProposal.map(a => {
+            if (a._id != item._id) {
+                chatUser.push(a);
+            }
+            else {
+                const data2 = yourArrival[index];
+                const ChatuserUpdate = {
+                    ...data2,
+                    PartnerArrival: true,
+                    active: 0
+                }
+                chatUser.push(ChatuserUpdate);
+            }
+        })
 
+        if (!test.length == 0 && !chatUser.length == 0) {
+            try {
+                firestore()
+                    .collection('Proposals')
+                    .doc(Currentuser.uid)
+                    .set({
+                        Proposals: test,
+                    }, { merge: true })
+                    .then(() => {
+                        setTimeout(() => {
+                            navigation.navigate('DateServayScreen', { ProposalId: item._id });
+                            console.log('DateServayScreen');
+                        }, 3000
+                            //   1000 * 60 * 60
+                        );
+                    })
+                // .then(() => {
+                //     console.log('Proposal Updated!');
+                //     // console.log(item);
+                // });
+                firestore()
+                    .collection('Proposals')
+                    .doc(uid)
+                    .set({
+                        Proposals: chatUser,
+                    }, { merge: true })
+                    .then(() => {
+                        console.log('chat user Proposal Updated!');
+                        // console.log(item);
+                    });
+            }
+            catch (e) {
+                console.log('Error', e);
+            }
+        }
+    }
+
+    const YouArrived = (item, index) => {
+        const test = [];
+        acceptedProposal.map(a => {
+            if (a._id != item._id) {
+                test.push(a);
+            }
+            else {
+                const data = yourArrival[index];
+                const updateAccepted = {
+                    ...data,
+                    YourArrival: true
+                }
+                test.push(updateAccepted);
+            }
+        })
+
+        // for chatuserproposal 
+        const chatUser = [];
+        SecondUserProposal.map(a => {
+            if (a._id != item._id) {
+                chatUser.push(a);
+            }
+            else {
+                const data2 = yourArrival[index];
+                const ChatuserUpdate = {
+                    ...data2,
+                    PartnerArrival: true
+                }
+                chatUser.push(ChatuserUpdate);
+            }
+        })
+
+        if (!test.length == 0 && !chatUser.length == 0) {
+            // console.log(test);
+            // console.log('=>', chatUser);
+            // try {
+            //     const userRef = firestore().collection('chatrooms')
+            //         .doc(docid)
+            //         .collection('messages')
+            //         .doc(item._id)
+
+            //     userRef.update({
+            //         YourArrival: true,
+            //     })
+            //         .then(() => {
+            //             // RefereshForm();
+            //             // setDefaultAnimationDialog(false)
+            //             // navigation.goBack();
+            //             // console.log('Event deleted!');
+            //             ToastAndroid.show('You are arrived!', ToastAndroid.SHORT)
+            //         });
+            // }
+            // catch (e) {
+            //     console.log('Error', e);
+            // }
+            try {
+                firestore()
+                    .collection('Proposals')
+                    .doc(Currentuser.uid)
+                    .set({
+                        Proposals: test,
+                    }, { merge: true })
+                    .then(() => {
+                        console.log('Proposal Updated!');
+                        // console.log(item);
+                    });
+                firestore()
+                    .collection('Proposals')
+                    .doc(uid)
+                    .set({
+                        Proposals: chatUser,
+                    }, { merge: true })
+                    .then(() => {
+                        console.log('chat user Proposal Updated!');
+                        // console.log(item);
+                    });
+            }
+            catch (e) {
+                console.log('Error', e);
+            }
+        }
         // return
 
         // if (!item == '') {
         //     const updatedata = { ...item, YourArrival: true }
-
 
         //     console.log(updatedata);
         //     return;
@@ -478,33 +734,144 @@ const ChatingScreen = ({ navigation, route }) => {
         // userRef.set({
         //     'YourArrival': true,
         // })
-    }
-    const YouNotArrived = (item, index) => {
-        // console.log(item);
-        const data = yourArrival[index];
-        const updateAccepted = { ...data, YourArrival: false, CancleDate: true }
-        yourArrival[index] = updateAccepted;
+    };
 
-        // console.log(yourArrival);
-        if (!yourArrival.length == 0) {
+    const YouNotArrived = (item, index) => {
+        const test = [];
+        acceptedProposal.map(a => {
+            if (a._id != item._id) {
+                test.push(a);
+            }
+            else {
+                const data = yourArrival[index];
+                const updateAccepted = {
+                    ...data,
+                    YourArrival: false,
+                    CancleDate: true,
+                    active: 0,
+                }
+                test.push(updateAccepted);
+            }
+        })
+
+        // for chatuserproposal 
+        const chatUser = [];
+        SecondUserProposal.map(a => {
+            if (a._id != item._id) {
+                chatUser.push(a);
+            }
+            else {
+                const data2 = yourArrival[index];
+                const ChatuserUpdate = {
+                    ...data2,
+                    PartnerArrival: false,
+                    CancleDate: true,
+                    active: 0,
+                }
+                chatUser.push(ChatuserUpdate);
+            }
+        })
+
+        if (!test.length == 0 && !chatUser.length == 0) {
             try {
                 firestore()
                     .collection('Proposals')
                     .doc(Currentuser.uid)
                     .set({
-                        Proposals: yourArrival,
+                        Proposals: test,
                     }, { merge: true })
-
-                const userRef = firestore().collection('Users')
-                    .doc(Currentuser.uid)
-                userRef.update({
-                    'userDetails.Flake': + 1,
-                })
+                    .then(() => {
+                        console.log('Proposal Updated!');
+                        // console.log(item);
+                    });
+                firestore()
+                    .collection('Proposals')
+                    .doc(uid)
+                    .set({
+                        Proposals: chatUser,
+                    }, { merge: true })
+                    .then(() => {
+                        console.log('chat user Proposal Updated!');
+                        // console.log(item);
+                    });
             }
             catch (e) {
                 console.log('Error', e);
             }
         }
+        // if (!item == '') {
+        //     const userRef = firestore().collection('chatrooms')
+        //         .doc(docid)
+        //         .collection('messages')
+        //         .doc(item._id)
+
+        //     userRef.update({
+        //         YourArrival: false,
+        //         CancleDate: true
+        //     })
+        //         .then(() => {
+        //             // RefereshForm();
+        //             // setDefaultAnimationDialog(false)
+        //             // navigation.goBack();
+        //             // console.log('Event deleted!');
+        //             ToastAndroid.show('Date cancled!', ToastAndroid.SHORT)
+        //             const userRef = firestore().collection('Users')
+        //                 .doc(Currentuser.uid)
+        //             userRef.update({
+        //                 'userDetails.Flake': + 1,
+        //             })
+        //         });
+        //     // firestore()
+        //     //     .collection('Proposals')
+        //     //     .doc(Currentuser.uid)
+        //     //     .set({
+        //     //         Proposals: test,
+        //     //     }, { merge: true })
+        //     //     .then(() => {
+        //     //         console.log('Proposal Updated!');
+        //     //         // console.log(item);
+        //     //     });
+        // }
+        // const test = [];
+        // messages.map(a => {
+        //     if (a._id != item._id) {
+        //         test.push(a);
+        //     }
+        // })
+
+
+        // // const data = yourArrival[index];
+        // // const updateAccepted = { ...data, YourArrival: true }
+        // // test.push(updateAccepted);
+
+        // // console.log(item);
+        // const data = yourArrival[index];
+        // const updateAccepted = { ...data, YourArrival: false, CancleDate: true }
+        // // yourArrival[index] = updateAccepted;
+        // test.push(updateAccepted);
+
+        // console.log(test);
+
+        // return;
+        // if (!yourArrival.length == 0) {
+        //     try {
+        //         firestore()
+        //             .collection('Proposals')
+        //             .doc(Currentuser.uid)
+        //             .set({
+        //                 Proposals: test,
+        //             }, { merge: true })
+
+        //         const userRef = firestore().collection('Users')
+        //             .doc(Currentuser.uid)
+        //         userRef.update({
+        //             'userDetails.Flake': + 1,
+        //         })
+        //     }
+        //     catch (e) {
+        //         console.log('Error', e);
+        //     }
+        // }
     }
 
     const PNoArrived = (item, index) => {
@@ -513,40 +880,80 @@ const ChatingScreen = ({ navigation, route }) => {
         const ctime = Math.round(d.getTime() / hour);
         const ntime = Math.round(d.getTime() / hour) + 1;
 
-
-        // const itemDate = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour);
-        // const itemDate2 = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour) + 1;
         var date = item.ProposalTempDate;
         const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
-        const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        const NProposaltime = Math?.round(date?.toDate().getTime() / hour);
         // console.log(ntime, Proposaltime);
 
-        if (NProposaltime == ctime) {
-            const data = processDate[index];
-            const updateAccepted = { ...data, PartnerArrival: false, CancleDate: true }
-            yourArrival[index] = updateAccepted;
+        const test = [];
+        acceptedProposal.map(a => {
+            if (a._id != item._id) {
+                test.push(a);
+            }
+            else {
+                const data = yourArrival[index];
+                const updateAccepted = {
+                    ...data,
+                    YourArrival: true,
+                    CancleDate: true,
+                }
+                test.push(updateAccepted);
+            }
+        })
 
-            console.log(yourArrival);
+        // for chatuserproposal 
+        const chatUser = [];
+        SecondUserProposal.map(a => {
+            if (a._id != item._id) {
+                chatUser.push(a);
+            }
+            else {
+                const data2 = yourArrival[index];
+                const ChatuserUpdate = {
+                    ...data2,
+                    PartnerArrival: true,
+                    YourArrival: false,
+                    CancleDate: true,
+                }
+                chatUser.push(ChatuserUpdate);
+            }
+        })
+
+        if (ctime >= NProposaltime) {
+            // console.log('test');
             // return
-            // if (!processDate.length == 0) {
-            //     try {
-            //         firestore()
-            //             .collection('Proposals')
-            //             .doc(Currentuser.uid)
-            //             .set({
-            //                 Proposals: yourArrival,
-            //             }, { merge: true })
-
-            //         const userRef = firestore().collection('Users')
-            //             .doc(Currentuser.uid)
-            //         userRef.update({
-            //             'userDetails.Flake': + 1,
-            //         })
-            //     }
-            //     catch (e) {
-            //         console.log('Error', e);
-            //     }
-            // }
+            if (!test.length == 0 && !chatUser.length == 0) {
+                try {
+                    firestore()
+                        .collection('Proposals')
+                        .doc(Currentuser.uid)
+                        .set({
+                            Proposals: test,
+                        }, { merge: true })
+                        .then(() => {
+                            console.log('Proposal Updated!');
+                            // console.log(item);
+                        });
+                    firestore()
+                        .collection('Proposals')
+                        .doc(uid)
+                        .set({
+                            Proposals: chatUser,
+                        }, { merge: true })
+                        .then(() => {
+                            console.log('chat user Proposal Updated!');
+                            const userRef = firestore().collection('Users')
+                                .doc(uid)
+                            userRef.update({
+                                'userDetails.Flake': + 1,
+                            })
+                            // console.log(item);
+                        });
+                }
+                catch (e) {
+                    console.log('Error', e);
+                }
+            }
 
         }
         else {
@@ -555,34 +962,58 @@ const ChatingScreen = ({ navigation, route }) => {
         }
     };
     const PArrived = (item, index) => {
+        // console.log('parrive');
+        // return;
         const d = new Date();
         const hour = 1000 * 60 * 60;
         const ctime = Math.round(d.getTime() / hour);
-        // const ntime = Math.round(d.getTime() / hour) + 1;
+        const ntime = Math.round(d.getTime() / hour) + 1;
 
         var date = item.ProposalTempDate;
-        // const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
-        const NProposaltime = Math?.round(date?.toDate().getTime() / hour) + 1;
+        const Proposaltime = Math?.round(date?.toDate().getTime() / hour);
+        const NProposaltime = Math?.round(date?.toDate().getTime() / hour);
         // console.log(ntime, Proposaltime);
 
-        if (NProposaltime != ctime) {
-            // yourArrival[index] = updateAccepted;
-            // console.log(yourArrival)
-
-            const test = [];
-            acceptedProposal.map(a => {
-                if (a._id != item._id) {
-                    test.push(a);
+        const test = [];
+        acceptedProposal.map(a => {
+            if (a._id != item._id) {
+                test.push(a);
+            }
+            else {
+                const data = yourArrival[index];
+                const updateAccepted = {
+                    ...data,
+                    PartnerArrival: true,
+                    CancleDate: false,
+                    active: 0,
                 }
-            })
-    
-            const data = processDate[index];
-            const updateAccepted = { ...data, PartnerArrival: true, CancleDate: false }
-            test.push(updateAccepted);
+                test.push(updateAccepted);
+            }
+        })
 
-            // console.log(test);
-            // return;
-            if (!test.length == 0) {
+        // for chatuserproposal 
+        const chatUser = [];
+        SecondUserProposal.map(a => {
+            if (a._id != item._id) {
+                chatUser.push(a);
+            }
+            else {
+                const data2 = yourArrival[index];
+                const ChatuserUpdate = {
+                    ...data2,
+                    PartnerArrival: true,
+                    YourArrival: true,
+                    CancleDate: false,
+                    active: 0,
+                }
+                chatUser.push(ChatuserUpdate);
+            }
+        })
+
+        if (ctime >= NProposaltime) {
+            // console.log('test');
+            // return
+            if (!test.length == 0 && !chatUser.length == 0) {
                 try {
                     firestore()
                         .collection('Proposals')
@@ -592,27 +1023,76 @@ const ChatingScreen = ({ navigation, route }) => {
                         }, { merge: true })
                         .then(() => {
                             setTimeout(() => {
-                                navigation.navigate('DateServayScreen' , {ProposalId : item._id } );
+                                navigation.navigate('DateServayScreen', { ProposalId: item._id });
                                 console.log('DateServayScreen');
-                              }, 1000
-                            //   1000 * 60 * 60
-                              );
+                            }, 3000
+                                //   1000 * 60 * 60
+                            );
                         })
-                    // const userRef = firestore().collection('Users')
-                    //     .doc(Currentuser.uid)
-                    // userRef.update({
-                    //     'userDetails.Flake': + 1,
-                    // })
+                    // .then(() => {
+                    //     console.log('Proposal Updated!');
+                    //     // console.log(item);
+                    // });
+                    firestore()
+                        .collection('Proposals')
+                        .doc(uid)
+                        .set({
+                            Proposals: chatUser,
+                        }, { merge: true })
+                        .then(() => {
+                            console.log('Partner Arrived!');
+                            // const userRef = firestore().collection('Users')
+                            //     .doc(uid)
+                            // userRef.update({
+                            //     'userDetails.Flake': + 1,
+                            // })
+                            // console.log(item);
+                        });
                 }
                 catch (e) {
                     console.log('Error', e);
                 }
             }
+
         }
         else {
             ToastAndroid.show(`Please wait for ${NProposaltime - ctime} hr to perform any action.`, ToastAndroid.SHORT)
-            // return
+            // console.log(item);
         }
+        // console.log(item);
+        // return;
+        // if (!item == '') {
+        //     const userRef = firestore().collection('chatrooms')
+        //         .doc(docid)
+        //         .collection('messages')
+        //         .doc(item._id)
+
+        //     userRef.update({
+        //         YourArrival: true,
+        //     })
+        //         .then(() => {
+        //             // RefereshForm();
+        //             // setDefaultAnimationDialog(false)
+        //             // navigation.goBack();
+        //             // console.log('Event deleted!');
+        //             ToastAndroid.show('You are arrived!', ToastAndroid.SHORT)
+        //         });
+        // firestore()
+        //     .collection('Proposals')
+        //     .doc(Currentuser.uid)
+        //     .set({
+        //         Proposals: test,
+        //     }, { merge: true })
+        //     .then(() => {
+        //         console.log('Proposal Updated!');
+        //         // console.log(item);
+        //     });
+        // }
+        // }
+        // else {
+        //     ToastAndroid.show(`Please wait for ${NProposaltime - ctime} hr to perform any action.`, ToastAndroid.SHORT)
+        //     // return
+        // }
 
         // const itemDate = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour);
         // const itemDate2 = Math?.round(item?.ProposalTempDate?.toDate().getTime() / hour) + 1;
@@ -675,6 +1155,7 @@ const ChatingScreen = ({ navigation, route }) => {
             // 'YourArrival': true,
             'ProposalStatus': true,
             'AcceptTime': date,
+            'active': 1,
         }).then(() => {
 
             firestore().collection('chatrooms')
@@ -736,11 +1217,27 @@ const ChatingScreen = ({ navigation, route }) => {
         const pathToFile = imageDataa.assets[0].uri;
         // console.log(imageDataa.assets[0].uri);
         const reference = storage().ref(`Chats/${imageDataa.assets[0].fileName}`);
-        await reference.putFile(pathToFile);
-        const url = await reference.getDownloadURL();
-
-        console.log('url', url);
-        setImageUrl(url);
+        const task = reference.putFile(pathToFile);
+        // const url = await reference.getDownloadURL();
+        // console.log('url', url);
+        // setImageUrl(url);
+        task.on('state_changed', (taskSnapshot) => {
+            console.log(
+                `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+            );
+            setTransferred(
+                Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+                100,
+            );
+        });
+        try {
+            await task;
+            const url = await reference.getDownloadURL();
+            setImageUrl(url);
+            // console.log('===>',url);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const renderBubble = (props) => {
@@ -928,7 +1425,7 @@ const ChatingScreen = ({ navigation, route }) => {
                             marginHorizontal: 5,
                         }}>
                         <Image
-                            source={{ uri: imageData.assets[0].uri }}
+                            source={{ uri: imageUrl }}
                             style={{
                                 width: 40,
                                 height: 40,
@@ -976,7 +1473,7 @@ const ChatingScreen = ({ navigation, route }) => {
     }
     const goToMessages = () => {
         navigation.goBack()
-        uid
+        // uid
         // console.log('goback');
     }
 
@@ -1440,13 +1937,23 @@ const ChatingScreen = ({ navigation, route }) => {
                                                     alignItems: 'center',
                                                     justifyContent: 'space-between'
                                                 }}>
-                                                    <View>
-                                                        <Text style={{
-                                                            fontSize: 20,
-                                                            fontWeight: 'bold',
-                                                            color: COLORS.black,
-                                                        }}>Are you Arrived?</Text>
-                                                    </View>
+                                                    {item.YourArrival == true ?
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 20,
+                                                                fontWeight: 'bold',
+                                                                color: COLORS.black,
+                                                            }}>Your partner Arrived?</Text>
+                                                        </View>
+                                                        :
+                                                        <View>
+                                                            <Text style={{
+                                                                fontSize: 20,
+                                                                fontWeight: 'bold',
+                                                                color: COLORS.black,
+                                                            }}>Are you Arrived?</Text>
+                                                        </View>
+                                                    }
                                                 </View>
                                                 {!yourArrivalStatus ?
                                                     <>
@@ -1470,7 +1977,6 @@ const ChatingScreen = ({ navigation, route }) => {
                                                             </View>
 
                                                         </View>
-
                                                         <View style={{
                                                             flexDirection: 'row',
                                                             alignItems: 'center',
@@ -1511,6 +2017,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                                                 }}>Yes</Text>
                                                             </TouchableOpacity>
                                                         </View>
+
                                                     </>
                                                     :
                                                     <>
@@ -1585,193 +2092,281 @@ const ChatingScreen = ({ navigation, route }) => {
                                                                 </View>
                                                             </View>
                                                         </View>
-                                                        <View style={{
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center'
-                                                        }}>
-                                                            <TouchableOpacity
-                                                                onPress={() => setYourArrivalStatus(false)}
-                                                                activeOpacity={0.8}
-                                                                style={{
-                                                                    backgroundColor: COLORS.transparent,
-                                                                    borderWidth: 1,
-                                                                    marginTop: 20,
-                                                                    borderRadius: 10,
-                                                                    padding: 10,
-                                                                    alignItems: 'center',
-                                                                    paddingHorizontal: 30,
-                                                                    marginHorizontal: 10
-                                                                }}>
-                                                                <Text style={{
-                                                                    color: COLORS.black
-                                                                }}>No</Text>
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity
-                                                                onPress={() => YouArrived(item, index)}
 
-                                                                activeOpacity={0.8}
-                                                                style={{
-                                                                    backgroundColor: COLORS.black,
-                                                                    marginTop: 20,
-                                                                    borderRadius: 10,
-                                                                    padding: 10,
-                                                                    alignItems: 'center',
-                                                                    paddingHorizontal: 30,
-                                                                    marginHorizontal: 10
-                                                                }}>
+
+
+                                                        {item.YourArrival == true ?
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                                <TouchableOpacity
+                                                                    onPress={() => PNoArrived(item, index)}
+                                                                    activeOpacity={0.8}
+                                                                    style={{
+                                                                        backgroundColor: COLORS.transparent,
+                                                                        borderWidth: 1,
+                                                                        marginTop: 20,
+                                                                        borderRadius: 10,
+                                                                        padding: 10,
+                                                                        alignItems: 'center',
+                                                                        paddingHorizontal: 30,
+                                                                        marginHorizontal: 10
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        color: COLORS.black
+                                                                    }}>No</Text>
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity
+                                                                    onPress={() => PArrived(item, index)}
+
+                                                                    activeOpacity={0.8}
+                                                                    style={{
+                                                                        backgroundColor: COLORS.black,
+                                                                        marginTop: 20,
+                                                                        borderRadius: 10,
+                                                                        padding: 10,
+                                                                        alignItems: 'center',
+                                                                        paddingHorizontal: 30,
+                                                                        marginHorizontal: 10
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        color: COLORS.white
+                                                                    }}>Yes</Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                            :
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                                <TouchableOpacity
+                                                                    onPress={() => setYourArrivalStatus(false)}
+                                                                    activeOpacity={0.8}
+                                                                    style={{
+                                                                        backgroundColor: COLORS.transparent,
+                                                                        borderWidth: 1,
+                                                                        marginTop: 20,
+                                                                        borderRadius: 10,
+                                                                        padding: 10,
+                                                                        alignItems: 'center',
+                                                                        paddingHorizontal: 30,
+                                                                        marginHorizontal: 10
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        color: COLORS.black
+                                                                    }}>No</Text>
+                                                                </TouchableOpacity>
+                                                                {item?.PartnerArrival ?
+                                                                    <TouchableOpacity
+                                                                        onPress={() => YouArrivedTwo(item, index)}
+
+                                                                        activeOpacity={0.8}
+                                                                        style={{
+                                                                            backgroundColor: COLORS.black,
+                                                                            marginTop: 20,
+                                                                            borderRadius: 10,
+                                                                            padding: 10,
+                                                                            alignItems: 'center',
+                                                                            paddingHorizontal: 30,
+                                                                            marginHorizontal: 10
+                                                                        }}>
+                                                                        <Text style={{
+                                                                            color: COLORS.white
+                                                                        }}>Yes</Text>
+                                                                    </TouchableOpacity>
+                                                                    :
+                                                                    <TouchableOpacity
+                                                                        onPress={() => YouArrived(item, index)}
+
+                                                                        activeOpacity={0.8}
+                                                                        style={{
+                                                                            backgroundColor: COLORS.black,
+                                                                            marginTop: 20,
+                                                                            borderRadius: 10,
+                                                                            padding: 10,
+                                                                            alignItems: 'center',
+                                                                            paddingHorizontal: 30,
+                                                                            marginHorizontal: 10
+                                                                        }}>
+                                                                        <Text style={{
+                                                                            color: COLORS.white
+                                                                        }}>Yes</Text>
+                                                                    </TouchableOpacity>
+                                                                }
+                                                            </View>
+                                                        }
+                                                        {item?.PartnerArrival &&
+                                                            <View style={{
+                                                                paddingTop: 5,
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}>
                                                                 <Text style={{
-                                                                    color: COLORS.white
-                                                                }}>Yes</Text>
-                                                            </TouchableOpacity>
-                                                        </View>
+                                                                    fontSize: 12,
+                                                                    paddingRight: 5
+                                                                }}>
+                                                                    Your partner hase arrived!
+                                                                </Text>
+                                                                <Text style={{
+                                                                    fontSize: 12,
+                                                                    color: 'red'
+                                                                }}>
+                                                                    youre getting late
+                                                                </Text>
+                                                            </View>
+
+                                                        }
                                                     </>
                                                 }
                                             </View>
                                         ))}
                                     </>
                                     :
-                                    <>
-                                        {processDate?.map((item, index) => (
-                                            // console.log('==============', item),
-                                            <View
-                                                key={index}
-                                                style={{
-                                                    paddingHorizontal: 20,
-                                                    paddingVertical: 10,
-                                                    backgroundColor: COLORS.white,
-                                                    marginVertical: 10,
-                                                    marginHorizontal: 20,
-                                                    borderRadius: 10,
-                                                    elevation: 3,
-                                                }}>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between'
-                                                }}>
-                                                    <View>
-                                                        <Text style={{
-                                                            fontSize: 20,
-                                                            fontWeight: 'bold',
-                                                            color: COLORS.black,
-                                                        }}>Your Partner Arrived?</Text>
-                                                    </View>
-                                                </View>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    paddingTop: 10
-                                                }}>
-                                                    <View style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        paddingRight: 10
-                                                    }}>
-                                                        <View style={{
-                                                            paddingRight: 5
-                                                        }}>
-                                                            <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
-                                                        <View>
-                                                            <Text style={{
-                                                                fontSize: 12,
-                                                            }}>{item?.ProposalDate}</Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        <View style={{
-                                                            paddingRight: 5
-                                                        }}>
-                                                            <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
-                                                        <View>
-                                                            <Text style={{
-                                                                fontSize: 12,
-                                                            }}>{item.remainingTime}hr remaining</Text>
-                                                        </View>
-                                                    </View>
+                                    null
+                                    // <>
+                                    //     {processDate?.map((item, index) => (
+                                    //         // console.log('==============', item),
+                                    //         <View
+                                    //             key={index}
+                                    //             style={{
+                                    //                 paddingHorizontal: 20,
+                                    //                 paddingVertical: 10,
+                                    //                 backgroundColor: COLORS.white,
+                                    //                 marginVertical: 10,
+                                    //                 marginHorizontal: 20,
+                                    //                 borderRadius: 10,
+                                    //                 elevation: 3,
+                                    //             }}>
+                                    //             <View style={{
+                                    //                 flexDirection: 'row',
+                                    //                 alignItems: 'center',
+                                    //                 justifyContent: 'space-between'
+                                    //             }}>
+                                    //                 <View>
+                                    //                     <Text style={{
+                                    //                         fontSize: 20,
+                                    //                         fontWeight: 'bold',
+                                    //                         color: COLORS.black,
+                                    //                     }}>Your Partner Arrived?</Text>
+                                    //                 </View>
+                                    //             </View>
+                                    //             <View style={{
+                                    //                 flexDirection: 'row',
+                                    //                 alignItems: 'center',
+                                    //                 justifyContent: 'space-between',
+                                    //                 paddingTop: 10
+                                    //             }}>
+                                    //                 <View style={{
+                                    //                     flexDirection: 'row',
+                                    //                     alignItems: 'center',
+                                    //                     paddingRight: 10
+                                    //                 }}>
+                                    //                     <View style={{
+                                    //                         paddingRight: 5
+                                    //                     }}>
+                                    //                         <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
+                                    //                             width: 15,
+                                    //                             height: 15,
+                                    //                         }} />
+                                    //                     </View>
+                                    //                     <View>
+                                    //                         <Text style={{
+                                    //                             fontSize: 12,
+                                    //                         }}>{item?.ProposalDate}</Text>
+                                    //                     </View>
+                                    //                 </View>
+                                    //                 <View style={{
+                                    //                     flexDirection: 'row',
+                                    //                     alignItems: 'center'
+                                    //                 }}>
+                                    //                     <View style={{
+                                    //                         paddingRight: 5
+                                    //                     }}>
+                                    //                         <Image source={require('../../assets/clock.png')} resizeMode="contain" style={{
+                                    //                             width: 15,
+                                    //                             height: 15,
+                                    //                         }} />
+                                    //                     </View>
+                                    //                     <View>
+                                    //                         <Text style={{
+                                    //                             fontSize: 12,
+                                    //                         }}>{item.remainingTime}hr remaining</Text>
+                                    //                     </View>
+                                    //                 </View>
 
-                                                </View>
+                                    //             </View>
 
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    paddingTop: 10
-                                                }}>
-                                                    <View style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        <View style={{
-                                                            paddingRight: 5
-                                                        }}>
-                                                            <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
-                                                        <View>
-                                                            <Text style={{
-                                                                fontSize: 12,
-                                                            }}>{item.ProposalAddress}</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center'
-                                                }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => PNoArrived(item, index)}
-                                                        activeOpacity={0.8}
-                                                        style={{
-                                                            backgroundColor: COLORS.transparent,
-                                                            borderWidth: 1,
-                                                            marginTop: 20,
-                                                            borderRadius: 10,
-                                                            padding: 10,
-                                                            alignItems: 'center',
-                                                            paddingHorizontal: 30,
-                                                            marginHorizontal: 10
-                                                        }}>
-                                                        <Text style={{
-                                                            color: COLORS.black
-                                                        }}>No</Text>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                        onPress={() => PArrived(item, index)}
+                                    //             <View style={{
+                                    //                 flexDirection: 'row',
+                                    //                 alignItems: 'center',
+                                    //                 justifyContent: 'space-between',
+                                    //                 paddingTop: 10
+                                    //             }}>
+                                    //                 <View style={{
+                                    //                     flexDirection: 'row',
+                                    //                     alignItems: 'center'
+                                    //                 }}>
+                                    //                     <View style={{
+                                    //                         paddingRight: 5
+                                    //                     }}>
+                                    //                         <Image source={require('../../assets/map.png')} resizeMode="contain" style={{
+                                    //                             width: 15,
+                                    //                             height: 15,
+                                    //                         }} />
+                                    //                     </View>
+                                    //                     <View>
+                                    //                         <Text style={{
+                                    //                             fontSize: 12,
+                                    //                         }}>{item.ProposalAddress}</Text>
+                                    //                     </View>
+                                    //                 </View>
+                                    //             </View>
+                                    //             <View style={{
+                                    //                 flexDirection: 'row',
+                                    //                 alignItems: 'center',
+                                    //                 justifyContent: 'center'
+                                    //             }}>
+                                    //                 <TouchableOpacity
+                                    //                     onPress={() => PNoArrived(item, index)}
+                                    //                     activeOpacity={0.8}
+                                    //                     style={{
+                                    //                         backgroundColor: COLORS.transparent,
+                                    //                         borderWidth: 1,
+                                    //                         marginTop: 20,
+                                    //                         borderRadius: 10,
+                                    //                         padding: 10,
+                                    //                         alignItems: 'center',
+                                    //                         paddingHorizontal: 30,
+                                    //                         marginHorizontal: 10
+                                    //                     }}>
+                                    //                     <Text style={{
+                                    //                         color: COLORS.black
+                                    //                     }}>No</Text>
+                                    //                 </TouchableOpacity>
+                                    //                 <TouchableOpacity
+                                    //                     onPress={() => PArrived(item, index)}
 
-                                                        activeOpacity={0.8}
-                                                        style={{
-                                                            backgroundColor: COLORS.black,
-                                                            marginTop: 20,
-                                                            borderRadius: 10,
-                                                            padding: 10,
-                                                            alignItems: 'center',
-                                                            paddingHorizontal: 30,
-                                                            marginHorizontal: 10
-                                                        }}>
-                                                        <Text style={{
-                                                            color: COLORS.white
-                                                        }}>Yes</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        ))}
-                                    </>
+                                    //                     activeOpacity={0.8}
+                                    //                     style={{
+                                    //                         backgroundColor: COLORS.black,
+                                    //                         marginTop: 20,
+                                    //                         borderRadius: 10,
+                                    //                         padding: 10,
+                                    //                         alignItems: 'center',
+                                    //                         paddingHorizontal: 30,
+                                    //                         marginHorizontal: 10
+                                    //                     }}>
+                                    //                     <Text style={{
+                                    //                         color: COLORS.white
+                                    //                     }}>Yes</Text>
+                                    //                 </TouchableOpacity>
+                                    //             </View>
+                                    //         </View>
+                                    //     ))}
+                                    // </>
                                 }
 
                             </ScrollView>
@@ -2034,7 +2629,7 @@ const ChatingScreen = ({ navigation, route }) => {
                     }}
                 >
                     {/* locationpopup  */}
-                    < Modal
+                    <Modal
                         animationType='fade'
                         transparent={false}
                         visible={locationModalVisible}>

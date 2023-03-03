@@ -180,10 +180,8 @@ const QuestionClingyScreen = ({ navigation, route }) => {
       await task;
 
       const url = await storageRef.getDownloadURL();
-
       // setUploading(false);
       // setImage(null);
-
       // Alert.alert(
       //   'Image uploaded!',
       //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',

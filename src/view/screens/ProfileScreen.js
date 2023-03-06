@@ -13,7 +13,7 @@ const ProfileScreen = ({ navigation }) => {
   const [uploading, setUploading] = useState(false);
   const [buyPack, setBuyPack] = useState(false);
   const user = useSelector(selectUser);
-  // console.log(user.uid);
+  // console.log(user.Flake);
   const dispatch = useDispatch();
 
   const fetchMemberships = async () => {
@@ -151,122 +151,235 @@ const ProfileScreen = ({ navigation }) => {
             </View>
 
             <View style={{
+              display: 'flex',
               flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'flex-end',
+              alignContent: 'stretch',
+              alignItems: 'center',
+              maxWidth: '100%',
+              margin: 'auto',
               paddingHorizontal: 20,
-              justifyContent: 'space-between'
+              paddingTop: 20,
             }}>
-              <View>
-                {user ? (
-                  <Image source={{ uri: user.image1 }}
-                    resizeMode='cover'
+              <View style={{
+                flexDirection: 'row',
+                width: '70%',
+                height: 200,
+                paddingRight: 5
+              }}>
+                {user.image1 ?
+                  <TouchableOpacity
+                    // onPress={pickImage1}
                     style={{
-                      width: 220,
-                      height: 200,
-                      borderRadius: 10
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                    <Image source={{ uri: user.image1 }} resizeMode='cover' style={{
+                      height: '100%',
+                      width: '100%',
+                      borderRadius: 10,
                     }} />
-                ) : (
-                  <Image source={require('../../assets/profile6.png')} resizeMode='cover'
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity
+                    // onPress={pickImage1}
                     style={{
-                      width: 220,
-                      height: 200,
-                      borderRadius: 10
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                    <Image source={require('../../assets/uploadimage.png')} style={{
+                      width: 30,
+                      height: 30,
                     }} />
-                )}
+                    <Text style={{
+                      width: '70%'
+                    }}>
+                      Click to add image
+                    </Text>
+                  </TouchableOpacity>
+                }
               </View>
               <View style={{
+                flexDirection: 'column',
+                width: '30%',
+                height: 200,
                 justifyContent: 'space-between'
               }}>
-                <View>
-                  {user ? (
-                    <Image source={{ uri: user.image1 }} resizeMode='cover'
-                      style={{
-                        height: 95,
-                        width: 120,
-                        borderRadius: 10
-                      }} />
-                  ) : (
-                    <Image source={require('../../assets/profile2.png')} resizeMode='cover'
-                      style={{
-                        height: 95,
-                        width: 120,
-                        borderRadius: 10
-                      }} />
-                  )}
-                </View>
-                <View>
-                  {user ? (
-                    <Image source={{ uri: user.image1 }} resizeMode='cover'
-                      style={{
-                        height: 95,
-                        width: 120,
-                        borderRadius: 10
-                      }} />
-                  ) : (
-                    <Image source={require('../../assets/profile3.png')} resizeMode='cover'
-                      style={{
-                        height: 95,
-                        width: 120,
-                        borderRadius: 10
-                      }} />
-                  )}
-                </View>
+                {user.image2 ?
+                  <TouchableOpacity
+                    // onPress={pickImage2}
+                    style={{
+                      height: 98,
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                    <Image source={{ uri: user.image2 }} resizeMode='cover' style={{
+                      height: '100%',
+                      width: '100%',
+                      borderRadius: 10,
+                    }} />
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity
+                    // onPress={pickImage2}
+                    style={{
+                      height: 98,
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image source={require('../../assets/add.png')} style={{
+                      width: 20,
+                      height: 20,
+                    }} />
+                  </TouchableOpacity>
+                }
+
+                {user.image3 ?
+                  <TouchableOpacity
+                    // onPress={pickImage3}
+                    style={{
+                      height: 98,
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                    <Image source={{ uri: user.image3 }} resizeMode='cover' style={{
+                      height: '100%',
+                      width: '100%',
+                      borderRadius: 10,
+                    }} />
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity
+                    // onPress={pickImage3}
+                    style={{
+                      height: 98,
+                      backgroundColor: COLORS.mainlight,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image source={require('../../assets/add.png')} style={{
+                      width: 20,
+                      height: 20,
+                    }} />
+                  </TouchableOpacity>
+                }
               </View>
             </View>
             <View style={{
+              display: 'flex',
               flexDirection: 'row',
+              // width: '100%',
               paddingHorizontal: 20,
-              justifyContent: 'space-between',
-              paddingTop: 10
+              marginTop: 5,
+              justifyContent: 'space-between'
             }}>
-              <View>
-                {user ? (
-                  <Image source={{ uri: user.image1 }} resizeMode='cover'
-                    style={{
-                      height: 95,
-                      width: 110,
-                      borderRadius: 10
-                    }} />
-                ) : (
-                  <Image source={require('../../assets/profile4.png')} resizeMode='cover'
-                    style={{
-                      height: 95,
-                      width: 110,
-                      borderRadius: 10
-                    }} />
-                )}
-              </View>
-              <View>
-                {user ? (
-                  <Image source={{ uri: user.image1 }} resizeMode='cover'
-                    style={{
-                      height: 95,
-                      width: 110,
-                      borderRadius: 10
-                    }} />
-                ) : (
-                  <Image source={require('../../assets/profile5.png')} resizeMode='cover'
-                    style={{
-                      height: 95,
-                      width: 110,
-                      borderRadius: 10
-                    }} />
-                )}
-              </View>
-              <View style={{
-                backgroundColor: COLORS.mainlight,
-                height: 95,
-                width: 110,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10
-              }}>
-                <TouchableOpacity>
-                  <Image source={require('../../assets/add.png')} resizeMode='contain'
-                    style={{
-                      borderRadius: 10
-                    }} />
+              {user.image4 ?
+                <TouchableOpacity
+                  // onPress={pickImage4}
+                  style={{
+                    height: 98,
+                    width: '34%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                  <Image source={{ uri: user.image4 }} resizeMode='cover' style={{
+                    height: '100%',
+                    width: '100%',
+                    borderRadius: 10,
+                  }} />
                 </TouchableOpacity>
-              </View>
+                :
+                <TouchableOpacity
+                  // onPress={pickImage4}
+                  style={{
+                    height: 98,
+                    width: '34%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image source={require('../../assets/add.png')} style={{
+                    width: 20,
+                    height: 20,
+                  }} />
+                </TouchableOpacity>
+              }
+
+              {user.image5 ?
+                <TouchableOpacity
+                  // onPress={pickImage5}
+                  style={{
+                    height: 98,
+                    width: '34%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                  <Image source={{ uri: user.image5 }} resizeMode='cover' style={{
+                    height: '100%',
+                    width: '100%',
+                    borderRadius: 10,
+                  }} />
+                </TouchableOpacity>
+                :
+                <TouchableOpacity
+                  // onPress={pickImage5}
+                  style={{
+                    height: 98,
+                    width: '34%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image source={require('../../assets/add.png')} style={{
+                    width: 20,
+                    height: 20,
+                  }} />
+                </TouchableOpacity>
+              }
+
+              <TouchableOpacity
+                // onPress={pickImage6}
+                style={{
+                  height: 98,
+                  width: '30%',
+                  marginRight: 5,
+                  backgroundColor: COLORS.mainlight,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image source={require('../../assets/add.png')} style={{
+                  width: 20,
+                  height: 20,
+                }} />
+              </TouchableOpacity>
+
             </View>
 
             <View style={{
@@ -423,7 +536,98 @@ const ProfileScreen = ({ navigation }) => {
                 <Text>Flakes on your profile</Text>
               </View>
               <View>
-                <Image source={require('../../assets/flakemeter.png')} resizeMode='contain' />
+                <Text style={{
+                  color: COLORS.black,
+                  textAlign: 'center'
+                }}>
+                  #flakemeter
+                </Text>
+                {user.Flake == 1 &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Text>
+                      +{user.Flake}
+                    </Text>
+                  </View>
+                  // <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                }
+                {user.Flake == 2 &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Text>
+                      +{user.Flake}
+                    </Text>
+                  </View>
+                }
+                {user.Flake == 3 &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Text>
+                      +{user.Flake}
+                    </Text>
+                  </View>
+                }
+                {user.Flake > 3 &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.main
+                    }} />
+                    <Text>
+                      +{user.Flake}
+                    </Text>
+                  </View>
+                }
+                {user.Flake < 1 &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                    <Text>
+                      +0
+                    </Text>
+                  </View>
+
+                }
+                {/* <Image source={require('../../assets/flakemeter.png')} resizeMode='contain' /> */}
               </View>
             </View>
 
@@ -475,10 +679,10 @@ const ProfileScreen = ({ navigation }) => {
                   fontSize: 16
                 }}>Memberships</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('AdditonalPackages')}>
-                <Text style={{
-                  color: COLORS.blue, borderBottomColor: COLORS.blue,
-                  borderBottomWidth: 1,
-                }}>Additional Packages</Text>
+                  <Text style={{
+                    color: COLORS.blue, borderBottomColor: COLORS.blue,
+                    borderBottomWidth: 1,
+                  }}>Additional Packages</Text>
                 </TouchableOpacity>
               </View>
               {memberships ? (

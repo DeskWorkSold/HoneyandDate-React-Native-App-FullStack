@@ -347,7 +347,6 @@ const DateServayScreen = ({ navigation, route }) => {
               marginHorizontal: 20
             }}>
               {renderDropdown()}
-
             </View>
 
             <View style={{

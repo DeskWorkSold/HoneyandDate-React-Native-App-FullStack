@@ -8,9 +8,12 @@ import firestore from '@react-native-firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { chatuser, selectPackages, selectUser } from '../../../redux/reducers/Reducers'
 import Notifictaions from '../../view/components/Notifictaions';
-const { height, width } = Dimensions.get('window')
+const { height, width } = Dimensions.get('window');
+
+
 
 function RenderCard({ data, navigation }) {
+    const [flake, setFlake] = useState('')
     return (
         <View style={{
             marginTop: -50,
@@ -31,6 +34,138 @@ function RenderCard({ data, navigation }) {
                         paddingHorizontal: 10
                     }}
                 />
+                {data.userDetails?.Flake > 0 &&
+                    <View style={{
+                        backgroundColor: COLORS.white,
+                        borderRadius: 15,
+                        marginTop: height / 2,
+                        alignItems: 'center',
+                        position: 'absolute',
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        marginLeft: 15
+                    }}>
+                        <Text style={{
+                            color: COLORS.black,
+                            // textAlign: 'center'
+                            fontWeight: 'bold'
+                        }}>
+                            #flakemeter
+                        </Text>
+                        {data.userDetails?.Flake == 1 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Text>
+                                    +{data.userDetails.Flake}
+                                </Text>
+                            </View>
+                            // <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                        }
+                        {data.userDetails?.Flake == 2 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Text>
+                                    +{data.userDetails.Flake}
+                                </Text>
+                            </View>
+                        }
+                        {data.userDetails?.Flake == 3 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Text>
+                                    +{data.userDetails.Flake}
+                                </Text>
+                            </View>
+                        }
+                        {data.userDetails?.Flake > 3 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Text>
+                                    +{data.userDetails.Flake}
+                                </Text>
+                            </View>
+                        }
+                        {data.userDetails.Flake < 1 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                <Text>
+                                    +0
+                                </Text>
+                            </View>
+
+                        }
+                    </View>
+                }
             </View>
             <View>
                 <View style={{
@@ -65,7 +200,7 @@ function RenderCard({ data, navigation }) {
 
 
             <View style={{
-                paddingBottom:20
+                paddingBottom: 20
             }}>
                 <View style={{
                     flexDirection: 'row',
@@ -1642,8 +1777,8 @@ const HomeScreen = ({ navigation }) => {
                             >
                                 <Image source={require('../../assets/heart.png')} resizeMode='contain'
                                     style={{
-                                        width: 30,
-                                        height: 30
+                                        width: 40,
+                                        height: 40
                                     }} />
                             </TouchableOpacity>
                         </View>

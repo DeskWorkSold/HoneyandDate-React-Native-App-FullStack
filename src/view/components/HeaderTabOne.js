@@ -13,10 +13,7 @@ const HeaderTabOne = ({ Lefticon, logo, onpress, Righticon, Title }) => {
         }}>
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <TouchableOpacity onPress={onpress}>
-                    <Image source={Lefticon} resizeMode='contain' style={{
-                        width:20,
-                        height:20,
-                    }} />
+                    <Image source={Lefticon} resizeMode='contain' />
                 </TouchableOpacity>
             </View>
 

@@ -1,4 +1,4 @@
-import { FlatList, Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, Modal, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HeaderTabOne from '../components/HeaderTabOne';
 import COLORS from '../../consts/Colors';
@@ -8,10 +8,36 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useSelector } from 'react-redux';
 import { selectChatuser, selectUser } from '../../../redux/reducers/Reducers';
+import Slider from '@react-native-community/slider';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const filteruser = [
+  {
+    id: 1,
+    name: 'Guys',
+  },
+  {
+    id: 2,
+    name: 'Girls',
+  },
+  {
+    id: 3,
+    name: 'Both',
+  },
+]
 
 const LikeDetailScreen = ({ navigation }) => {
   const [likedusers, setLikedUser] = useState();
   const [modalDataUid, setModalDataUid] = useState();
+  const [showFilter, setShowFilter] = useState(false);
+  const [segmentedButtons, setSegmentedButtons] = useState(false);
+  const [selectGender, setSelectGender] = useState();
+  const [selectMinMaxAge, setSelectMinMaxAge] = useState('minage');
+
+  const [minimumAge, setminimumAgeRange] = useState(0);
+  const [maximumAge, setmaximumAgeRange] = useState(0);
+  const [distance, setDistance] = useState(0);
   const user = useSelector(selectUser)
   const MatchUser = useSelector(selectChatuser);
 
@@ -160,7 +186,7 @@ const LikeDetailScreen = ({ navigation }) => {
                   fontWeight: 'bold',
                   color: COLORS.black,
                   paddingVertical: 5,
-                }}>Want to remove flakes</Text>
+                }}>Boost for more likes</Text>
               </View>
               <View style={{
                 paddingHorizontal: 10,
@@ -169,16 +195,21 @@ const LikeDetailScreen = ({ navigation }) => {
                 <Text style={{
                   textAlign: 'center',
                   fontSize: 12
-                }}>You can remove flakes by paying
-                  $20 per flake now</Text>
+                }}>Boost your profile and get seen 30x more</Text>
               </View>
-              <TouchableOpacity activeOpacity={0.8} style={{
-                paddingHorizontal: 20,
-                paddingVertical: 10,
-                backgroundColor: COLORS.main,
-                borderRadius: 10,
-              }}>
-                <Text style={{ color: COLORS.black, fontSize: 13 }}>Remove Flakes</Text>
+              <TouchableOpacity
+                onPress={() => setShowFilter(true)}
+                activeOpacity={0.8} style={{
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  backgroundColor: COLORS.main,
+                  borderRadius: 10,
+                }}>
+                <Text style={{
+                  color: COLORS.black,
+                  fontSize: 13,
+                  fontWeight: 'bold'
+                }}>Boost for 10$</Text>
               </TouchableOpacity>
             </View>
 
@@ -204,7 +235,7 @@ const LikeDetailScreen = ({ navigation }) => {
               {MatchUser ? (
                 // <View style={{ height: 170, width:'100%' }}>
                 <>
-                {MatchUser.map((item, index) => (
+                  {MatchUser.map((item, index) => (
                     <View key={index} style={{
                       flexDirection: 'row',
                       paddingHorizontal: 20,
@@ -280,8 +311,8 @@ const LikeDetailScreen = ({ navigation }) => {
                         </TouchableOpacity>
                       </View>
                     </View>
-                    ))}
-                    </>
+                  ))}
+                </>
                 // </View>
               ) : (
                 <View style={{
@@ -308,13 +339,13 @@ const LikeDetailScreen = ({ navigation }) => {
               paddingHorizontal: 10,
             }}>
               {likedusers ? (
-                <View  style={{
+                <View style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                   justifyContent: "space-between",
-                  width:'100%',
-                  paddingHorizontal:10
-              }}>
+                  width: '100%',
+                  paddingHorizontal: 10
+                }}>
                   {likedusers.map((item, index) => (
                     <View key={index}
                       style={{
@@ -323,7 +354,7 @@ const LikeDetailScreen = ({ navigation }) => {
                         marginHorizontal: 5,
                       }}>
                       <LikesCard image={{ uri: item.image1 }} name={item.Name} navigation={navigation}
-                        description='Model at Instagram' />
+                        description='Model at Instagram' item={item} />
                     </View>
                   ))}
                 </View>
@@ -374,6 +405,321 @@ const LikeDetailScreen = ({ navigation }) => {
               </View>
             </View> */}
           </View>
+
+
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={showFilter}
+            onRequestClose={() => {
+              setShowFilter(!showFilter);
+            }}
+          >
+            <View style={{
+              // marginTop: 109,
+              // borderTopRightRadius: 20,
+              // borderTopLeftRadius: 20,
+              elevation: 5,
+              // justifyContent:'flex-end',
+              height: windowHeight,
+              backgroundColor: COLORS.white
+            }}>
+              <View>
+                <View style={{
+                  padding: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <TouchableOpacity>
+                    <Image source={require('../../assets/right.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.black
+                    }} />
+                  </TouchableOpacity>
+                  <View>
+                    <Text style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: COLORS.black
+                    }}>
+                      Filter
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => setShowFilter(false)}>
+                    <Image source={require('../../assets/cross.png')} resizeMode='contain' style={{
+                      tintColor: COLORS.black
+                    }} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{
+                  paddingHorizontal: 20,
+                }}>
+                  <Text style={{
+                    fontSize: 16,
+                    color: COLORS.black
+                  }}>
+                    I'm interested in
+                  </Text>
+                </View>
+                <View style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  // paddingHorizontal: 20,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLORS.gray2,
+                  marginHorizontal: 20,
+                  // paddingVertical: 15
+                }}>
+                  {filteruser.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => setSelectGender(index)}
+                      style={{
+                        borderWidth: selectGender == index ? 1 : 0,
+                        borderColor: selectGender == index ? '#2A3182' : null,
+                        borderRadius: 10,
+                        paddingHorizontal: 20,
+                        paddingVertical: 15,
+                        width: '33%'
+                      }}>
+                      <Text style={{
+                        textAlign: 'center'
+                      }}>
+                        {item.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 20,
+                  paddingTop: 20,
+                }}>
+                  <View style={{
+                    flex: 1,
+                  }}>
+                    <Text style={{
+                      fontSize: 16,
+                      // fontWeight: 'bold',
+                      color: COLORS.black
+                    }}>Age Range</Text>
+                  </View>
+                  <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end'
+                  }}>
+                    <TouchableOpacity onPress={() => setSelectMinMaxAge('minage')}
+                      style={{
+                        // backgroundColor: COLORS.main,
+                        // paddingHorizontal: 3,
+                        // borderRadius: 4
+                      }}>
+                      <Text style={{
+                        fontSize: 20,
+                        color: COLORS.black,
+                        fontWeight: 'bold'
+                      }}>{Math.floor(minimumAge * 100)}</Text>
+                    </TouchableOpacity>
+                    <Text> - </Text>
+                    <TouchableOpacity onPress={() => setSelectMinMaxAge('maxage')}
+                      style={{
+                        // backgroundColor: COLORS.main,
+                        // paddingHorizontal: 3,
+                        // borderRadius: 4
+                      }}>
+                      <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: COLORS.black
+                      }}>{Math.floor(maximumAge * 100)}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {selectMinMaxAge == 'maxage' ?
+                  <View style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <Slider
+                      style={{ width: '100%', height: 40, }}
+                      minimumValue={0}
+                      maximumValue={1}
+                      thumbTouchSize={{
+                        width: 40, height: 40
+                      }}
+                      thumbTintColor={COLORS.main}
+                      minimumTrackTintColor={COLORS.main}
+                      maximumTrackTintColor={COLORS.gray}
+                      onValueChange={(value) => setmaximumAgeRange(value)}
+                    />
+                  </View>
+                  :
+                  <View style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <Slider
+                      style={{ width: '100%', height: 40, }}
+                      minimumValue={0}
+                      maximumValue={1}
+                      thumbTouchSize={{
+                        width: 40, height: 40
+                      }}
+                      thumbTintColor={COLORS.main}
+                      minimumTrackTintColor={COLORS.main}
+                      maximumTrackTintColor={COLORS.gray}
+                      onValueChange={(value) => setminimumAgeRange(value)}
+                    />
+                  </View>
+                }
+
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 20,
+                  paddingTop: 20,
+                  justifyContent: 'space-between'
+                }}>
+                  <View style={{
+                  }}>
+                    <Text style={{
+                      fontSize: 16,
+                      // fontWeight: 'bold',
+                      color: COLORS.black
+                    }}>Distance(miles)</Text>
+                  </View>
+                  <View style={{
+                  }}>
+                    <Text style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: COLORS.black
+                    }}>Whole country</Text>
+                  </View>
+                </View>
+                <View style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Slider
+                    style={{ width: '100%', height: 40, }}
+                    minimumValue={0}
+                    maximumValue={1}
+                    thumbTouchSize={{
+                      width: 40, height: 40
+                    }}
+                    thumbTintColor={COLORS.main}
+                    minimumTrackTintColor={COLORS.main}
+                    maximumTrackTintColor={COLORS.gray}
+                    onValueChange={(value) => setDistance(value)}
+                  />
+                </View>
+
+
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 20,
+                }}>
+                  <View style={{
+                    flex: 1
+                  }}>
+                    <Image source={require('../../assets/modal/Religion.png')} resizeMode='contain' style={{
+                      width: 40,
+                      height: 40
+                    }} />
+                  </View>
+                  <View style={{
+                    flex: 4,
+                    alignItems: 'flex-start'
+                  }}>
+                    <Text style={{
+                      fontSize: 16,
+                      color: COLORS.black
+                    }}>
+                      Religion
+                    </Text>
+                  </View>
+                  <View style={{
+                    flex: 1,
+                    alignItems: 'flex-end'
+                  }}>
+                    <Image source={require('../../assets/back.png')} resizeMode='contain' style={{
+                      width: 20,
+                      height: 20,
+                      tintColor: COLORS.black
+                    }} />
+                  </View>
+                </View>
+
+                <View style={{
+                  paddingHorizontal: 20,
+                  paddingTop: 30
+                }}>
+                  <Text style={{
+                    color: COLORS.black,
+                    fontSize: 20
+                  }}>Advanced fillters</Text>
+                </View>
+                <View style={{
+                  paddingHorizontal: 20,
+                }}>
+                  <Text style={{
+                    fontSize: 13
+                  }}>Mix and match up to 3 filters, or use them all
+                    at once with Premium</Text>
+                </View>
+
+                <TouchableOpacity style={{
+                  marginHorizontal: 20,
+                  marginTop: 20,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  // padding:5,
+                  borderRadius: 30,
+                  backgroundColor: COLORS.main,
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center'
+                }}>
+                  <Image source={require('../../assets/dropdown.png')} resizeMode='contain' />
+                </TouchableOpacity>
+
+
+                <View style={{
+                  paddingVertical: 5, alignSelf: 'center',
+                  paddingTop: 80,
+                }}>
+                  <View>
+                    <Text>
+                      Answer these questions on your own profile
+                      to use these filters
+                    </Text>
+                  </View>
+                  <CustomeButton title={'Apply'}
+                    bcolor={COLORS.main} border={COLORS.white} />
+                </View>
+
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </View>
     </SafeAreaView>

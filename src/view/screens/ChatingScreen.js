@@ -731,12 +731,25 @@ const ChatingScreen = ({ navigation, route }) => {
         // const userRef = firestore().collection('chatrooms')
         //     .doc(Currentuser.uid)
 
-        // userRef.set({
+        // userRef.set({  
         //     'YourArrival': true,
         // })
     };
 
     const YouNotArrived = (item, index) => {
+        // console.log('asljdhajcn');
+        // return;
+        const userRef = firestore().collection('Users')
+            .doc(Currentuser.uid)
+        userRef.update({
+            'userDetails.Flake': firestore.FieldValue.increment(1),
+        }).then(() => {
+            console.log('Flake Added!');
+            // console.log(item);
+        });
+
+        // return;
+
         const test = [];
         acceptedProposal.map(a => {
             if (a._id != item._id) {
@@ -781,7 +794,7 @@ const ChatingScreen = ({ navigation, route }) => {
                         Proposals: test,
                     }, { merge: true })
                     .then(() => {
-                        console.log('Proposal Updated!');
+                        console.log('Proposal Updatedss!');
                         // console.log(item);
                     });
                 firestore()

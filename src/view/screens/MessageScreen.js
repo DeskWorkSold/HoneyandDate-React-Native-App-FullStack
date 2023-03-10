@@ -2,8 +2,12 @@ import { SafeAreaView, StatusBar, StyleSheet, Text, View, Image, TouchableOpacit
 import React from 'react'
 import COLORS from '../../consts/Colors'
 import { ScrollView } from 'react-native-gesture-handler'
-import { selectChatuser } from '../../../redux/reducers/Reducers'
+import { selectChatuser, selectUser } from '../../../redux/reducers/Reducers'
 import { useSelector } from 'react-redux'
+import { useEffect } from 'react';
+import firestore from '@react-native-firebase/firestore';
+import { useState } from 'react'
+
 
 const Masseges = [
     {
@@ -34,7 +38,49 @@ const Masseges = [
 
 const MessageScreen = ({ navigation }) => {
     const reduxChatUser = useSelector(selectChatuser);
-    console.log(reduxChatUser);
+    const user = useSelector(selectUser);
+    const [recentMessage, setRecentMessage] = useState();
+    const [unreadMessage, setUnreadMessage] = useState([]);
+
+    // console.log(reduxChatUser);
+
+
+    const data = () => {
+        // console.log('test');
+        reduxChatUser.map((i) => {
+            // console.log(i.Name);
+            const docid = i.uid > user.uid ? user.uid + "-" + i.uid : i.uid + "-" + user.uid
+            // console.log(docid);
+
+            const test = new Object;
+            const unreaded = []
+            const messageRef = firestore().collection('chatrooms')
+                .doc(docid)
+                .collection('messages')
+                .orderBy('createdAt', "desc")
+                .limit(1)
+            messageRef.onSnapshot((querySnap) => {
+                const allmsg = querySnap.docs.map(docSanp => {
+                    const data = docSanp.data();
+                    // test.one = data.text
+                    setRecentMessage(data.text);
+                    // if (data.read == false && data.sentBy == docSnapshot.data().userDetails.uid) {
+                    //     unreaded.push(data?.text)
+                    // }
+                })
+                // setUnreadMessage(unreaded)
+            })
+            // console.log('====>',test); 
+            reduxChatUser.recentMessages = recentMessage;
+            // docSnapshot.data().userDetails.recentMessages = recentMessage
+            // docSnapshot.data().userDetails.unreadMessages = unreadMessage
+        })
+
+    }
+
+    useEffect(() => {
+        // data();
+    }, [])
 
     return (
         <SafeAreaView>
@@ -49,12 +95,12 @@ const MessageScreen = ({ navigation }) => {
                         fontSize: 16,
                         fontWeight: 'bold',
                         color: COLORS.black
-                    }}>Matching With You! 
-                    {reduxChatUser ? (
-                        <Text style={{ fontWeight: '400', fontSize: 13 }}>({reduxChatUser.length})</Text>
-                    ):(
-                        <Text style={{ fontWeight: '400', fontSize: 13 }}>(0)</Text>
-                    )}
+                    }}>Matching With You!
+                        {reduxChatUser ? (
+                            <Text style={{ fontWeight: '400', fontSize: 13 }}>({reduxChatUser.length})</Text>
+                        ) : (
+                            <Text style={{ fontWeight: '400', fontSize: 13 }}>(0)</Text>
+                        )}
                     </Text>
                 </View>
                 <View style={{
@@ -79,14 +125,14 @@ const MessageScreen = ({ navigation }) => {
                                     fontWeight: 'bold',
                                     fontSize: 17,
                                     color: COLORS.black,
-                                    textAlign:'center'
+                                    textAlign: 'center'
                                 }}>+{reduxChatUser.length}</Text>
-                            ):(
+                            ) : (
                                 <Text style={{
                                     fontWeight: 'bold',
                                     fontSize: 17,
                                     color: COLORS.black,
-                                    textAlign:'center'
+                                    textAlign: 'center'
                                 }}>+0</Text>
                             )}
                         </View>
@@ -192,12 +238,12 @@ const MessageScreen = ({ navigation }) => {
                                     <View>
                                         <TouchableOpacity onPress={
                                             () => navigation.navigate('ChatingScreen', {
-                                            userName: item.Name,
-                                            userImg: item.image1,
-                                            uid: item.uid,
-                                        })
-                                        // () => console.log(item.Name , item.image1 , item.uid)
-                                    }
+                                                userName: item.Name,
+                                                userImg: item.image1,
+                                                uid: item.uid,
+                                            })
+                                            // () => console.log(item.Name , item.image1 , item.uid)
+                                        }
                                         >
                                             <View style={{
                                                 flexDirection: 'row',
@@ -212,7 +258,7 @@ const MessageScreen = ({ navigation }) => {
                                                     borderRadius: 50,
                                                     width: '20%',
                                                 }}>
-                                                    <Image source={{ uri: item.image1 }} resizeMode='contain'
+                                                    <Image source={{ uri: item?.image1 }} resizeMode='contain'
                                                         style={{
                                                             width: 65,
                                                             height: 65,
@@ -223,11 +269,30 @@ const MessageScreen = ({ navigation }) => {
                                                 <View style={{
                                                     width: '65%'
                                                 }}>
-                                                    <Text style={{
-                                                        fontWeight: 'bold',
-                                                        color: COLORS.black
-                                                    }}>{item.Name}</Text>
-                                                    <Text>say hey...</Text>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                    }}>
+                                                        <Text style={{
+                                                            fontWeight: 'bold',
+                                                            color: COLORS.black
+                                                        }}>{item?.Name}</Text>
+                                                        {!item.unreadMessages == 0 &&
+                                                            <View style={{
+                                                                // padding:5,
+                                                                marginLeft: 5,
+                                                                paddingVertical: 0,
+                                                                paddingHorizontal: 5,
+                                                                backgroundColor: COLORS.main,
+                                                                borderRadius: 20,
+                                                            }}>
+                                                                <Text style={{
+                                                                    color: COLORS.black
+                                                                }}>{item?.unreadMessages?.length ? item?.unreadMessages?.length : 0}</Text>
+                                                            </View>
+                                                        }
+                                                    </View>
+                                                    <Text>{item?.recentMessages ? item?.recentMessages : 'File..'}</Text>
                                                 </View>
                                                 <View style={{
                                                     width: '15%'

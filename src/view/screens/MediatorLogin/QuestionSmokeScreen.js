@@ -33,22 +33,22 @@ const SmokeData = [
 const MediatorQuestionSmokeScreen = ({ navigation, route }) => {
   const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor } = route.params;
   console.log(Lookingfor);
-  
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
 
   const onSmokeScreen = () => {
     console.log(SmokeData[selectedCategoryIndex].name);
     const selectedPolitics = SmokeData[selectedCategoryIndex].name;
-    if(selectedPolitics){
+    if (selectedPolitics) {
       navigation.navigate('MediatorQuestionVapeScreen', { Smoke: selectedPolitics, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
-    else{
+    else {
       ToastAndroid.show("Please select do you smoke!", ToastAndroid.SHORT);
     }
   }
   const SkipScreen = () => {
-      navigation.navigate('MediatorQuestionVapeScreen', { Lookingfor: Lookingfor, PIntroandExtro: PIntroandExtro, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('MediatorQuestionVapeScreen', { Smoke: null, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 

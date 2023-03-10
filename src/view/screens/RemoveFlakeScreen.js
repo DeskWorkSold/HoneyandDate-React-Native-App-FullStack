@@ -16,7 +16,7 @@ const RemoveFlakeScreen = () => {
 
     const RemoveFlakeScreen = () => {
         if (user.Flake >= 1) {
-            if (name >= 1) {
+            if (name <= 2) {
                 console.log('RemoveFlake');
                 setUploading(true)
                 // navigation.navigate('QuestionWantKidsScreen')
@@ -33,7 +33,7 @@ const RemoveFlakeScreen = () => {
                 });
             }
             else {
-                ToastAndroid.show("You can remove more then 1 flake at a time!", ToastAndroid.SHORT);
+                ToastAndroid.show("You cannot remove more then 2 flake at a time!", ToastAndroid.SHORT);
             }
         }
         else {

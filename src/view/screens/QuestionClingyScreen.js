@@ -123,6 +123,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         Data.CompanyName = CompanyName;
         Data.uid = CurrentUser
         Data.PhoneNumber = userPhoneNumber
+        // Data.filterGender = 'Female'
         // console.log('test data: ', Data);
         // return;
         // console.log(CurrentUser);

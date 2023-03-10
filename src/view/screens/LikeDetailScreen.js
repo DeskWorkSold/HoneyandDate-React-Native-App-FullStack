@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, Image, Modal, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, Image, Modal, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HeaderTabOne from '../components/HeaderTabOne';
 import COLORS from '../../consts/Colors';
@@ -16,14 +16,105 @@ const filteruser = [
   {
     id: 1,
     name: 'Guys',
+    value: 'Male',
   },
   {
     id: 2,
     name: 'Girls',
+    value: 'Female',
   },
   {
     id: 3,
     name: 'Both',
+    value: 'Both',
+  },
+]
+
+const filterAdvance = [
+  {
+    id: 1,
+    name: 'Status',
+    image: require('../../assets/modal/Status.png')
+  },
+  {
+    id: 2,
+    name: 'Non Smoker',
+    image: require('../../assets/modal/info2.png')
+  },
+  {
+    id: 3,
+    name: 'Drinker',
+    image: require('../../assets/modal/info6.png')
+  },
+  {
+    id: 4,
+    name: 'Kids',
+    image: require('../../assets/modal/Kids.png')
+  },
+  {
+    id: 5,
+    name: 'Pets',
+    image: require('../../assets/modal/Pets.png')
+  },
+  {
+    id: 6,
+    name: 'Orintation',
+    image: require('../../assets/modal/info8.png')
+  },
+  {
+    id: 7,
+    name: 'Language',
+    image: require('../../assets/modal/info7.png')
+  },
+  {
+    id: 8,
+    name: 'Height',
+    image: require('../../assets/modal/info3.png')
+  },
+  {
+    id: 9,
+    name: 'Personality',
+    image: require('../../assets/modal/info5.png')
+  },
+  {
+    id: 10,
+    name: 'Education',
+    image: require('../../assets/modal/info4.png')
+  },
+  {
+    id: 11,
+    name: 'Religion',
+    image: require('../../assets/modal/Religion.png')
+  },
+  {
+    id: 12,
+    name: 'Political Views',
+    image: require('../../assets/modal/PoliticalViews.png')
+  },
+  {
+    id: 13,
+    name: 'Any Disability',
+    image: require('../../assets/modal/AnyDisability.png')
+  },
+  {
+    id: 14,
+    name: 'Your Body Type',
+    image: require('../../assets/modal/YourBodyType.png')
+  },
+  {
+    id: 15,
+    name: 'Music',
+    image: require('../../assets/modal/Music.png')
+  },
+  {
+    id: 16,
+    name: 'Favourite Food',
+    image: require('../../assets/modal/FavouriteFood.png')
+  },
+  {
+    id: 17,
+    name: 'Exercise',
+    image: require('../../assets/modal/Exercise.png')
   },
 ]
 
@@ -31,9 +122,13 @@ const LikeDetailScreen = ({ navigation }) => {
   const [likedusers, setLikedUser] = useState();
   const [modalDataUid, setModalDataUid] = useState();
   const [showFilter, setShowFilter] = useState(false);
+  const [showAdvanceFilter, setShowAdvanceFilter] = useState(false);
   const [segmentedButtons, setSegmentedButtons] = useState(false);
-  const [selectGender, setSelectGender] = useState();
+  const [selectGender, setSelectGender] = useState(1);
   const [selectMinMaxAge, setSelectMinMaxAge] = useState('minage');
+  const [FilterModaldata, setFilterModaldata] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
 
   const [minimumAge, setminimumAgeRange] = useState(0);
   const [maximumAge, setmaximumAgeRange] = useState(0);
@@ -123,6 +218,56 @@ const LikeDetailScreen = ({ navigation }) => {
   }, [])
 
 
+  const ApplyFilter = async () => {
+    const filterGender = filteruser[selectGender]
+    const filterMinAge = Math.floor(minimumAge * 100)
+    const filterMaxAge = Math.floor(maximumAge * 100)
+    const filterDistance = Math.floor(distance * 100)
+
+    if (filterMinAge < 17 || filterDistance < 20 || !filterGender) {
+      if (filterMinAge < 17) {
+        ToastAndroid.show("Minimum age must be 17 atleast!", ToastAndroid.SHORT);
+      }
+      else if (filterDistance < 20) {
+        ToastAndroid.show("Distance must be 20miles atleast!", ToastAndroid.SHORT);
+      }
+      else if (!filterGender) {
+        ToastAndroid.show("Please select gender you looking for!", ToastAndroid.SHORT);
+      }
+    }
+    else {
+      console.log(
+        // filterAdvance,
+        filterMinAge,
+        filterGender.value,
+        filterDistance,
+        filterMaxAge,
+        // FilterModaldata
+      );
+      setUploading(true)
+      const userRef = await firestore().collection('Users')
+        .doc(user.uid)
+      userRef.update({
+        'userDetails.filterMinAge': filterMinAge,
+        'userDetails.filterGender': filterGender.value,
+        'userDetails.filterDistance': filterDistance,
+        'userDetails.filterMaxAge': filterMaxAge,
+      }).then(() => {
+        setShowFilter(false)
+        console.log('filter updated');
+        ToastAndroid.show('Filter applied!', ToastAndroid.SHORT);
+        setUploading(false)
+      })
+
+    }
+  }
+
+  const SelectedAdvanceFilter = (item) => {
+    console.log(item);
+    FilterModaldata.push(item);
+  }
+
+
   return (
     <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
@@ -148,7 +293,9 @@ const LikeDetailScreen = ({ navigation }) => {
           </View>
 
           <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 20 }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowFilter(true)}
+            >
               <Image source={require('../../assets/menu2.png')} resizeMode='contain' />
             </TouchableOpacity>
           </View>
@@ -417,307 +564,384 @@ const LikeDetailScreen = ({ navigation }) => {
             }}
           >
             <View style={{
-              // marginTop: 109,
-              // borderTopRightRadius: 20,
-              // borderTopLeftRadius: 20,
-              elevation: 5,
-              // justifyContent:'flex-end',
               height: windowHeight,
               backgroundColor: COLORS.white
             }}>
-              <View>
-                <View style={{
-                  padding: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <TouchableOpacity>
-                    <Image source={require('../../assets/right.png')} resizeMode='contain' style={{
-                      tintColor: COLORS.black
-                    }} />
-                  </TouchableOpacity>
-                  <View>
-                    <Text style={{
-                      fontSize: 20,
-                      fontWeight: 'bold',
-                      color: COLORS.black
-                    }}>
-                      Filter
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => setShowFilter(false)}>
-                    <Image source={require('../../assets/cross.png')} resizeMode='contain' style={{
-                      tintColor: COLORS.black
-                    }} />
-                  </TouchableOpacity>
-                </View>
-                <View style={{
-                  paddingHorizontal: 20,
-                }}>
-                  <Text style={{
-                    fontSize: 16,
-                    color: COLORS.black
-                  }}>
-                    I'm interested in
-                  </Text>
-                </View>
-                <View style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  // paddingHorizontal: 20,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: COLORS.gray2,
-                  marginHorizontal: 20,
-                  // paddingVertical: 15
-                }}>
-                  {filteruser.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => setSelectGender(index)}
-                      style={{
-                        borderWidth: selectGender == index ? 1 : 0,
-                        borderColor: selectGender == index ? '#2A3182' : null,
-                        borderRadius: 10,
-                        paddingHorizontal: 20,
-                        paddingVertical: 15,
-                        width: '33%'
-                      }}>
-                      <Text style={{
-                        textAlign: 'center'
-                      }}>
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: 20,
-                  paddingTop: 20,
-                }}>
+              <ScrollView vertical showsVerticalScrollIndicator={false}>
+                <View>
                   <View style={{
-                    flex: 1,
-                  }}>
-                    <Text style={{
-                      fontSize: 16,
-                      // fontWeight: 'bold',
-                      color: COLORS.black
-                    }}>Age Range</Text>
-                  </View>
-                  <View style={{
-                    flex: 1,
-                    alignItems: 'center',
+                    padding: 20,
                     flexDirection: 'row',
-                    justifyContent: 'flex-end'
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}>
-                    <TouchableOpacity onPress={() => setSelectMinMaxAge('minage')}
-                      style={{
-                        // backgroundColor: COLORS.main,
-                        // paddingHorizontal: 3,
-                        // borderRadius: 4
-                      }}>
-                      <Text style={{
-                        fontSize: 20,
-                        color: COLORS.black,
-                        fontWeight: 'bold'
-                      }}>{Math.floor(minimumAge * 100)}</Text>
+                    <TouchableOpacity>
+                      <Image source={require('../../assets/right.png')} resizeMode='contain' style={{
+                        tintColor: COLORS.black
+                      }} />
                     </TouchableOpacity>
-                    <Text> - </Text>
-                    <TouchableOpacity onPress={() => setSelectMinMaxAge('maxage')}
-                      style={{
-                        // backgroundColor: COLORS.main,
-                        // paddingHorizontal: 3,
-                        // borderRadius: 4
-                      }}>
+                    <View>
                       <Text style={{
                         fontSize: 20,
                         fontWeight: 'bold',
                         color: COLORS.black
-                      }}>{Math.floor(maximumAge * 100)}</Text>
+                      }}>
+                        Filter
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => setShowFilter(false)}>
+                      <Image source={require('../../assets/cross.png')} resizeMode='contain' style={{
+                        tintColor: COLORS.black
+                      }} />
                     </TouchableOpacity>
                   </View>
-                </View>
-                {selectMinMaxAge == 'maxage' ?
                   <View style={{
-                    flexDirection: 'row',
                     paddingHorizontal: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <Slider
-                      style={{ width: '100%', height: 40, }}
-                      minimumValue={0}
-                      maximumValue={1}
-                      thumbTouchSize={{
-                        width: 40, height: 40
-                      }}
-                      thumbTintColor={COLORS.main}
-                      minimumTrackTintColor={COLORS.main}
-                      maximumTrackTintColor={COLORS.gray}
-                      onValueChange={(value) => setmaximumAgeRange(value)}
-                    />
-                  </View>
-                  :
-                  <View style={{
-                    flexDirection: 'row',
-                    paddingHorizontal: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <Slider
-                      style={{ width: '100%', height: 40, }}
-                      minimumValue={0}
-                      maximumValue={1}
-                      thumbTouchSize={{
-                        width: 40, height: 40
-                      }}
-                      thumbTintColor={COLORS.main}
-                      minimumTrackTintColor={COLORS.main}
-                      maximumTrackTintColor={COLORS.gray}
-                      onValueChange={(value) => setminimumAgeRange(value)}
-                    />
-                  </View>
-                }
-
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: 20,
-                  paddingTop: 20,
-                  justifyContent: 'space-between'
-                }}>
-                  <View style={{
-                  }}>
-                    <Text style={{
-                      fontSize: 16,
-                      // fontWeight: 'bold',
-                      color: COLORS.black
-                    }}>Distance(miles)</Text>
-                  </View>
-                  <View style={{
-                  }}>
-                    <Text style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: COLORS.black
-                    }}>Whole country</Text>
-                  </View>
-                </View>
-                <View style={{
-                  flexDirection: 'row',
-                  paddingHorizontal: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Slider
-                    style={{ width: '100%', height: 40, }}
-                    minimumValue={0}
-                    maximumValue={1}
-                    thumbTouchSize={{
-                      width: 40, height: 40
-                    }}
-                    thumbTintColor={COLORS.main}
-                    minimumTrackTintColor={COLORS.main}
-                    maximumTrackTintColor={COLORS.gray}
-                    onValueChange={(value) => setDistance(value)}
-                  />
-                </View>
-
-
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: 20,
-                }}>
-                  <View style={{
-                    flex: 1
-                  }}>
-                    <Image source={require('../../assets/modal/Religion.png')} resizeMode='contain' style={{
-                      width: 40,
-                      height: 40
-                    }} />
-                  </View>
-                  <View style={{
-                    flex: 4,
-                    alignItems: 'flex-start'
                   }}>
                     <Text style={{
                       fontSize: 16,
                       color: COLORS.black
                     }}>
-                      Religion
+                      I'm interested in
                     </Text>
                   </View>
                   <View style={{
-                    flex: 1,
-                    alignItems: 'flex-end'
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: COLORS.gray2,
+                    marginHorizontal: 20,
                   }}>
-                    <Image source={require('../../assets/back.png')} resizeMode='contain' style={{
-                      width: 20,
-                      height: 20,
-                      tintColor: COLORS.black
-                    }} />
+                    {filteruser.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => setSelectGender(index)}
+                        style={{
+                          borderWidth: selectGender == index ? 1 : 0,
+                          borderColor: selectGender == index ? '#2A3182' : null,
+                          borderRadius: 10,
+                          paddingHorizontal: 20,
+                          paddingVertical: 15,
+                          width: '33%'
+                        }}>
+                        <Text style={{
+                          textAlign: 'center'
+                        }}>
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
                   </View>
-                </View>
 
-                <View style={{
-                  paddingHorizontal: 20,
-                  paddingTop: 30
-                }}>
-                  <Text style={{
-                    color: COLORS.black,
-                    fontSize: 20
-                  }}>Advanced fillters</Text>
-                </View>
-                <View style={{
-                  paddingHorizontal: 20,
-                }}>
-                  <Text style={{
-                    fontSize: 13
-                  }}>Mix and match up to 3 filters, or use them all
-                    at once with Premium</Text>
-                </View>
-
-                <TouchableOpacity style={{
-                  marginHorizontal: 20,
-                  marginTop: 20,
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  // padding:5,
-                  borderRadius: 30,
-                  backgroundColor: COLORS.main,
-                  width: 30,
-                  height: 30,
-                  justifyContent: 'center'
-                }}>
-                  <Image source={require('../../assets/dropdown.png')} resizeMode='contain' />
-                </TouchableOpacity>
-
-
-                <View style={{
-                  paddingVertical: 5, alignSelf: 'center',
-                  paddingTop: 80,
-                }}>
-                  <View>
-                    <Text>
-                      Answer these questions on your own profile
-                      to use these filters
-                    </Text>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 20,
+                    paddingTop: 20,
+                  }}>
+                    <View style={{
+                      flex: 1,
+                    }}>
+                      <Text style={{
+                        fontSize: 16,
+                        // fontWeight: 'bold',
+                        color: COLORS.black
+                      }}>Age Range</Text>
+                    </View>
+                    <View style={{
+                      flex: 1,
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end'
+                    }}>
+                      <TouchableOpacity onPress={() => setSelectMinMaxAge('minage')}
+                        style={{
+                          // backgroundColor: COLORS.main,
+                          // paddingHorizontal: 3,
+                          // borderRadius: 4
+                        }}>
+                        <Text style={{
+                          fontSize: 20,
+                          color: COLORS.black,
+                          fontWeight: 'bold'
+                        }}>{Math.floor(minimumAge * 100)}</Text>
+                      </TouchableOpacity>
+                      <Text> - </Text>
+                      <TouchableOpacity onPress={() => setSelectMinMaxAge('maxage')}
+                        style={{
+                          // backgroundColor: COLORS.main,
+                          // paddingHorizontal: 3,
+                          // borderRadius: 4
+                        }}>
+                        <Text style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          color: COLORS.black
+                        }}>{Math.floor(maximumAge * 100)}</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <CustomeButton title={'Apply'}
-                    bcolor={COLORS.main} border={COLORS.white} />
-                </View>
+                  {selectMinMaxAge == 'maxage' ?
+                    <View style={{
+                      flexDirection: 'row',
+                      paddingHorizontal: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Slider
+                        style={{ width: '100%', height: 40, }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        thumbTouchSize={{
+                          width: 40, height: 40
+                        }}
+                        thumbTintColor={COLORS.main}
+                        minimumTrackTintColor={COLORS.main}
+                        maximumTrackTintColor={COLORS.gray}
+                        onValueChange={(value) => setmaximumAgeRange(value)}
+                      />
+                    </View>
+                    :
+                    <View style={{
+                      flexDirection: 'row',
+                      paddingHorizontal: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Slider
+                        style={{ width: '100%', height: 40, }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        thumbTouchSize={{
+                          width: 40, height: 40
+                        }}
+                        thumbTintColor={COLORS.main}
+                        minimumTrackTintColor={COLORS.main}
+                        maximumTrackTintColor={COLORS.gray}
+                        onValueChange={(value) => setminimumAgeRange(value)}
+                      />
+                    </View>
+                  }
 
-              </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 20,
+                    paddingTop: 20,
+                    justifyContent: 'space-between'
+                  }}>
+                    <View style={{
+                    }}>
+                      <Text style={{
+                        fontSize: 16,
+                        // fontWeight: 'bold',
+                        color: COLORS.black
+                      }}>Distance(miles) {Math.floor(distance * 100)}</Text>
+                    </View>
+                    <View style={{
+                    }}>
+                      <Text style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: COLORS.black
+                      }}>Whole country</Text>
+                    </View>
+                  </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <Slider
+                      style={{ width: '100%', height: 40, }}
+                      minimumValue={0}
+                      maximumValue={1}
+                      thumbTouchSize={{
+                        width: 40, height: 40
+                      }}
+                      thumbTintColor={COLORS.main}
+                      minimumTrackTintColor={COLORS.main}
+                      maximumTrackTintColor={COLORS.gray}
+                      onValueChange={(value) => setDistance(value)}
+                    />
+                  </View>
+
+                  {!FilterModaldata.length == 0 &&
+                    <>
+                      {FilterModaldata.map((item, index) => (
+                        <View
+                          key={index}
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingHorizontal: 20,
+                            marginVertical: 10
+                          }}>
+                          <View style={{
+                            flex: 1
+                          }}>
+                            <Image source={item.image} resizeMode='contain' style={{
+                              width: 40,
+                              height: 40
+                            }} />
+                          </View>
+                          <View style={{
+                            flex: 4,
+                            alignItems: 'flex-start'
+                          }}>
+                            <Text style={{
+                              fontSize: 16,
+                              color: COLORS.black
+                            }}>
+                              {item.name}
+                            </Text>
+                          </View>
+                          <View style={{
+                            flex: 1,
+                            alignItems: 'flex-end'
+                          }}>
+                            <Image source={require('../../assets/back.png')} resizeMode='contain' style={{
+                              width: 20,
+                              height: 20,
+                              tintColor: COLORS.black
+                            }} />
+                          </View>
+                        </View>
+                      ))}
+                    </>
+                  }
+
+                  <View style={{
+                    backgroundColor: COLORS.light,
+                    justifyContent: 'center',
+                    paddingVertical: 20,
+                    marginTop: 20
+                  }}>
+                    <View style={{
+                      paddingHorizontal: 20,
+                    }}>
+                      <Text style={{
+                        color: COLORS.black,
+                        fontSize: 20
+                      }}>Advanced fillters</Text>
+                    </View>
+                    <View style={{
+                      paddingHorizontal: 20,
+                    }}>
+                      <Text style={{
+                        fontSize: 13
+                      }}>Mix and match up to 3 filters, or use them all
+                        at once with Premium</Text>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={() => setShowAdvanceFilter(!showAdvanceFilter)}
+                    style={{
+                      marginHorizontal: 20,
+                      marginTop: -10,
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                      // padding:5,
+                      borderRadius: 30,
+                      backgroundColor: COLORS.main,
+                      width: 30,
+                      height: 30,
+                      justifyContent: 'center'
+                    }}>
+                    {showAdvanceFilter ?
+                      <Image source={require('../../assets/dropdown.png')} resizeMode='contain'
+                        style={{ transform: [{ rotateZ: '-180deg' }] }}
+                      />
+                      :
+                      <Image source={require('../../assets/dropdown.png')} resizeMode='contain' />
+                    }
+                  </TouchableOpacity>
+
+                  {showAdvanceFilter == true &&
+                    filterAdvance.map((item, index) => (
+                      <TouchableOpacity
+                        onPress={() => SelectedAdvanceFilter(item)}
+                        key={index}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          paddingHorizontal: 20,
+                          marginBottom: 20
+                        }}>
+                        <View style={{
+                          flex: 1
+                        }}>
+                          <Image source={item.image} resizeMode='contain' style={{
+                            width: 40,
+                            height: 40
+                          }} />
+                        </View>
+                        <View style={{
+                          flex: 4,
+                          alignItems: 'flex-start'
+                        }}>
+                          <Text style={{
+                            fontSize: 16,
+                            color: COLORS.black
+                          }}>
+                            {item.name}
+                          </Text>
+                        </View>
+                        <View style={{
+                          flex: 1,
+                          alignItems: 'flex-end'
+                        }}>
+                          <Image source={require('../../assets/back.png')} resizeMode='contain' style={{
+                            width: 20,
+                            height: 20,
+                            tintColor: COLORS.black
+                          }} />
+                        </View>
+                      </TouchableOpacity>
+                    ))
+                  }
+
+
+                  <View style={{
+                    paddingVertical: 5, alignItems: 'center',
+                    paddingTop: '30%',
+                    marginBottom: 40,
+                    paddingHorizontal: 20
+                  }}>
+                    <View>
+                      <Text>
+                        Answer these questions on your own profile
+                        to use these filters
+                      </Text>
+                    </View>
+                    {!uploading == true ?
+                      <CustomeButton onpress={() => ApplyFilter()} title={'Apply'}
+                        bcolor={COLORS.main} border={COLORS.white} />
+                      :
+                      <View style={{
+                        backgroundColor: COLORS.main,
+                        width: 329,
+                        height: 50,
+                        borderRadius: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
+                      </View>
+                    }
+                  </View>
+
+                </View>
+              </ScrollView>
             </View>
           </Modal>
         </ScrollView>

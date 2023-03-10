@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ImageBackground, ToastAndroid, Modal, Dimensions } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ImageBackground, ToastAndroid, Modal, Dimensions, Linking } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
@@ -35,8 +35,8 @@ const DateModeScreen = ({ navigation }) => {
     longitude: 66.990501,
   });
   const [region, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: 24.902255,
+    longitude: 67.1154162,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   });
@@ -135,25 +135,46 @@ const DateModeScreen = ({ navigation }) => {
     }
   }
   const OnSendMessages = async () => {
-    // console.log(
-    //   location, trackingTime, region, arrivalTime
-    // );
-    // console.log(availableApps.open);
-    availableApps.map(item => {
-      console.log(item.open);
-    })
-    return;
-    
+    const url1 = Platform.select({
+      ios: "maps:" + region.latitude + "," + region.longitude + "?q=",
+      android: "geo:" + region.latitude + "," + region.longitude + "?q=",
+    });
+    const latLng = `${region.latitude},${region.longitude}`;
+    const label = "";
+    const url = Platform.select({
+      ios: `${url1}${label}@${latLng}`,
+      android: `${url1}${latLng}`,
+    });
+    // Linking.openURL('https://www.google.de/maps/@' + url)
+    // console.log('https://www.google.de/maps/@' + url);
+    const testurl = `https://www.google.com/maps/search/?api=1&query=${latLng}`
+    // Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${latLng}`);
+
+    // const data = Linking.canOpenURL(url).then(supported => {
+    //   if (supported) {
+    //     // const browser_url =
+    //     // "https://www.google.de/maps/@" + url
+    //     // console.log('urll' , url);
+    //     return Linking.openURL(url);
+
+    //   } else {
+    //     const browser_url =
+    //       "https://www.google.de/maps/@" +
+    //       region.latitude +
+    //       "," +
+    //       region.longitude;
+    //     // return Linking.openURL(browser_url);
+    //     console.log('browser_url', browser_url);
+    //   }
+    // });
+
+    // 'https://www.google.de/maps/place/24%C2%B051'39.5%22N+66%C2%B059'25.8%22E/@24.8609709,66.9883123,17z/data=!4m4!3m3!8m2!3d24.860966!4d66.990501'
+
     const shareOptions = {
       title: 'Share Location',
-      location: location,
-      message: availableApps,
-      // message:
-      //   'Address ' + location + ' ,Tracking Time ' + trackingTime + ' ,Arrival Time ' + arrivalTime + ' ,region ' + region,  //string
-      // url: 'some share url',
-      // // social: Share.Social.WHATSAPP,
-      // whatsAppNumber: "9199999999",  // country code + phone number
-      // filename: 'test', // only for base64 file in Android
+      url: testurl,
+      message:
+        'Address: ' + location + ' ,Tracking Time ' + trackingTime + ' ,Arrival Time ' + arrivalTime,  //string
     };
 
     let Data = new Object();
@@ -162,19 +183,17 @@ const DateModeScreen = ({ navigation }) => {
     Data.region = region;
     Data.arrivalTime = arrivalTime;
 
-    // console.log(shareOption , Data);
-    // return;
     try {
       const ShareResponce = await Share.open(shareOptions)
         .then((res) => {
           console.log(res);
         })
         .catch((err) => {
-          err && console.log('Error2',err);
+          err && console.log('Error2', err);
         });
     }
     catch (e) {
-      console.log('Error',e);
+      console.log('Error', e);
     }
   }
 
@@ -435,7 +454,7 @@ const DateModeScreen = ({ navigation }) => {
                         resizeMode="contain"
                       />
                     </Marker>
-                    <Circle center={pin} radius={200} />
+                    <Circle center={region} radius={200} />
                   </MapView>
                   <View
                     style={{

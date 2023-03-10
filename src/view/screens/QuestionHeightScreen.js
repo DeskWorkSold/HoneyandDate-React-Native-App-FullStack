@@ -26,8 +26,8 @@ const QuestionHeightScreen = ({ navigation, route }) => {
   }
 
   const onQuestionHeightPartnerScreen = () => {
-    if (height.length !== 0) {
-      console.log(height);
+    if (height) {
+      // console.log(height);
       navigation.navigate('QuestionHeightPartnerScreen', { Height: height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
@@ -36,7 +36,10 @@ const QuestionHeightScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      flex:1,
+      backgroundColor:COLORS.white
+    }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
@@ -128,11 +131,12 @@ const styles = StyleSheet.create({
 
   },
   contentContainer: {
-    height: '80%',
+    // height: '80%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%'
+    // height: '20%'
+    marginTop:'40%'
   },
   NumberInput: {
     marginTop: 60,

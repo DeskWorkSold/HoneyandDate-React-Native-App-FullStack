@@ -41,6 +41,13 @@ const MediatorQuestionWantKidsScreen = ({ navigation, route }) => {
     navigation.navigate('MediatorQuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
   }
 
+  const onSkip = () => {
+    // console.log(WantKidData[selectedCategoryIndex].name);
+    // console.log('test',selectedGender);
+    navigation.navigate('MediatorQuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+
+  }
+
   const ListKids = ({ data, value, setValue, cancle }) => {
     return (
       <View>
@@ -119,7 +126,7 @@ const MediatorQuestionWantKidsScreen = ({ navigation, route }) => {
             flexDirection: 'row'
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={180} onpress={() => onSkip()}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>

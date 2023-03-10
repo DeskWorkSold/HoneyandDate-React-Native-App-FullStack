@@ -51,7 +51,10 @@ const MediatorQuestionHeightPartnerScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      flex:1,
+      backgroundColor:COLORS.white
+    }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
@@ -178,11 +181,12 @@ const styles = StyleSheet.create({
 
   },
   contentContainer: {
-    height: '80%',
+    // height: '70%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%'
+    // height: '20%'
+    marginTop:'20%'
   },
   NumberInput: {
     marginTop: 60,

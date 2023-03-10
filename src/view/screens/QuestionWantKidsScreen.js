@@ -41,6 +41,13 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
     navigation.navigate('QuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
   }
 
+  const onSkip = () => {
+    // console.log(WantKidData[selectedCategoryIndex].name);
+    // console.log('test',selectedGender);
+    navigation.navigate('QuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+
+  }
+
   const ListKids = ({ data, value, setValue, cancle }) => {
     return (
       <View>
@@ -120,7 +127,7 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
             marginHorizontal:20
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={160} onpress={() => onSkip()}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>

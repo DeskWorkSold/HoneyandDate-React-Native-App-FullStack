@@ -10,15 +10,21 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
   const [experince, setExperince] = useState();
 
   const onMusicSelect = () => {
-    if(experince){
+    if (experince) {
       console.log(experince);
       navigation.navigate('QuestionMusicScreen', {
         Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
-    else{
+    else {
       ToastAndroid.show("Please enter your experince!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionMusicScreen', {
+      Experince: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    })
   }
 
   return (
@@ -80,7 +86,7 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
             flexDirection: 'row'
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={160} onpress={() => onSkip()}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>

@@ -1,29 +1,52 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableNativeFeedback, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 // import Calendar from 'react-native-calendars/src/calendar';
 import { Calendar } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+import { useEffect } from 'react';
+
 
 
 
 const DateOfBirthScreen = ({ navigation, route }) => {
-  const { name , image1, image2, image3, image4, image5 } = route.params;
+  const { name, image1, image2, image3, image4, image5 } = route.params;
   // console.log(image5);
-  const [date, setdate] = useState();
+  const [date, setdate] = useState(dayjs());
+  const [arr, setArr] = useState([]);
+  const [customDate, setCustomDate] = useState(new Date());
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isYearModalVisible, setIsYearModalVisible] = useState(false);
   // const cartItems = useSelector((state) => state.reducers.selectedItems.items)
   // console.log(cartItems);
 
   const onGenderPress = () => {
-    // console.log(dateString);
-    if (!date) {
+    // console.log(date.dateString);
+    const years = new Date().getFullYear() - new Date(customDate).getFullYear();
+    // console.log(years);
+    // return
+    if (!customDate && years < 18) {
+      if (!customDate) {
         ToastAndroid.show("Please select your Birth Date!", ToastAndroid.SHORT);
+      }
+      else if (years < 18) {
+        ToastAndroid.show("Your age you must have to be 18+!", ToastAndroid.SHORT);
+      }
     }
-    else{
-      navigation.navigate('QuestionGenderScreen', { Date: date.dateString , name:name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5,  })
+    else {
+      // console.log(years);
+      navigation.navigate('QuestionGenderScreen', { Date: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
     }
   }
+
+
+  useEffect(() => {
+    for (let i = dayjs().year(); i > dayjs().year() - 100; i--) {
+      setArr((prev) => [...prev, i]);
+    }
+  }, []);
 
   return (
     <SafeAreaView>
@@ -76,11 +99,97 @@ const DateOfBirthScreen = ({ navigation, route }) => {
               width: 300,
               backgroundColor: COLORS.transparent,
             }}
-              onDayPress={data => setdate(data)}
+              renderHeader={(year) => (
+                <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
+                  <View>
+                    <Text>
+                      {date.month() + 1}Month {date.year()}
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+              )}
+              onPressArrowLeft={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).subtract(1, 'month'))}
+              onPressArrowRight={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).add(1, 'month'))}
+              onDayPress={({ dateString }) => {
+                setCustomDate(dateString)
+              }}
+              initialDate={date.format('YYYY-MM-DD')}
+              current={date.format('YYYY-MM-DD').toString()}
+              allowSelectionOutOfRange
+              markingType='multi-dot'
               onMonthChange={() => { }}
-              markedDates={{
-                '2022-12-10': { marked: true, dotColor: COLORS.gray, selected: true, selectedColor: COLORS.main, selectedTextColor: COLORS.white }
-              }} />
+              onPressYear={() => onPressYear()}
+              markedDates={{ [customDate]: { selected: true, selectedColor: COLORS.main } }}
+            />
+
+            {isModalVisible && arr.length > 0 && (
+              <View
+                style={{
+                  zIndex: 10,
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: COLORS.white,
+                }}
+              >
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <TouchableNativeFeedback
+                    onPress={() => setIsModalVisible(false)}
+                    style={{
+                      flex: 7,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={{ fontSize: 20 }}>Select Year</Text>
+                  </TouchableNativeFeedback>
+                  {/* <TouchableNativeFeedback onPress={() => setIsModalVisible(false)}>
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Text>
+                        Cancle
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback> */}
+                </View>
+                <ScrollView>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      zIndex: 25,
+                      padding: 15,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    {arr.map((year, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          // const new = 
+                          // console.log('year', new Date(year), date);
+                          setdate((prev) => dayjs().subtract(dayjs().year() - year, 'years'));
+                          setIsModalVisible(false);
+                        }}
+                      >
+                        <View style={{ padding: 20, width: '100%' }}>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{year}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            )}
           </View>
 
 

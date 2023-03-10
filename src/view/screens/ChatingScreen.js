@@ -39,6 +39,7 @@ const ChatingScreen = ({ navigation, route }) => {
     const [messages, setMessages] = useState([]);
     const [imageData, setImageData] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
+    // console.log('=====>',imageUrl);
     const [category, setCategory] = useState(null);
 
     const [rendering, setRendering] = useState(false);
@@ -297,10 +298,12 @@ const ChatingScreen = ({ navigation, route }) => {
 
     const onSend = useCallback((messages = []) => {
         let mymsg = null;
-        console.log('category==>', category);
-        console.log('imageUrl===>', imageUrl);
+        // console.log('category==>', category);
+        // console.log('imageUrl===>', imageUrl);
+        // console.log('=====>',imageUrl);
+
         // return
-        if (imageUrl) {
+        if (!imageUrl == '') {
             console.log('send image');
             const msg = messages[0]
             mymsg = {
@@ -317,6 +320,7 @@ const ChatingScreen = ({ navigation, route }) => {
                 ProposalLocation: '',
                 ProposalDescription: '',
                 ProposalStatus: '',
+                read: false,
             };
         }
         // else if (category == 'Proposal') {
@@ -355,6 +359,7 @@ const ChatingScreen = ({ navigation, route }) => {
                 ProposalLocation: pin,
                 ProposalDescription: description,
                 ProposalStatus: false,
+                read: false,
             };
         }
         // console.log(mymsg);
@@ -530,6 +535,7 @@ const ChatingScreen = ({ navigation, route }) => {
                     ProposalDescription: description,
                     ProposalStatus: false,
                     text: null,
+                    read: false,
                     user: {
                         _id: Currentuser.uid,
                         avatar: Currentuser.image1,
@@ -556,9 +562,9 @@ const ChatingScreen = ({ navigation, route }) => {
         }
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-    }, [category])
+    // }, [category])
 
     const YouArrivedTwo = (item, index) => {
         // console.log('testdfvsd');
@@ -1246,12 +1252,61 @@ const ChatingScreen = ({ navigation, route }) => {
         try {
             await task;
             const url = await reference.getDownloadURL();
-            setImageUrl(url);
+            // setImageUrl(url);
+            SendToChat(url);
             // console.log('===>',url);
         } catch (e) {
             console.log(e);
         }
     };
+
+    const SendToChat = (url) => {
+        let mymsg = null;
+
+        if (url) {
+            let pUid = Math.random().toString(16).slice(2);
+
+            const msg = messages[0]
+            mymsg = {
+                ...msg,
+                _id: pUid,
+                sentBy: Currentuser.uid,
+                sentTo: uid,
+                createdAt: new Date(),
+                image: url,
+                sent: true,
+                category: 'image',
+                ProposalDate: '',
+                ProposalTime: '',
+                ProposalAddress: '',
+                ProposalLocation: '',
+                ProposalDescription: '',
+                ProposalStatus: '',
+                read:false,
+                text: null,
+                user: {
+                    _id: Currentuser.uid,
+                    avatar: Currentuser.image1,
+                }
+            };
+            setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg))
+            const docid = uid > Currentuser.uid ? Currentuser.uid + "-" + uid : uid + "-" + Currentuser.uid
+            // console.log(mymsg);
+
+            firestore().collection('chatrooms')
+                .doc(docid)
+                .collection('messages')
+                .doc(mymsg._id)
+                .set({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() })
+                .then(() => {
+                    console.log('image send');
+                    // dispatch(PorposalCategory(null))
+                })
+        }
+        else {
+            ToastAndroid.show("Network issue try again!", ToastAndroid.SHORT);
+        }
+    }
 
     const renderBubble = (props) => {
         // console.log(props.currentMessage.category);

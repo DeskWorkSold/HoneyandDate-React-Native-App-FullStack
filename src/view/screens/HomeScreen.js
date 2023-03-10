@@ -26,7 +26,7 @@ function RenderCard({ data, navigation }) {
             <View style={{
                 paddingTop: 5,
             }}>
-                <Image source={{ uri: data.userDetails.image1 }} resizeMode='cover'
+                <Image source={{ uri: data?.userDetails?.image1 }} resizeMode='cover'
                     style={{
                         height: height / 1.7,
                         borderRadius: 20,
@@ -34,7 +34,7 @@ function RenderCard({ data, navigation }) {
                         paddingHorizontal: 10
                     }}
                 />
-                {data.userDetails?.Flake > 0 &&
+                {data?.userDetails?.Flake > 0 &&
                     <View style={{
                         backgroundColor: COLORS.white,
                         borderRadius: 15,
@@ -52,7 +52,7 @@ function RenderCard({ data, navigation }) {
                         }}>
                             #flakemeter
                         </Text>
-                        {data.userDetails?.Flake == 1 &&
+                        {data?.userDetails?.Flake == 1 &&
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
@@ -71,12 +71,12 @@ function RenderCard({ data, navigation }) {
                                     height: 20
                                 }} />
                                 <Text>
-                                    +{data.userDetails.Flake}
+                                    +{data?.userDetails?.Flake}
                                 </Text>
                             </View>
                             // <Image source={require('../../assets/flake.png')} resizeMode='contain' />
                         }
-                        {data.userDetails?.Flake == 2 &&
+                        {data?.userDetails?.Flake == 2 &&
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
@@ -96,36 +96,11 @@ function RenderCard({ data, navigation }) {
                                     height: 20
                                 }} />
                                 <Text>
-                                    +{data.userDetails.Flake}
+                                    +{data?.userDetails?.Flake}
                                 </Text>
                             </View>
                         }
-                        {data.userDetails?.Flake == 3 &&
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}>
-                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
-                                    tintColor: COLORS.main,
-                                    width: 20,
-                                    height: 20
-                                }} />
-                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
-                                    tintColor: COLORS.main,
-                                    width: 20,
-                                    height: 20
-                                }} />
-                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
-                                    tintColor: COLORS.main,
-                                    width: 20,
-                                    height: 20
-                                }} />
-                                <Text>
-                                    +{data.userDetails.Flake}
-                                </Text>
-                            </View>
-                        }
-                        {data.userDetails?.Flake > 3 &&
+                        {data?.userDetails?.Flake == 3 &&
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
@@ -146,11 +121,36 @@ function RenderCard({ data, navigation }) {
                                     height: 20
                                 }} />
                                 <Text>
-                                    +{data.userDetails.Flake}
+                                    +{data?.userDetails?.Flake}
                                 </Text>
                             </View>
                         }
-                        {data.userDetails.Flake < 1 &&
+                        {data?.userDetails?.Flake > 3 &&
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                    tintColor: COLORS.main,
+                                    width: 20,
+                                    height: 20
+                                }} />
+                                <Text>
+                                    +{data?.userDetails?.Flake}
+                                </Text>
+                            </View>
+                        }
+                        {data?.userDetails?.Flake < 1 &&
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
@@ -184,12 +184,12 @@ function RenderCard({ data, navigation }) {
                         fontSize: 20, fontWeight: 'bold',
                         color: COLORS.black,
                         marginRight: 5
-                    }}>{data.userDetails.Name}</Text>
+                    }}>{data?.userDetails?.Name}</Text>
                     <Text style={{
                         fontSize: 20,
                         color: COLORS.black,
                         marginRight: 5
-                    }}>{data.userDetails.Age}</Text>
+                    }}>{data?.userDetails?.Age}</Text>
                     <Image source={require('../../assets/conform.png')} resizeMode='contain'
                         style={{
                             width: 25,
@@ -308,10 +308,13 @@ const HomeScreen = ({ navigation }) => {
     const [ChatUserId, setChatUserId] = useState();
     const [ChatUserDetail, setChatUserDetail] = useState();
     const [modalVisible, setModalVisible] = useState(false);
+    const [recentMessage, setRecentMessage] = useState([]);
+    const [unreadMessage, setUnreadMessage] = useState([]);
     const user = useSelector(selectUser);
     const userPackage = useSelector(selectPackages);
     const CurrentUser = auth().currentUser.uid;
     const dispatch = useDispatch();
+
 
 
 
@@ -440,7 +443,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
     const fetchMatchUsers = (ChatUserId) => {
-        console.log('chat id', ChatUserId);
+        // console.log('chat id', ChatUserId);
         if (!userPackage == '') {
             const Package = userPackage.id;
             if (Package == 123) {
@@ -457,7 +460,7 @@ const HomeScreen = ({ navigation }) => {
                                     // console.log(UserDetailLock);
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
-                                            // console.log('test',docSnapshot.data().userDetails);
+
                                             MatchedUser.push(docSnapshot.data().userDetails)
                                         } else {
                                             console.log('no match found');
@@ -493,7 +496,24 @@ const HomeScreen = ({ navigation }) => {
                                     // console.log('data here');
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
-                                            MatchedUser.push(docSnapshot.data().userDetails)
+
+                                            const docid = docSnapshot.data().userDetails.uid > CurrentUser ? CurrentUser + "-" + docSnapshot.data().userDetails.uid : docSnapshot.data().userDetails.uid + "-" + CurrentUser
+                                            // console.log(docid);
+
+                                            const messageRef = firestore().collection('chatrooms')
+                                                .doc(docid)
+                                                .collection('messages')
+                                                .orderBy('createdAt', "desc")
+                                                .limit(1)
+                                            messageRef.onSnapshot((querySnap) => {
+                                                const allmsg = querySnap.docs.map(docSanp => {
+                                                    const data = docSanp.data();
+                                                    // setRecentMessage(data.text)
+                                                    console.log(data);
+                                                })
+                                            })
+                                            // docSnapshot.data().userDetails.recentMessages = recentMessage
+                                            // MatchedUser.push(docSnapshot.data().userDetails)
                                         } else {
                                             console.log('no match found');
                                         }
@@ -525,19 +545,48 @@ const HomeScreen = ({ navigation }) => {
                                 // console.log('Match User: ', documentSnapshot.data());
                                 if (docSnapshot.data()?.PrivateChat) {
                                     // console.log('data here');
-
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
-                                            MatchedUser.push(docSnapshot.data().userDetails)
-                                            // console.log('test', docSnapshot.data().userDetails);
+                                            const docid = docSnapshot.data().userDetails.uid > CurrentUser ? CurrentUser + "-" + docSnapshot.data().userDetails.uid : docSnapshot.data().userDetails.uid + "-" + CurrentUser
+                                            // console.log(item);
+
+                                            const messageRef = firestore().collection('chatrooms')
+                                            .doc(docid)
+                                            .collection('messages')
+                                            // .limit(1)
+                                            .orderBy('createdAt', "desc")
+                                            messageRef.onSnapshot((querySnap) => {
+                                                const unreaded = []
+                                                const recentmsg = []
+                                                const allmsg = querySnap.docs.map(docSanp => {
+                                                    const data2 = docSanp.data();
+                                                    recentmsg.push(data2.text)
+                                                    if (data2.read == false && data2.sentBy == item) {
+                                                        // setRecentMessage(data?.text)
+                                                        // docSnapshot.data().userDetails.recentMessages = recentMessage
+                                                        // return data2.text
+                                                        unreaded.push(data2.text)
+                                                    }
+                                                })
+                                            })
+                                            dataupdated = {
+                                                ...docSnapshot.data().userDetails,
+                                                // recentMessages: recentmsg.slice(0, 1),
+                                                unreadMessages: '2',
+                                                recentMessages: 'Hello there',
+                                            }
+                                            // console.log(docSnapshot.data().userDetails);
+                                            //     docSnapshot.data().userDetails.unreadMessages = unreaded
+                                            //     console.log(docSnapshot.data().userDetails);
+                                            MatchedUser.push(dataupdated);
+                                            // })
                                         } else {
                                             console.log('no match found');
-                                            // setChatUserDetail('')
                                         }
-                                        // console.log('push: ',MatchedUser);
+                                        // console.log('push: ', MatchedUser);
                                         // setChatUserId(chats.ChatuserDetails)
                                     })
-                                    console.log('final', MatchedUser.slice(0, 5));
+                                    // console.log('final', MatchedUser.slice(0, 5));
                                     // const finalMatch = MatchedUser.slice(0, 5)
                                     setChatUserDetail(MatchedUser.slice(0, 25))
                                     dispatch(chatuser(MatchedUser.slice(0, 25)))
@@ -567,6 +616,21 @@ const HomeScreen = ({ navigation }) => {
                                 // console.log('data here');
                                 docSnapshot.data()?.PrivateChat.map(secUser => {
                                     if (secUser.ChatuserDetails?.uid == CurrentUser) {
+                                        const docid = docSnapshot.data().userDetails.uid > CurrentUser ? CurrentUser + "-" + docSnapshot.data().userDetails.uid : docSnapshot.data().userDetails.uid + "-" + CurrentUser
+                                        // console.log(docid);
+
+                                        const messageRef = firestore().collection('chatrooms')
+                                            .doc(docid)
+                                            .collection('messages')
+                                            .limit(1)
+                                            .orderBy('createdAt', "desc")
+                                        messageRef.onSnapshot((querySnap) => {
+                                            const allmsg = querySnap.docs.map(docSanp => {
+                                                const data = docSanp.data();
+                                                setRecentMessage(data.text)
+                                            })
+                                        })
+                                        docSnapshot.data().userDetails.recentMessages = recentMessage
                                         MatchedUser.push(docSnapshot.data().userDetails)
                                     } else {
                                         console.log('no match found');
@@ -620,7 +684,6 @@ const HomeScreen = ({ navigation }) => {
     const fetchMaleUsers = async () => {
         // const Package = userPackage.otherCategory;
         // console.log(Package);
-        // for pacakges
         if (!userPackage == '') {
             const Package = userPackage.id;
             // console.log('male filter', Package);
@@ -628,57 +691,126 @@ const HomeScreen = ({ navigation }) => {
             if (Package == 123) {
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Male")
-                    .limit(2)
+                    // .where("userDetails.Gender", '==', "Male")
+                    // .limit(2)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 2))
+                        setModalDataUid(modalDataUid.slice(0, 2))
                     })
             }
             // for Standar pacakge 
             else if (Package == 456) {
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Male")
-                    .limit(3)
+                    // .where("userDetails.Gender", '==', "Male")
+                    // .limit(3)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 3))
+                        setModalDataUid(modalDataUid.slice(0, 3))
                     })
             }
             // for premium package 
             else {
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Male")
-                    .limit(25)
+                    // .where("userDetails.Gender", '==', "Male")
+                    // .limit(25)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 25))
+                        setModalDataUid(modalDataUid.slice(0, 25))
                     })
             }
         }
@@ -687,19 +819,42 @@ const HomeScreen = ({ navigation }) => {
             // console.log('hello');
             await firestore()
                 .collection('Users')
-                .where("userDetails.Gender", '==', "Male")
-                .limit(1)
+                // .where("userDetails.Gender", '==', "Male")
+                // .limit(1)
                 .onSnapshot(querySnapshot => {
                     // console.log('Total user: ', querySnapshot.size);
                     const users = [];
                     const modalDataUid = [];
                     querySnapshot.forEach((documentSnapshot) => {
-                        // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                        users.push(documentSnapshot.data());
-                        modalDataUid.push(documentSnapshot.id);
+                        const data = documentSnapshot.data().userDetails;
+                        const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                        if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
+                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                users.push(documentSnapshot.data());
+                                modalDataUid.push(documentSnapshot.id);
+                            }
+                            else if (!user.filterMinAge || !user.filterMinAge) {
+                                users.push(documentSnapshot.data());
+                                modalDataUid.push(documentSnapshot.id);
+                            }
+                        }
+                        else if (user.filterGender == 'Both') {
+                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                users.push(documentSnapshot.data());
+                                modalDataUid.push(documentSnapshot.id);
+                            }
+                            else if (!user.filterMinAge || !user.filterMinAge) {
+                                users.push(documentSnapshot.data());
+                                modalDataUid.push(documentSnapshot.id);
+                            }
+                            // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                            // users.push(documentSnapshot.data());
+                        }
                     });
-                    setUsers(users)
-                    setModalDataUid(modalDataUid)
+                    setUsers(users.slice(0, 1))
+                    setModalDataUid(modalDataUid.slice(0, 1))
                 })
             // console.log('MaleUsers: ', users);
 
@@ -719,19 +874,42 @@ const HomeScreen = ({ navigation }) => {
                 // console.log('female filter', Package);
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Female")
+                    // .where("userDetails.Gender", '==', "Female")
                     .limit(2)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 2))
+                        setModalDataUid(modalDataUid.slice(0, 2))
                     })
                 // console.log('FemaleUsers: ', users);
             }
@@ -739,38 +917,85 @@ const HomeScreen = ({ navigation }) => {
                 // console.log('female filter', Package);
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Female")
-                    .limit(3)
+                    // .where("userDetails.Gender", '==', "Female")
+                    // .limit(3)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                    // console.log(documentSnapshot.data());
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 3))
+                        setModalDataUid(modalDataUid.slice(0, 3))
                     })
             }
             // for premium package 
             else {
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Female")
-                    .limit(25)
+                    // .where("userDetails.Gender", '==', user.filterGender ? user.filterGender : "Female")
+                    // .limit(25)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                            }
+                            else if (user.filterGender == 'Both') {
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                    users.push(documentSnapshot.data());
+                                    modalDataUid.push(documentSnapshot.id);
+                                }
+                                // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                // users.push(documentSnapshot.data());
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 25))
+                        setModalDataUid(modalDataUid.slice(0, 25))
                     })
             }
         }
@@ -778,19 +1003,48 @@ const HomeScreen = ({ navigation }) => {
             try {
                 await firestore()
                     .collection('Users')
-                    .where("userDetails.Gender", '==', "Female")
-                    .limit(1)
+                    // .where("userDetails.Gender", '==', "Female")
+                    // .limit(1)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
                         const modalDataUid = [];
                         querySnapshot.forEach((documentSnapshot) => {
-                            // console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                            users.push(documentSnapshot.data());
-                            modalDataUid.push(documentSnapshot.id);
+                            const data = documentSnapshot.data().userDetails;
+                            const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // console.log('=====>',data.Gender);
+                            if (data.Gender == 'Female') {
+                                // console.log('asdjk'); 
+                                if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
+                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                        // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                        users.push(documentSnapshot.data());
+                                        modalDataUid.push(documentSnapshot.id);
+                                        // console.log('yetduh');
+                                    }
+                                    else if (!user.filterMinAge || !user.filterMinAge) {
+                                        users.push(documentSnapshot.data());
+                                        modalDataUid.push(documentSnapshot.id);
+                                        // console.log('etg');
+                                    }
+                                }
+                                else if (user.filterGender == 'Both') {
+                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                        // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                        users.push(documentSnapshot.data());
+                                        modalDataUid.push(documentSnapshot.id);
+                                    }
+                                    else if (!user.filterMinAge || !user.filterMinAge) {
+                                        users.push(documentSnapshot.data());
+                                        modalDataUid.push(documentSnapshot.id);
+                                    }
+                                    // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
+                                    // users.push(documentSnapshot.data());
+                                }
+                            }
                         });
-                        setUsers(users)
-                        setModalDataUid(modalDataUid)
+                        setUsers(users.slice(0, 1))
+                        setModalDataUid(modalDataUid.slice(0, 1))
                     })
                 // console.log('FemaleUsers: ', users);
             } catch (e) {
@@ -840,7 +1094,7 @@ const HomeScreen = ({ navigation }) => {
                     }),
                 })
                 .then(() => {
-                    console.log('You like', Data.userDetails.Name);
+                    // console.log('You like', Data.userDetails.Name);
                     // navigation.navigate('MessagesScreen')
                     Notifictaions(
                         Docuser = DataId,
@@ -927,6 +1181,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeaderTabOne Lefticon={require('../../assets/menu3.png')} logo={require('../../assets/splashlogo.png')} />
                     <View style={{
                         marginHorizontal: 10,
+                        alignItems: 'center'
                     }}>
                         <View style={{
                             // marginTop: 0, 
@@ -937,19 +1192,28 @@ const HomeScreen = ({ navigation }) => {
                             backgroundColor: COLORS.white,
                             elevation: 5,
                             borderRadius: 25,
-                            paddingHorizontal: 10
+                            // paddingHorizontal: 10,
+                            paddingBottom: 20,
+                            marginTop: 10,
+                            borderWidth: 5,
+                            borderColor: COLORS.white
                         }}>
                             <ScrollView vertical showsVerticalScrollIndicator={false}>
-                                <View>
+                                <View style={{
+                                    borderRadius: 20,
+                                }}>
                                     <View style={{
-                                        paddingTop: 10,
+                                        // paddingTop: 10,
+                                        // marginTop:10
+                                        borderRadius: 20,
+
                                     }}>
                                         <Image source={{ uri: modalData.userDetails.image1 }} resizeMode='cover'
                                             style={{
                                                 height: 380,
                                                 width: '100%',
                                                 borderRadius: 20,
-                                                paddingHorizontal: 10
+                                                // paddingHorizontal: 10
                                             }}
                                         />
                                         <TouchableOpacity
@@ -1050,8 +1314,8 @@ const HomeScreen = ({ navigation }) => {
 
                                                     <Image source={require('../../assets/heart.png')} resizeMode='contain'
                                                         style={{
-                                                            width: 30,
-                                                            height: 30
+                                                            width: 40,
+                                                            height: 40
                                                         }} />
                                                 </TouchableOpacity>
                                             </View>
@@ -1188,13 +1452,16 @@ const HomeScreen = ({ navigation }) => {
                                             alignItems: 'center',
                                         }}>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
+                                                // width: '40%',
+                                                paddingRight: 10,
+                                                marginRight: 5,
+                                                marginBottom: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
-                                                marginRight: 5,
+                                                // marginRight: 5,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/like2.png')} resizeMode='contain'
@@ -1208,14 +1475,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
-                                                paddingHorizontal: 8,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info4.png')} resizeMode='contain'
@@ -1230,14 +1498,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info3.png')} resizeMode='contain'
@@ -1252,15 +1521,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                marginTop: 10,
-                                                width: '40%',
-                                                height: 40,
-                                                flexDirection: 'row',
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
-                                                paddingHorizontal: 8,
+                                                paddingVertical: 10,
+                                                // height: 40,
+                                                flexDirection: 'row',
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info8.png')} resizeMode='contain'
@@ -1275,14 +1544,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '30%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info7.png')} resizeMode='contain'
@@ -1297,14 +1567,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '30%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info6.png')} resizeMode='contain'
@@ -1319,15 +1590,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
-                                                marginTop: 10
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info9.png')} resizeMode='contain'
@@ -1342,15 +1613,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
-                                                marginTop: 10
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info5.png')} resizeMode='contain'
@@ -1365,15 +1636,15 @@ const HomeScreen = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{
-                                                width: '40%',
-                                                height: 40,
+                                                paddingHorizontal: 10,
                                                 marginRight: 5,
+                                                paddingVertical: 10,
+                                                // height: 40,
                                                 flexDirection: 'row',
-                                                paddingHorizontal: 8,
                                                 alignItems: 'center',
                                                 backgroundColor: COLORS.light,
                                                 borderRadius: 30,
-                                                marginTop: 10
+                                                marginBottom: 10,
                                             }}>
                                                 <View>
                                                     <Image source={require('../../assets/modal/info2.png')} resizeMode='contain'

@@ -9,6 +9,9 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+import auth from '@react-native-firebase/auth';
+
 
 
 
@@ -18,6 +21,7 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
   const {confirmation, phoneNum} = route.params;
   const [userType, setUserType] = useState('Mediator');
   // console.log('secscreen==>',confirmation);
+  const [authUser, setAuthUser] = useState('');
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -59,6 +63,23 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
       ToastAndroid.show('Invalid code' + ToastAndroid.SHORT)
     }
   }
+
+
+  function onAuthStateChanged(user) {
+    // console.log('user: ', user);
+    setAuthUser(user)
+    if (user) {
+      console.log('user login Succesfully', user);
+      ToastAndroid.show('User Sign In Succesfully', ToastAndroid.SHORT);
+      navigation.navigate('MediatorQuestionPhotoScreen')
+    }
+
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   return (
     <SafeAreaView>

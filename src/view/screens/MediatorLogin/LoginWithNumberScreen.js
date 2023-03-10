@@ -79,7 +79,7 @@ const MediatorLoginWithNumberScreen = ({ navigation }) => {
               fontSize: 20,
               fontWeight: 'bold',
               color: COLORS.black
-            }}>What's your Number?</Text>
+            }}>What's your Numbers?</Text>
           </View>
 
 

@@ -48,7 +48,7 @@ export const CategoriesEvent = [
 
 const EventDetails = ({ navigation, route }) => {
   const details = route.params;
-  console.log(details.details.item);
+  // console.log(details.details.item);
   const [Events, setEvents] = useState('Explore');
 
 

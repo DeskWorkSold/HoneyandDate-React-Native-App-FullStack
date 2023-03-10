@@ -47,7 +47,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         Data.PanelAccess = false;
         Data.Event = 1;
         Data.POSFood = 1;
-        Data.email = email;
+        Data.email = email; 
         Data.RelationshipStatus = RelationshipStatus;
         Data.Clingy = clingy;
         Data.Interest = Interest;

@@ -463,8 +463,8 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
 
     const OnUpdateEvents = async () => {
         // console.log('add events here: ',Data);
+        setUploading(true)
         try {
-            setUploading(true)
             // const imageUrl = await uploadImage();
             var Data = new Object();
             Data.Title = name
@@ -570,7 +570,7 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
                 setDefaultAnimationDialog(false)
                 navigation.goBack();
                 console.log('Event deleted!');
-                ToastAndroid.show('Event Updated successfully', ToastAndroid.SHORT)
+                ToastAndroid.show('Event Deleted successfully', ToastAndroid.SHORT)
             });
     }
     const CancleForm = () => {
@@ -651,7 +651,7 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
                                 bordered
                                 textStyle={{
                                     color: COLORS.black,
-                                    fontSize:16
+                                    fontSize: 16
                                 }}
                                 onPress={() => {
                                     setDefaultAnimationDialog(false);
@@ -669,7 +669,7 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
                                 }}
                                 textStyle={{
                                     color: COLORS.white,
-                                    fontSize:16
+                                    fontSize: 16
                                 }}
                                 onPress={() => {
                                     DeleteForm();
@@ -1417,7 +1417,7 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
                                     :
                                     <View style={{
                                         backgroundColor: COLORS.main,
-                                        width: 329,
+                                        width: 200,
                                         height: 50,
                                         borderRadius: 10,
                                         alignItems: 'center',
@@ -1904,9 +1904,23 @@ const MediatorEditEventScreen = ({ navigation, route }) => {
                                                         marginTop: 50,
                                                         marginBottom: 100
                                                     }}>
-                                                        <CustomeButton
-                                                            onpress={() => OnAddTicket()}
-                                                            title={'Add Ticket'} color={COLORS.white} />
+                                                        {!uploading == true ?
+                                                            <CustomeButton
+                                                                onpress={() => OnAddTicket()}
+                                                                title={'Add Ticket'} color={COLORS.white} />
+                                                            :
+                                                            <View style={{
+                                                                backgroundColor: COLORS.main,
+                                                                width: '90%',
+                                                                height: 50,
+                                                                borderRadius: 10,
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                                <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
+                                                            </View>
+                                                        }
+
                                                     </View>
                                                 </ScrollView>
                                             </View>

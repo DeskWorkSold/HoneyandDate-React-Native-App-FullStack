@@ -35,7 +35,7 @@ const height = Dimensions.get('window').height;
 
 const MediatorEditFoodScreen = ({ navigation, route }) => {
     const { details } = route.params;
-    console.log('==>', details);
+    // console.log('==>', details);
     const currentuser = useSelector(selectMediatorUser);
     // for events states
 
@@ -192,6 +192,9 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
         const categoryid = FoodType[foodTypeindex].uid
         // const categoryImage = FoodType[foodTypeindex].image
         const Eventid = yourEvents[selectEvent].uid
+
+        // console.log(Eventid);
+        // return
         try {
             // setUploading(true)
             var Data = new Object();
@@ -293,7 +296,7 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
                 setDefaultAnimationDialog(false)
                 navigation.goBack();
                 console.log('Event deleted!');
-                ToastAndroid.show('Event Updated successfully', ToastAndroid.SHORT)
+                ToastAndroid.show('Item Deleted successfully', ToastAndroid.SHORT)
             });
     }
     const CancleForm = () => {

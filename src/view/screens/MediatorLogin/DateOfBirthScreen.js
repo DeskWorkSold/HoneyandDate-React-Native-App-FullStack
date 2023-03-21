@@ -26,7 +26,7 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
 
   const onGenderPress = () => {
     const years = new Date().getFullYear() - new Date(customDate).getFullYear();
-    // console.log(years);
+    // console.log(customDate);
     // return;
     if (!customDate && years < 18 ) {
       if(!customDate){
@@ -37,7 +37,7 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
       }
     }
     else {
-      navigation.navigate('MediatorQuestionGenderScreen', { Date: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
+      navigation.navigate('MediatorQuestionGenderScreen', { DateOfBirth: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
     }
   }
 

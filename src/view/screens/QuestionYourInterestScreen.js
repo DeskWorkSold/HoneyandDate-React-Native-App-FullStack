@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
 
 
 
@@ -29,15 +30,22 @@ const GenderData = [
 ]
 
 const QuestionYourInterestScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender } = route.params;
   // console.log(image5);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [checked, setChecked] = React.useState('Apple'); //initial choice
+  // console.log(DateOfBirth);
 
   const onQuestionWantKidsScreen = () => {
     console.log(GenderData[selectedCategoryIndex].name);
     const selectedGender = GenderData[selectedCategoryIndex].name;
-    navigation.navigate('QuestionWantKidsScreen', { PartnerGender: selectedGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+    navigation.navigate('QuestionWantKidsScreen', { PartnerGender: selectedGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
+  }
+  const onSkip = () => {
+    console.log('skip');
+    console.log(GenderData[selectedCategoryIndex].name);
+    const selectedGender = GenderData[selectedCategoryIndex].name;
+    navigation.navigate('QuestionClingyScreen', { RelationshipLookingType: null, Cuddling: null, InLife: null, InBed: null, MovieType: null, NextLongestRelationship: null, LongestRelationship: null, OpenTo: null, DealBreaker: null, DealMakers: null, Firstrefname: null, FirstRefemail: null, FirstRefnumber: null, Secrefname: null, SecRefemail: null, SecRefnumber: null, PartnerBuildType: null, BuildType: null, PartnerMaxHeight: null, PartnerMinHeight: null, Height: null, PartnerDisability: null, Disability: null, DescribePartner: null, DescribeYou: null, PartnerEthnicity: null, Ethnicity: null, PartnerExercise: null, ExerciseStatus: null, Exercise: null, FavFood: null, PartnerDiet: null, Diet: null, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, Relagion: null, RelationshipType: null, Education: null, Interest: null, CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: null, Drink: null, Drugs: null, Marijauna: null, Vape: null, Smoke: null, Lookingfor: null, PartnerNature: null, Nature: null, PoliticalPartnerView: null, PoliticalView: null, Music: null, Experince: null, Bio: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: selectedGender, Kids: null })
   }
 
   const ListGender = ({ data, value, setValue, cancle }) => {
@@ -61,10 +69,7 @@ const QuestionYourInterestScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>
@@ -108,9 +113,17 @@ const QuestionYourInterestScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
+            flexDirection: 'row',
+            marginHorizontal: 20
           }}>
-            <CustomeButton onpress={() => onQuestionWantKidsScreen()}
-              title={'Continue'} />
+            <View style={{ marginHorizontal: 5 }}>
+              <CustomeButton width={160} onpress={() => onSkip()}
+                title={'Skip All'} bcolor={COLORS.light} />
+            </View>
+            <View style={{ marginHorizontal: 5 }}>
+              <CustomeButton width={160} onpress={() => onQuestionWantKidsScreen()}
+                title={'Continue'} />
+            </View>
           </View>
 
           <View style={{
@@ -144,7 +157,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '20%',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 20
   },
   NumberInput: {
     marginTop: 20,

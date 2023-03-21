@@ -28,7 +28,7 @@ const WantKidData = [
 
 
 const MediatorQuestionWantKidsScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender } = route.params;
   // console.log(PartnerGender);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [kids, setKids] = useState();
@@ -38,13 +38,13 @@ const MediatorQuestionWantKidsScreen = ({ navigation, route }) => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     const selectedGender = WantKidData[selectedCategoryIndex].name;
     // console.log('test',selectedGender);
-    navigation.navigate('MediatorQuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+    navigation.navigate('MediatorQuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
   }
 
   const onSkip = () => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     // console.log('test',selectedGender);
-    navigation.navigate('MediatorQuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+    navigation.navigate('MediatorQuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
 
   }
 

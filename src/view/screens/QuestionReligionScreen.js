@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
@@ -8,6 +8,8 @@ import {
   MultiselectDropdown,
 } from 'sharingan-rn-modal-dropdown';
 import { set } from 'react-native-reanimated';
+import SVGImg from '../../assets/tik.svg';
+
 
 const RelagionType = [
   {
@@ -89,7 +91,7 @@ export const MoreAboutJewaish = [
 
 
 const QuestionReligionScreen = ({ navigation, route }) => {
-  const { RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
   const [valueGS, setValueGS] = useState('');
@@ -102,6 +104,8 @@ const QuestionReligionScreen = ({ navigation, route }) => {
   const [showtick7, setShowtick7] = useState('');
   const [Christian, setChristian] = useState('');
   const [Jewaish, setJewaish] = useState('');
+  // console.log(DateOfBirth);
+
 
 
 
@@ -109,7 +113,7 @@ const QuestionReligionScreen = ({ navigation, route }) => {
     const selectitem = RelagionType[selectedCategoryIndex].name;
     console.log(selectitem);
     if (selectitem) {
-      navigation.navigate('QuestionDietScreen', { Relagion: selectitem, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionDietScreen', { Relagion: selectitem, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your religion!", ToastAndroid.SHORT);
@@ -140,10 +144,7 @@ const QuestionReligionScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>
@@ -159,7 +160,7 @@ const QuestionReligionScreen = ({ navigation, route }) => {
     setSelectedCategoryIndex(index)
     console.log(TypeTestimonial.onpress);
     if (TypeTestimonial.onpress) {
-      navigation.navigate(TypeTestimonial.onpress, { Relagion: TypeTestimonial.name, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate(TypeTestimonial.onpress, { Relagion: TypeTestimonial.name, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     // const selectitem = RelagionType[selectedCategoryIndex].name;
     // console.log(selectitem);

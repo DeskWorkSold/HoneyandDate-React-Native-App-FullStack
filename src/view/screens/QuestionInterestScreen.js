@@ -29,7 +29,7 @@ const TypeTestimonial = [
 
 
 const QuestionInterestScreen = ({ navigation, route }) => {
-  const { CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [search, setsearch] = useState();
 
@@ -39,7 +39,7 @@ const QuestionInterestScreen = ({ navigation, route }) => {
     console.log(selectitem);
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionEducationScreen', { Interest: selectitem, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionEducationScreen', { Interest: selectitem, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
@@ -53,17 +53,22 @@ const QuestionInterestScreen = ({ navigation, route }) => {
           <TouchableOpacity
             key={index}
             activeOpacity={0.8}
-            onPress={() => setValue(index)}>
+            onPress={() => setValue(index)}
+            style={styles.button}>
             <View style={{
               backgroundColor: value == index ? COLORS.main : COLORS.transparent,
               borderWidth: value == index ? 0 : 1,
               borderColor: value == index ? COLORS.main : COLORS.gray,
-              ...styles.toggelbtn
+              // ...styles.toggelbtn
+              borderRadius: 10,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              flexDirection: 'row',
             }}>
-              <View style={{ width: '80%', alignItems: 'center' }}>
+              <View style={{ paddingLeft: 10 }}>
                 <Text>{TypeTestimonial.name}</Text>
               </View>
-              <View style={{ width: '20%', justifyContent: 'center' }}>
+              <View style={{ justifyContent: 'center', paddingLeft: 5 }}>
                 {value == index ? (
                   <Image source={cancle} />
                 ) : (
@@ -137,7 +142,7 @@ const QuestionInterestScreen = ({ navigation, route }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
 
           <View style={{
-            paddingLeft:20
+            paddingLeft: 10
           }}>
             <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
               setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
@@ -216,5 +221,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: 'center',
     borderRadius: 10
-  }
+  },
+  button: {
+    flexDirection: 'row',
+    height: 30,
+    marginTop: 5,
+    borderRadius: 10,
+  },
 })

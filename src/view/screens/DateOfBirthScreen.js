@@ -25,7 +25,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
   const onGenderPress = () => {
     // console.log(date.dateString);
     const years = new Date().getFullYear() - new Date(customDate).getFullYear();
-    // console.log(years);
+    // console.log('==>',customDate);
     // return
     if (!customDate && years < 18) {
       if (!customDate) {
@@ -37,7 +37,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
     }
     else {
       // console.log(years);
-      navigation.navigate('QuestionGenderScreen', { Date: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
+      navigation.navigate('QuestionGenderScreen', { DateOfBirth: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
     }
   }
 
@@ -102,7 +102,11 @@ const DateOfBirthScreen = ({ navigation, route }) => {
               renderHeader={(year) => (
                 <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
                   <View>
-                    <Text>
+                    <Text style={{
+                      color:COLORS.main,
+                      fontWeight:'bold',
+                      fontSize:20
+                    }}>
                       {date.month() + 1}Month {date.year()}
                     </Text>
                   </View>
@@ -110,7 +114,8 @@ const DateOfBirthScreen = ({ navigation, route }) => {
               )}
               onPressArrowLeft={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).subtract(1, 'month'))}
               onPressArrowRight={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).add(1, 'month'))}
-              onDayPress={({ dateString }) => {
+              onDayPress={({dateString}) => {
+                console.log(dateString);
                 setCustomDate(dateString)
               }}
               initialDate={date.format('YYYY-MM-DD')}
@@ -118,7 +123,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
               allowSelectionOutOfRange
               markingType='multi-dot'
               onMonthChange={() => { }}
-              onPressYear={() => onPressYear()}
+              // onPressYear={() => onPressYear()}
               markedDates={{ [customDate]: { selected: true, selectedColor: COLORS.main } }}
             />
 

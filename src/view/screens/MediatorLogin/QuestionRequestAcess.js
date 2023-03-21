@@ -23,7 +23,7 @@ const RelationshipTypes = [
 
 
 const MediatorQuestionRequestAcess = ({ navigation, route }) => {
-  const { RelationshipStatus, email, clingy, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { RelationshipStatus, email, clingy, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   // console.log(RelationshipStatus);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [uploading, setUploading] = useState(0);
@@ -39,7 +39,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
       // console.log(selectitem);
       // return;
       try {
-        // setUploading(true)
+        setUploading(true)
         const imageUrl = await uploadImage();
         var Data = new Object();
         Data.Category = category;
@@ -47,7 +47,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         Data.PanelAccess = false;
         Data.Event = 1;
         Data.POSFood = 1;
-        Data.email = email; 
+        Data.email = email;
         Data.RelationshipStatus = RelationshipStatus;
         Data.Clingy = clingy;
         Data.Interest = Interest;
@@ -109,7 +109,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         Data.Kids = Kids;
         Data.PartnerGender = PartnerGender;
         Data.Gender = Gender;
-        Data.Dates = Date;
+        Data.Dates = DateOfBirth;
         Data.image5 = image5;
         Data.image4 = image4;
         Data.image3 = image3;
@@ -118,9 +118,13 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         Data.CompanyType = CompanyType;
         Data.PositioninCompany = PositioninCompany;
         Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser
+        Data.uid = CurrentUser;
+        Data.Location = {
+          latitude: 24.9028039,
+          longitude: 67.1145385,
+        }
         // console.log('test data: ', Data);
-        // dispatch(mediatorLogin(Data))
+        // // dispatch(mediatorLogin(Data))
         // return;
         // console.log(CurrentUser);
         firestore()
@@ -137,7 +141,6 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
       } catch (error) {
         console.log('error test1', error);
       }
-      // navigation.navigate('MediatorApprovalScreen', { RequestAccessType: selectitem, RelationshipStatus: RelationshipStatus, email: email, clingy: clingy, RelationshipLookingType: RelationshipLookingType, Cuddling: Cuddling, InLife: InLife, InBed: InBed, MovieType: MovieType, NextLongestRelationship: NextLongestRelationship, LongestRelationship: LongestRelationship, OpenTo: OpenTo, DealBreaker: DealBreaker, DealMakers: DealMakers, Firstrefname: Firstrefname, FirstRefemail: FirstRefemail, FirstRefnumber: FirstRefnumber, Secrefname: Secrefname, SecRefemail: SecRefemail, SecRefnumber: SecRefnumber, PartnerBuildType: PartnerBuildType, BuildType: BuildType, PartnerMaxHeight: PartnerMaxHeight, PartnerMinHeight: PartnerMinHeight, Height: Height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else if (selectitem == 'Event Coordinator') {
       try {

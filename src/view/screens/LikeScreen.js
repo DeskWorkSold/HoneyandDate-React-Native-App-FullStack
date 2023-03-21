@@ -10,14 +10,13 @@ import { selectUser } from '../../../redux/reducers/Reducers';
 
 
 const LikeScreen = ({ navigation }) => {
-  
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
-
-        <HeaderTabOne Lefticon={require('../../assets/menu.png')}
+        <HeaderTabOne onpress={() => navigation.openDrawer()} Lefticon={require('../../assets/menu.png')}
           logo={require('../../assets/logo2.png')} />
 
 

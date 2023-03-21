@@ -10,7 +10,7 @@ import auth from '@react-native-firebase/auth';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const MediatorProfileScreen = ({navigation}) => {
+const MediatorProfileScreen = ({ navigation }) => {
     const mediator = useSelector(selectMediatorUser);
     const [name, setName] = useState(mediator?.Name);
     const [email, setEmail] = useState(mediator?.email);
@@ -21,23 +21,23 @@ const MediatorProfileScreen = ({navigation}) => {
     const OnLogOut = () => {
         // navigation.navigate('LoginScreen')
         try {
-          auth()
-            .signOut()
-            .then(() =>
-              console.log('User signed out!'),
-              ToastAndroid.show('Signed out!', ToastAndroid.SHORT),
-              //   navigation.navigate('LoginScreen')
-              );
-              // const userData = await AsyncStorage.getItem('session');
-              //   await AsyncStorage.removeItem('CurrentUserData')
-              //   await AsyncStorage.removeItem('CurrentUser')
-              dispatch(logout());
-            }
-        catch (exception) {
-          return false;
+            auth()
+                .signOut()
+                .then(() =>
+                    console.log('User signed out!'),
+                    ToastAndroid.show('Signed out!', ToastAndroid.SHORT),
+                    //   navigation.navigate('LoginScreen')
+                );
+            // const userData = await AsyncStorage.getItem('session');
+            //   await AsyncStorage.removeItem('CurrentUserData')
+            //   await AsyncStorage.removeItem('CurrentUser')
+            dispatch(logout());
         }
-      }
-    
+        catch (exception) {
+            return false;
+        }
+    }
+
 
 
     return (
@@ -65,23 +65,27 @@ const MediatorProfileScreen = ({navigation}) => {
                                 }} />
                             </View>
                             <View style={{
-                                paddingHorizontal: 20,
-                                justifyContent: 'center'
+                                justifyContent:'center'
+                                ,paddingLeft:20
                             }}>
-                                <Text style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: COLORS.black
-                                }}>{mediator?.Name}</Text>
-
+                                <View style={{
+                                    justifyContent: 'center'
+                                }}>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        fontWeight: 'bold',
+                                        color: COLORS.black
+                                    }}>{mediator?.Name}</Text>
+                                </View>
                                 <View style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     backgroundColor: COLORS.light,
                                     borderRadius: 5,
-                                    width: '100%',
+                                    width: '80%',
                                     padding: 5,
-                                    paddingHorizontal: 10
+                                    paddingHorizontal: 10,
+                                    marginTop:5,
                                 }}>
                                     <Text style={{ color: COLORS.black, fontSize: 13 }}>Event Vendor</Text>
                                 </View>
@@ -187,8 +191,8 @@ export default MediatorProfileScreen
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        width:width,
-        height:height,
+        width: width,
+        height: height,
     },
     NumberInput: {
         flexDirection: 'row',

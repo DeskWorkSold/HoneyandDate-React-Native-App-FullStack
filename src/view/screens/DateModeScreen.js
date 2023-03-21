@@ -4,13 +4,15 @@ import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import MapView, { Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Share from 'react-native-share';
 import { getApps, GetAppResult } from 'react-native-map-link';
 import { useEffect } from 'react';
-
-
+import GoogleMapKey from '../../consts/GoogleMapKey';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/reducers/Reducers';
+import MapViewDirections from 'react-native-maps-directions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -29,17 +31,23 @@ const DateModeScreen = ({ navigation }) => {
   const [LocationModalVisible, setLocationModalVisible] = useState(false);
   const [ExpectedTimeVisibility, setExpectedTimeVisibility] = useState(false);
   const [TrackingTimeVisibility, setTrackingTimeVisibility] = useState(false);
+  const [timeDuration, setTimeDuration] = useState(false);
+  const [distanceDuration, setDistanceDuration] = useState(false);
   const [tempDates, setTempDates] = useState('');
   const [pin, setPin] = useState({
     latitude: 24.860966,
     longitude: 66.990501,
   });
+  const api = GoogleMapKey?.GOOGLE_MAP_KEY
   const [region, setRegion] = useState({
     latitude: 24.902255,
     longitude: 67.1154162,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   });
+  const [searchTextRef, setSearchTextRef] = useState('')
+  const user = useSelector(selectUser);
+
 
   useEffect(() => {
     (async () => {
@@ -61,11 +69,11 @@ const DateModeScreen = ({ navigation }) => {
     setLocationModalVisible(!LocationModalVisible)
     setActionTriggered('ACTION_1');
   }
-  const OnSetLocation = (region) => {
+  const OnSetLocation = () => {
     // console.log(pin);
     if (region) {
-      setRegion(region)
-      setLocation('Karachi Federal B Area')
+      console.log('selected pin', region);
+      console.log('selected pin', location);
       setLocationModalVisible(false)
     }
     else {
@@ -183,6 +191,8 @@ const DateModeScreen = ({ navigation }) => {
     Data.region = region;
     Data.arrivalTime = arrivalTime;
 
+    // console.log(shareOptions);
+    // return
     try {
       const ShareResponce = await Share.open(shareOptions)
         .then((res) => {
@@ -197,133 +207,126 @@ const DateModeScreen = ({ navigation }) => {
     }
   }
 
-
-
-
-
-
   return (
     <SafeAreaView style={{
       flex: 1,
       backgroundColor: COLORS.white
     }}>
       <StatusBar backgroundColor={COLORS.black} />
-      <ScrollView>
-        <View style={styles.container}>
+      {/* <ScrollView> */}
+      <View style={styles.container}>
+
+        <View style={{
+          alignItems: 'center',
+          paddingTop: 20,
+          paddingHorizontal: 70,
+        }}>
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: COLORS.black,
+            textAlign: 'center',
+          }}>Date Mode
+          </Text>
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ color: COLORS.black }}>Date Location </Text>
+            <TouchableOpacity
+              onPress={() => OpenLocationModalView()}
+              style={{
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <MapView
+                style={styles.map1}
+                initialRegion={{
+                  latitude: 24.860966,
+                  longitude: 66.990501,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                  }}
+                  draggable
+                  onDragEnd={
+                    (e) => alert(JSON.stringify(e.nativeEvent.coordinate))
+                  }
+                  title={'Test Marker'}
+                  description={'This is description of marker'} />
+              </MapView>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ color: COLORS.black }}> Where going for date? </Text>
+            <View style={styles.NumberInput}>
+              <TextInput
+                value={location}
+                placeholder={'Enter date location'}
+                keyboardType='email-address'
+                onChangeText={location => setLocation(location)
+                }
+                style={styles.TextInput}
+                onPressIn={OpenLocationModalView}
+              />
+            </View>
+          </View>
+        </View>
+
+
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ color: COLORS.black }}> Expected arrival time? </Text>
+            <View style={styles.NumberInput}>
+              <TextInput
+                value={arrivalTime}
+                placeholder={'Arrival time'}
+                keyboardType='number-pad'
+                onChangeText={arrivalTime => setArrivalTime(arrivalTime)
+                }
+                style={styles.TextInput}
+                onPressIn={showExpectedTimePicker}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ color: COLORS.black }}> Tracking time </Text>
+            <View style={styles.NumberInput}>
+              <TextInput
+                value={trackingTime}
+                placeholder={'Time'}
+                onChangeText={trackingTime => setTrackingTime(trackingTime)
+                }
+                style={styles.TextInput}
+                onPressIn={showTrackingTimePicker}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{ alignItems: 'center' }}>
 
           <View style={{
             alignItems: 'center',
-            paddingTop: 20,
-            paddingHorizontal: 70,
+            flexDirection: 'row',
+            paddingTop: 80,
+            paddingBottom: 10,
           }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Date Mode
-            </Text>
-          </View>
-
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 10 }}>
-              <Text style={{ color: COLORS.black }}>Date Location </Text>
-              <TouchableOpacity
-                onPress={() => OpenLocationModalView()}
-                style={{
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                }}>
-                <MapView
-                  style={styles.map1}
-                  initialRegion={{
-                    latitude: 24.860966,
-                    longitude: 66.990501,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  }}
-                >
-                  <Marker
-                    coordinate={{
-                      latitude: region.latitude,
-                      longitude: region.longitude,
-                    }}
-                    draggable
-                    onDragEnd={
-                      (e) => alert(JSON.stringify(e.nativeEvent.coordinate))
-                    }
-                    title={'Test Marker'}
-                    description={'This is description of marker'} />
-                </MapView>
-              </TouchableOpacity>
+            <View style={{ marginHorizontal: 5 }}>
+              <CustomeButton onpress={() => onContinue()}
+                title={'Continue'} />
             </View>
           </View>
-
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 10 }}>
-              <Text style={{ color: COLORS.black }}> Where going for date? </Text>
-              <View style={styles.NumberInput}>
-                <TextInput
-                  value={location}
-                  placeholder={'Enter date location'}
-                  keyboardType='email-address'
-                  onChangeText={location => setLocation(location)
-                  }
-                  style={styles.TextInput}
-                  onPressIn={OpenLocationModalView}
-                />
-              </View>
-            </View>
-          </View>
-
-
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 10 }}>
-              <Text style={{ color: COLORS.black }}> Expected arrival time? </Text>
-              <View style={styles.NumberInput}>
-                <TextInput
-                  value={arrivalTime}
-                  placeholder={'Arrival time'}
-                  keyboardType='number-pad'
-                  onChangeText={arrivalTime => setArrivalTime(arrivalTime)
-                  }
-                  style={styles.TextInput}
-                  onPressIn={showExpectedTimePicker}
-                />
-              </View>
-            </View>
-          </View>
-
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 10 }}>
-              <Text style={{ color: COLORS.black }}> Tracking time </Text>
-              <View style={styles.NumberInput}>
-                <TextInput
-                  value={trackingTime}
-                  placeholder={'Time'}
-                  onChangeText={trackingTime => setTrackingTime(trackingTime)
-                  }
-                  style={styles.TextInput}
-                  onPressIn={showTrackingTimePicker}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={{ alignItems: 'center' }}>
-
-            <View style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              paddingTop: 80,
-              paddingBottom: 10,
-            }}>
-              <View style={{ marginHorizontal: 5 }}>
-                <CustomeButton onpress={() => onContinue()}
-                  title={'Continue'} />
-              </View>
-            </View>
-          </View>
-
         </View>
 
 
@@ -382,56 +385,78 @@ const DateModeScreen = ({ navigation }) => {
                   </View>
                 </View>
                 <View style={{
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  flex: 1,
+                  // marginTop: 20
                 }}>
                   <GooglePlacesAutocomplete
-                    placeholder='Search'
-                    fetchDetails={true}
-                    autoFocus={false}
-                    onFail={error => console.error(error)}
-                    GooglePlacesSearchQuery={{
-                      rankby: "distance"
-                    }}
-                    onPress={(data, details = null) => {
-                      // 'details' is provided when fetchDetails = true
-                      console.log('data here ===>', data, 'details ===>', details);
-                      setRegion({
-                        latitude: details.geometry.location.lat,
-                        longitude: details.geometry.location.lng,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421
-                      })
-                      setLocation(data.description)
-                    }}
+                    placeholder="Type a place"
                     query={{
-                      key: 'AIzaSyADaEpiFSeltBH4uNI9aZaIM1XRXFfPvhs',
-                      language: 'en',
-                      components: "country:pk",
+                      key: api,
+                      // language: 'en',
+                      // components: "country:pk",
                       types: "establishment",
                       radius: 30000,
                       location: `${region.latitude}, ${region.longitude}`
                     }}
+                    textInputProps={{
+                      autoFocus: true,
+                    }}
+                    fetchDetails={true}
+                    // ref={ref => setSearchTextRef(ref)}
+                    // placeholder='Search'
+                    // fetchDetails={true}
+                    autoFocus={true}
+                    // keyboardShouldPersistTaps={'handled'}
+                    // listUnderlayColor={'transparent'}
+                    // minLength={1} // minimum length of text to search
+                    // returnKeyType={'search'}
+                    // listViewDisplayed={'auto'}
+                    GooglePlacesSearchQuery={{
+                      rankby: "distance"
+                    }}
+                    // onFail={error => console.log(error)}
+                    // onNotFound={() => console.log('no results')}
+                    onPress={(data, details = null) => {
+                      console.log('======>data', data, '====>details', details)
+                      setRegion({
+                        latitude: details.geometry.location.lat,
+                        longitude: details.geometry.location.lng,
+                      })
+                      setLocation(data.description)
+                    }
+                    }
+                    // query={{
+                    //     key: api,
+                    //     language: 'en',
+                    //     components: "country:pk",
+                    //     types: "establishment",
+                    //     radius: 30000,
+                    //     location: `${region.latitude}, ${region.longitude}`
+                    // }}
+                    // nearbyPlacesAPI='GooglePlacesSearch'
                     styles={{
                       container: {
-                        flex: 1, position: 'relative', width: "100%", zIndex: 1,
+                        flex: 0, position: 'absolute', width: "100%", zIndex: 1,
                         // marginHorizontal: 20,
-                        marginTop: 10,
+                        // marginTop: 10,
                       },
                       listView: { backgroundColor: "white" }
                     }}
+                  // filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
+                  // debounce={200}
                   />
                   <MapView
+                    // ref={mapRef}
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                     style={styles.map}
                     initialRegion={{
-                      latitude: 24.860966,
-                      longitude: 66.990501,
+                      latitude: region.latitude,
+                      longitude: region.longitude,
                       latitudeDelta: 0.0922,
                       longitudeDelta: 0.0421,
                     }}
                   >
+                    {/* <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} /> */}
                     <Marker
                       coordinate={{
                         latitude: region.latitude,
@@ -454,7 +479,7 @@ const DateModeScreen = ({ navigation }) => {
                         resizeMode="contain"
                       />
                     </Marker>
-                    <Circle center={region} radius={200} />
+                    <Circle center={region} radius={1000} />
                   </MapView>
                   <View
                     style={{
@@ -463,7 +488,7 @@ const DateModeScreen = ({ navigation }) => {
                       alignSelf: 'center' //for align to right
                     }}
                   >
-                    <CustomeButton title={'Add Location'} onpress={() => OnSetLocation(region)} />
+                    <CustomeButton title={'Add Location'} onpress={() => OnSetLocation()} />
                   </View>
                 </View>
               </View>
@@ -479,37 +504,37 @@ const DateModeScreen = ({ navigation }) => {
                   }}>
                     <MapView
                       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingHorizontal: 20,
-                        height: windowHeight,
-                        width: windowWidth,
-                        borderRadius: 15,
-                      }}
                       initialRegion={{
-                        latitude: region.latitude,
-                        longitude: region.longitude,
+                        latitude: user?.Location?.latitude ? user?.Location?.latitude : pin.latitude,
+                        longitude: user?.Location?.longitude ? user?.Location?.longitude : pin.longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                       }}
+                      style={{
+                        height: windowHeight,
+                        width: windowWidth,
+                        flex: 1
+                      }}
                     >
+                      {Object.keys(region).length > 0 &&
+                        <MapViewDirections
+                          origin={user.Location ? user.Location : pin}
+                          destination={region}
+                          apikey={api}
+                          strokeWidth={6}
+                          strokeColor={COLORS.gray}
+                          optimizeWaypoints={true}
+                          onReady={result => {
+                            console.log(`Distance: ${result.distance} km`)
+                            console.log(`Duration: ${result.duration} min.`)
+                            setTimeDuration(`${result.duration.toFixed(2)} min.`)
+                            setDistanceDuration(`${result.distance.toFixed(2)} km`)
+                            // this.forceUpdate()
+                          }}
+                        />
+                      }
                       <Marker
-                        coordinate={{
-                          latitude: region.latitude,
-                          longitude: region.longitude,
-                        }}
-                      // image={require('../../../assets/map.png')}
-                      // draggable={true}
-                      // onDragEnd={(e) => {
-                      //   console.log('Drag end', e.nativeEvent.coordinate)
-                      //   setRegion({
-                      //     latitude: e.nativeEvent.coordinate.latitude,
-                      //     longitude: e.nativeEvent.coordinate.longitude,
-                      //   })
-                      // }}
-                      // title={'Test Marker'}
-                      // description={'This is description of marker'} 
+                        coordinate={region}
                       >
                         <Image
                           source={require('../../assets/map.png')}
@@ -517,7 +542,18 @@ const DateModeScreen = ({ navigation }) => {
                           resizeMode="contain"
                         />
                       </Marker>
-                      <Circle center={region} radius={200} />
+                      <Marker
+                        coordinate={user.Location ? user.Location : pin}
+                      >
+                        <Image
+                          source={require('../../assets/map.png')}
+                          style={{ width: 26, height: 28 }}
+                          resizeMode="contain"
+                        />
+                      </Marker>
+
+
+                      <Circle center={user?.Location ? user?.Location : pin} radius={200} />
                     </MapView>
 
 
@@ -549,7 +585,8 @@ const DateModeScreen = ({ navigation }) => {
                           <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            height: 50
+                            // height: 50
+                            paddingVertical: 20
                           }}>
                             <Image source={require('../../assets/map.png')}
                               style={{ width: 16, height: 18, marginRight: 5 }}
@@ -581,7 +618,11 @@ const DateModeScreen = ({ navigation }) => {
                               style={{ width: 16, height: 18, marginRight: 5, tintColor: COLORS.black, color: COLORS.black }}
                               resizeMode="contain"
                             />
-                            <Text style={{ color: COLORS.black }}>03h 24m</Text>
+                            {!timeDuration ?
+                              < Text style={{ color: COLORS.black }}>00:00 min</Text>
+                              :
+                              <Text style={{ color: COLORS.black }}>{timeDuration}</Text>
+                            }
                           </View>
                         </View>
                         <View style={{
@@ -593,9 +634,19 @@ const DateModeScreen = ({ navigation }) => {
                             style={{ width: 16, height: 18, marginRight: 5 }}
                             resizeMode="contain"
                           />
-                          <Text style={{
-                            color: COLORS.black
-                          }}>407mm</Text>
+                          {!distanceDuration ?
+                            <Text style={{
+                              color: COLORS.black
+                            }}>
+                              0.00 km
+                            </Text>
+                            :
+                            <Text style={{
+                              color: COLORS.black
+                            }}>
+                              {distanceDuration}
+                            </Text>
+                          }
                         </View>
 
                         <View style={{
@@ -608,16 +659,13 @@ const DateModeScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
+              // <View>
+              //   <Text>test</Text>
+              // </View>
               : null}
         </Modal>
-      </ScrollView>
-
-
-
-
-
-
-
+      </View >
+      {/* </ScrollView> */}
     </SafeAreaView >
   )
 }

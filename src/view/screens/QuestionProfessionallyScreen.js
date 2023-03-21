@@ -2,18 +2,21 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/notify.svg';
+
 
 
 
 const QuestionProfessionallyScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
   const [experince, setExperince] = useState();
+  console.log(DateOfBirth);
 
   const onMusicSelect = () => {
     if (experince) {
       console.log(experince);
       navigation.navigate('QuestionMusicScreen', {
-        Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else {
@@ -23,7 +26,7 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
 
   const onSkip = () => {
     navigation.navigate('QuestionMusicScreen', {
-      Experince: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+      Experince: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
     })
   }
 
@@ -41,13 +44,10 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
             flexDirection: 'row',
             justifyContent: 'center'
           }}>
-            <Image source={require('../../assets/notify.png')} resizeMode='contain'
-              style={{
-                width: 15,
-                height: 15,
-              }} />
+            <SVGImg width={19} height={19} />
             <Text style={{
-              color: COLORS.black
+              color: COLORS.black,
+              paddingLeft:5
             }}>Response is Not Public</Text>
           </View>
 

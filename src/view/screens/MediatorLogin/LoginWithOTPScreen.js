@@ -263,7 +263,6 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
 
           <View style={{
             paddingTop: 20,
-            width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -289,7 +288,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    height: '20%'
+    height: '20%',
+    alignItems:'center'
   },
   NumberInput: {
     marginTop: 60,

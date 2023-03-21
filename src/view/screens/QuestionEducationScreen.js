@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
 
 const Education = [
   {
@@ -41,7 +42,7 @@ const Education = [
 
 
 const QuestionEducationScreen = ({ navigation, route }) => {
-  const { Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
 
@@ -51,7 +52,7 @@ const QuestionEducationScreen = ({ navigation, route }) => {
     console.log(selectitem);
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionRelationshipScreen', { Education: selectitem, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionRelationshipScreen', { Education: selectitem, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
@@ -79,10 +80,7 @@ const QuestionEducationScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

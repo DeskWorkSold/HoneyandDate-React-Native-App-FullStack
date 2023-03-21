@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
@@ -6,14 +6,14 @@ import CustomeButton from '../components/CustomeButton';
 
 
 const QuestionHeightScreen = ({ navigation, route }) => {
-  const { PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [height, setHeight] = useState();
+  const [heighType, setHeightType] = useState(false);
 
 
   const onHeight = (height) => {
     let newText = '';
     let numbers = '0123456789.';
-
     for (var i = 0; i < height.length; i++) {
       if (numbers.indexOf(height[i]) > -1) {
         newText = newText + height[i];
@@ -28,7 +28,7 @@ const QuestionHeightScreen = ({ navigation, route }) => {
   const onQuestionHeightPartnerScreen = () => {
     if (height) {
       // console.log(height);
-      navigation.navigate('QuestionHeightPartnerScreen', { Height: height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionHeightPartnerScreen', { Height: height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Height!", ToastAndroid.SHORT);
@@ -37,8 +37,8 @@ const QuestionHeightScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{
-      flex:1,
-      backgroundColor:COLORS.white
+      flex: 1,
+      backgroundColor: COLORS.white
     }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
@@ -81,13 +81,19 @@ const QuestionHeightScreen = ({ navigation, route }) => {
                 maxLength={5}
               />
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../../assets/HIcon.png')} resizeMode='contain'
-                  style={{
-                    width: 15,
-                    height: 15,
-                    marginRight: 2
-                  }} />
-                <Text>Inches</Text>
+                <TouchableOpacity onPress={() => setHeightType(!heighType)}>
+                  <Image source={require('../../assets/HIcon.png')} resizeMode='contain'
+                    style={{
+                      width: 15,
+                      height: 15,
+                      marginRight: 2
+                    }} />
+                </TouchableOpacity>
+                {heighType ?
+                  <Text>feets</Text>
+                  :
+                  <Text>Inches</Text>
+                }
               </View>
             </View>
           </View>
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     // height: '20%'
-    marginTop:'40%'
+    marginTop: '40%'
   },
   NumberInput: {
     marginTop: 60,

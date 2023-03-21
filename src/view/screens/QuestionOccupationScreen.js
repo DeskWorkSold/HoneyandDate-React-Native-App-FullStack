@@ -44,13 +44,14 @@ const PositionTestimonial = [
 
 
 const QuestionOccupationScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [occupation, setoccupation] = useState();
   const [type, setType] = useState();
   const [position, setposition] = useState();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedPositionIndex, setSelectedPositionIndex] = useState(0);
 
+  console.log(DateOfBirth);
 
 
   const onInterestScreen = () => {
@@ -60,17 +61,15 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
     // console.log(CompanyType,PositioninCompany);
     if (occupation) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionInterestScreen', { CompanyName: occupation, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionInterestScreen', { CompanyName: occupation, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please enter company name!", ToastAndroid.SHORT);
     }
   }
-
   const SkipScreen = () => {
-    navigation.navigate('QuestionInterestScreen', { CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionInterestScreen', { CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
-
 
   const ListTestimonial = ({ data, value, setValue, cancle }) => {
     return (
@@ -79,17 +78,22 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
           <TouchableOpacity
             key={index}
             activeOpacity={0.8}
-            onPress={() => setValue(index)}>
+            onPress={() => setValue(index)}
+            style={styles.button}>
             <View style={{
               backgroundColor: value == index ? COLORS.main : COLORS.transparent,
               borderWidth: value == index ? 0 : 1,
               borderColor: value == index ? COLORS.main : COLORS.gray,
-              ...styles.toggelbtn
+              // ...styles.toggelbtn
+              borderRadius: 10,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              flexDirection: 'row',
             }}>
-              <View style={{ width: '80%', alignItems: 'center' }}>
+              <View style={{ paddingLeft: 10 }}>
                 <Text>{TypeTestimonial.name}</Text>
               </View>
-              <View style={{ width: '20%', justifyContent: 'center' }}>
+              <View style={{ justifyContent: 'center', paddingLeft: 5 }}>
                 {value == index ? (
                   <Image source={cancle} />
                 ) : (
@@ -161,32 +165,32 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
             <View style={{
               alignItems: 'center',
             }}>
-            <View style={styles.NumberInput}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
-                  marginRight: 5
-                }} />
-                <TextInput
-                  value={type}
-                  placeholder={'Type of Company'}
-                  onChangeText={type => setType(type)
-                  }
-                  style={styles.TextInput}
-                />
+              <View style={styles.NumberInput}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
+                    marginRight: 5
+                  }} />
+                  <TextInput
+                    value={type}
+                    placeholder={'Type of Company'}
+                    onChangeText={type => setType(type)
+                    }
+                    style={styles.TextInput}
+                  />
+                </View>
+                <View style={{
+                  alignItems: 'flex-end'
+                }}>
+                  <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                </View>
               </View>
-              <View style={{
-                alignItems: 'flex-end'
-              }}>
-                <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
-                  width: 20,
-                  height: 20
-                }} />
-              </View>
-            </View>
             </View>
 
             <View style={{
-              paddingLeft:20
+              paddingLeft: 10
             }}>
               <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
@@ -196,32 +200,32 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
             <View style={{
               alignItems: 'center',
             }}>
-            <View style={styles.NumberInput}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
-                  marginRight: 5
-                }} />
-                <TextInput
-                  value={position}
-                  placeholder={'Position in Company'}
-                  onChangeText={position => setposition(position)
-                  }
-                  style={styles.TextInput}
-                />
+              <View style={styles.NumberInput}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
+                    marginRight: 5
+                  }} />
+                  <TextInput
+                    value={position}
+                    placeholder={'Position in Company'}
+                    onChangeText={position => setposition(position)
+                    }
+                    style={styles.TextInput}
+                  />
+                </View>
+                <View style={{
+                  alignItems: 'flex-end'
+                }}>
+                  <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                </View>
               </View>
-              <View style={{
-                alignItems: 'flex-end'
-              }}>
-                <Image source={require('../../assets/add.png')} resizeMode='contain' style={{
-                  width: 20,
-                  height: 20
-                }} />
-              </View>
-            </View>
             </View>
 
             <View style={{
-              paddingLeft:20
+              paddingLeft: 10
             }}>
               <ListTestimonial data={PositionTestimonial} value={selectedPositionIndex}
                 setValue={setSelectedPositionIndex} cancle={require('../../assets/cross.png')} />
@@ -282,7 +286,7 @@ const styles = StyleSheet.create({
   Options: {
     marginTop: 0,
     // justifyContent: 'center',
-    paddingLeft:20,
+    paddingLeft: 20,
     width: 340,
     borderRadius: 5,
   },
@@ -300,5 +304,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10
-  }
+  },
+  button: {
+    flexDirection: 'row',
+    height: 30,
+    marginTop: 5,
+    borderRadius: 10,
+  },
 })

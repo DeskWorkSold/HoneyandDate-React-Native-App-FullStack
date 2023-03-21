@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
 
 const dietData = [
   {
@@ -41,8 +42,8 @@ const dietData = [
 
 
 const QuestionDietScreen = ({ navigation, route }) => {
-  const { ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
-  console.log(KosherType);
+  const { ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  console.log(KosherType , DateOfBirth);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
 
@@ -50,7 +51,7 @@ const QuestionDietScreen = ({ navigation, route }) => {
     const Diet = dietData[selectedCategoryIndex].name
     console.log(Diet);
     if (Diet) {
-      navigation.navigate('QuestionPartnerDietScreen', { Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionPartnerDietScreen', { Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Religion!", ToastAndroid.SHORT);
@@ -78,10 +79,7 @@ const QuestionDietScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                   <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

@@ -1,17 +1,26 @@
-import { ActivityIndicator, Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, Modal, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import COLORS from '../../consts/Colors';
 import HeaderTabTwo from '../components/HeaderTabTwo';
 import { useDispatch, useSelector } from 'react-redux';
-import { packages, selectUser } from '../../../redux/reducers/Reducers';
+import { Buypackages, packages, selectUser } from '../../../redux/reducers/Reducers';
 import firestore from '@react-native-firebase/firestore';
+import { launchImageLibrary } from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
 
+const { height, width } = Dimensions.get('window');
 
 const ProfileScreen = ({ navigation }) => {
   const [memberships, setMemberships] = useState();
+  const [modal, setModal] = useState(false);
+  const [actionTriggered, setActionTriggered] = useState(false);
+  const [image, setImage] = useState(null);
+  // console.log(image);
   const [membershipUid, setMembershipUid] = useState();
   const [uploading, setUploading] = useState(false);
   const [buyPack, setBuyPack] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+
   const user = useSelector(selectUser);
   // console.log(user.Flake);
   const dispatch = useDispatch();
@@ -54,21 +63,248 @@ const ProfileScreen = ({ navigation }) => {
     Data.otherCategory = item.otherCategory;
     Data.rate = item.rate;
     Data.status = item.status;
-    console.log('test data: ', Data);
-    dispatch(packages(Data))
+    // console.log('test data: ', Data);
+    // return;
+    dispatch(Buypackages(Data))
     // console.log(item.id);
-    const MembershipName = item.otherCategory.split(' ')[0]
-    // console.log(MembershipName);
-    const useRef = firestore().collection('Users')
-      .doc(user.uid)
-    useRef.update({
-      'userDetails.AccountType': MembershipName,
-      'userDetails.PackageId': item.id,
-    }).then(() => {
-      setBuyPack(true)
-      // console.log('Notices send!');
-    });
+    // const MembershipName = item.otherCategory.split(' ')[0]
+    // // console.log(MembershipName);
+    // const useRef = firestore().collection('Users')
+    //   .doc(user.uid)
+    // useRef.update({
+    //   'userDetails.AccountType': MembershipName,
+    //   'userDetails.PackageId': item.id,
+    // }).then(() => {
+    //   setBuyPack(true)
+    //   // console.log('Notices send!');
+    // });
+    navigation.navigate('PaymentOptionScreen')
   }
+  const uploadImage = async (tempImage, names) => {
+    if (tempImage == null) {
+      ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+      return null;
+    }
+    setModal(true)
+    const uploadUri = tempImage;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+    if (names == 'image2') {
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL();
+        if (url) {
+          const useRef = firestore().collection('Users')
+            .doc(user?.uid)
+          useRef.update({
+            'userDetails.image2': url,
+          }).then(() => {
+            ToastAndroid.show('image uploaded successfull', ToastAndroid.SHORT)
+            setModal(false)
+            setActionTriggered(null)
+            setUploading(false)
+          });
+        }
+        else {
+          ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+        }
+        return url;
+
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    else if (names == 'image3') {
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL();
+        if (url) {
+          const useRef = firestore().collection('Users')
+            .doc(user?.uid)
+          useRef.update({
+            'userDetails.image3': url,
+          }).then(() => {
+            ToastAndroid.show('image uploaded successfull', ToastAndroid.SHORT)
+            setModal(false)
+            setActionTriggered(null)
+            setUploading(false)
+          });
+        }
+        else {
+          ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+        }
+        return url;
+
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    else if (names == 'image4') {
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL();
+        if (url) {
+          const useRef = firestore().collection('Users')
+            .doc(user?.uid)
+          useRef.update({
+            'userDetails.image4': url,
+          }).then(() => {
+            ToastAndroid.show('image uploaded successfull', ToastAndroid.SHORT)
+            setModal(false)
+            setActionTriggered(null)
+            setUploading(false)
+          });
+        }
+        else {
+          ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+        }
+        return url;
+
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    else if (names == 'image5') {
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL();
+        if (url) {
+          const useRef = firestore().collection('Users')
+            .doc(user?.uid)
+          useRef.update({
+            'userDetails.image5': url,
+          }).then(() => {
+            ToastAndroid.show('image uploaded successfull', ToastAndroid.SHORT)
+            setModal(false)
+            setActionTriggered(null)
+            setUploading(false)
+          });
+        }
+        else {
+          ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+        }
+        return url;
+
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    else {
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL();
+        if (url) {
+          const useRef = firestore().collection('Users')
+            .doc(user?.uid)
+          useRef.update({
+            'userDetails.image6': url,
+          }).then(() => {
+            ToastAndroid.show('image uploaded successfull', ToastAndroid.SHORT)
+            setModal(false)
+            setActionTriggered(null)
+            setUploading(false)
+          });
+        }
+        else {
+          ToastAndroid.show('Network issue please try again!!', ToastAndroid.SHORT)
+        }
+        return url;
+
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+  }
+
+  const pickImage2 = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'photo',
+      saveToPhotos: true,
+    });
+    const tempImage = result.assets[0].uri;
+    const names = 'image2'
+    setActionTriggered('UploadImage')
+    setUploading(true)
+    uploadImage(tempImage, names)
+    // setImage1(result.assets[0].uri);
+  }
+  const pickImage3 = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'photo',
+      saveToPhotos: true,
+    });
+    const tempImage = result.assets[0].uri;
+    const names = 'image3'
+    setActionTriggered('UploadImage')
+    setUploading(true)
+    uploadImage(tempImage, names)
+  }
+  const pickImage4 = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'photo',
+      saveToPhotos: true,
+    });
+    const tempImage = result.assets[0].uri;
+    const names = 'image4'
+    setActionTriggered('UploadImage')
+    setUploading(true)
+    uploadImage(tempImage, names)
+  }
+  const pickImage5 = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'photo',
+      saveToPhotos: true,
+    });
+    const tempImage = result.assets[0].uri;
+    const names = 'image5'
+    setActionTriggered('UploadImage')
+    setUploading(true)
+    uploadImage(tempImage, names)
+  }
+  const pickImage6 = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'photo',
+      saveToPhotos: true,
+    });
+    const tempImage = result.assets[0].uri;
+    const names = 'image6'
+    setActionTriggered('UploadImage')
+    setUploading(true)
+    uploadImage(tempImage, names)
+  }
+
 
 
   useEffect(() => {
@@ -136,8 +372,8 @@ const ProfileScreen = ({ navigation }) => {
                   alignItems: 'center',
                   backgroundColor: COLORS.light,
                   borderRadius: 5,
-                  width: '80%',
-                  padding: 5
+                  padding: 5,
+                  width: 120
                 }}>
                   <Image source={require('../../assets/dates.png')} resizeMode='contain'
                     style={{
@@ -171,13 +407,14 @@ const ProfileScreen = ({ navigation }) => {
                 {user.image1 ?
                   <TouchableOpacity
                     // onPress={pickImage1}
+                    onPress={() => { setModal(true), setImage(user.image1) }}
                     style={{
                       height: '100%',
                       width: '100%',
                       backgroundColor: COLORS.mainlight,
                       borderRadius: 10,
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}>
                     <Image source={{ uri: user.image1 }} resizeMode='cover' style={{
                       height: '100%',
@@ -217,6 +454,7 @@ const ProfileScreen = ({ navigation }) => {
                 {user.image2 ?
                   <TouchableOpacity
                     // onPress={pickImage2}
+                    onPress={() => { setModal(true), setImage(user.image2) }}
                     style={{
                       height: 98,
                       backgroundColor: COLORS.mainlight,
@@ -232,7 +470,7 @@ const ProfileScreen = ({ navigation }) => {
                   </TouchableOpacity>
                   :
                   <TouchableOpacity
-                    // onPress={pickImage2}
+                    onPress={() => pickImage2()}
                     style={{
                       height: 98,
                       backgroundColor: COLORS.mainlight,
@@ -250,6 +488,7 @@ const ProfileScreen = ({ navigation }) => {
                 {user.image3 ?
                   <TouchableOpacity
                     // onPress={pickImage3}
+                    onPress={() => { setModal(true), setImage(user.image3) }}
                     style={{
                       height: 98,
                       backgroundColor: COLORS.mainlight,
@@ -265,7 +504,7 @@ const ProfileScreen = ({ navigation }) => {
                   </TouchableOpacity>
                   :
                   <TouchableOpacity
-                    // onPress={pickImage3}
+                    onPress={() => pickImage3()}
                     style={{
                       height: 98,
                       backgroundColor: COLORS.mainlight,
@@ -284,17 +523,27 @@ const ProfileScreen = ({ navigation }) => {
             <View style={{
               display: 'flex',
               flexDirection: 'row',
-              // width: '100%',
+              width: width,
               paddingHorizontal: 20,
               marginTop: 5,
-              justifyContent: 'space-between'
+              flexWrap: 'nowrap',
+              // justifyContent: 'flex-end',
+              alignContent: 'stretch',
+              alignItems: 'center',
+              maxWidth: '100%',
+              margin: 'auto',
+              // backgroundColor:COLORS.gray,
+              // marginHorizontal:20
+              // paddingHorizontal: 20,
+              // paddingTop: 20,
             }}>
               {user.image4 ?
                 <TouchableOpacity
+                  onPress={() => { setModal(true), setImage(user.image4) }}
                   // onPress={pickImage4}
                   style={{
                     height: 98,
-                    width: '34%',
+                    width: '33%',
                     marginRight: 5,
                     backgroundColor: COLORS.mainlight,
                     borderRadius: 10,
@@ -309,7 +558,7 @@ const ProfileScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 :
                 <TouchableOpacity
-                  // onPress={pickImage4}
+                  onPress={() => pickImage4()}
                   style={{
                     height: 98,
                     width: '34%',
@@ -329,9 +578,10 @@ const ProfileScreen = ({ navigation }) => {
               {user.image5 ?
                 <TouchableOpacity
                   // onPress={pickImage5}
+                  onPress={() => { setModal(true), setImage(user.image5) }}
                   style={{
                     height: 98,
-                    width: '34%',
+                    width: '33%',
                     marginRight: 5,
                     backgroundColor: COLORS.mainlight,
                     borderRadius: 10,
@@ -346,7 +596,7 @@ const ProfileScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 :
                 <TouchableOpacity
-                  // onPress={pickImage5}
+                  onPress={() => pickImage5()}
                   style={{
                     height: 98,
                     width: '34%',
@@ -363,22 +613,44 @@ const ProfileScreen = ({ navigation }) => {
                 </TouchableOpacity>
               }
 
-              <TouchableOpacity
-                // onPress={pickImage6}
-                style={{
-                  height: 98,
-                  width: '30%',
-                  marginRight: 5,
-                  backgroundColor: COLORS.mainlight,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image source={require('../../assets/add.png')} style={{
-                  width: 20,
-                  height: 20,
-                }} />
-              </TouchableOpacity>
+
+              {user.image6 ?
+                <TouchableOpacity
+                  // onPress={pickImage5}
+                  onPress={() => { setModal(true), setImage(user.image6) }}
+                  style={{
+                    height: 98,
+                    width: '30%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                  <Image source={{ uri: user.image6 }} resizeMode='cover' style={{
+                    height: '100%',
+                    width: '100%',
+                    borderRadius: 10,
+                  }} />
+                </TouchableOpacity>
+                :
+                <TouchableOpacity
+                  onPress={() => pickImage6()}
+                  style={{
+                    height: 98,
+                    width: '30%',
+                    marginRight: 5,
+                    backgroundColor: COLORS.mainlight,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image source={require('../../assets/add.png')} style={{
+                    width: 20,
+                    height: 20,
+                  }} />
+                </TouchableOpacity>
+              }
 
             </View>
 
@@ -868,6 +1140,64 @@ const ProfileScreen = ({ navigation }) => {
 
 
           </View>
+
+
+          <Modal
+            animationType='fade'
+            transparent={true}
+            visible={modal}>
+            <>
+              {actionTriggered == 'UploadImage' ?
+                <View style={{
+                  width: width,
+                  height: height,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  opacity: .9
+                }}>
+                  <ActivityIndicator size="large" color={COLORS.black} animating={uploading} />
+                </View>
+                :
+                <TouchableOpacity
+                  onPress={() => { setModal(false), setImage(null) }}
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 22,
+                    backgroundColor: COLORS.gray,
+                    opacity: .9
+                  }}>
+                  <View style={{
+                    // margin: 20,
+                    backgroundColor: 'white',
+                    borderRadius: 20,
+                    // padding: 35,
+                    alignItems: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 5,
+                    width: '100%',
+                    height: height / 1.6,
+                    justifyContent: 'center'
+                  }}>
+                    <Image source={{ uri: image }} resizeMode="cover" style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 20,
+                    }} />
+                  </View>
+                </TouchableOpacity>
+              }
+            </>
+          </Modal>
+
         </ScrollView>
 
 

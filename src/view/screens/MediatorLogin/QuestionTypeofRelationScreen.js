@@ -19,7 +19,7 @@ const DatesData = [
 ]
 
 const MediatorQuestionTypeofRelationScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature } = route.params;
   // console.log(PartnerNature);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
@@ -27,7 +27,7 @@ const MediatorQuestionTypeofRelationScreen = ({ navigation, route }) => {
     console.log(DatesData[selectedCategoryIndex].name);
     const selectedPolitics = DatesData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('MediatorQuestionSmokeScreen', { Lookingfor: selectedPolitics, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('MediatorQuestionSmokeScreen', { Lookingfor: selectedPolitics, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your partner nature!", ToastAndroid.SHORT);
@@ -35,7 +35,7 @@ const MediatorQuestionTypeofRelationScreen = ({ navigation, route }) => {
   }
 
   const SkipScreen = () => {
-    navigation.navigate('MediatorQuestionSmokeScreen', { Lookingfor: null, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('MediatorQuestionSmokeScreen', { Lookingfor: null, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListDatesData = ({ data, value, setValue, cancle }) => {

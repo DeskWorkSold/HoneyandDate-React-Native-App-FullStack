@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, Dimensions, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Button, Dimensions, Image, Modal, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import COLORS from '../../../consts/Colors'
 import { useState } from 'react';
@@ -15,6 +15,8 @@ import { selectMediatorUser, selectUser } from '../../../../redux/reducers/Reduc
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import GoogleMapKey from '../../../consts/GoogleMapKey';
 // import Geocoder from 'react-native-geocoding';
 // import Geocoder from 'react-native-geocoder';
 // import Geocoder from 'react-native-geocoder';
@@ -26,6 +28,7 @@ const height = Dimensions.get('window').height;
 
 const MediatorCreateEventScreen = ({ navigation }) => {
     const currentuser = useSelector(selectMediatorUser);
+    const api = GoogleMapKey?.GOOGLE_MAP_KEY
     // for events states
     // console.log(currentuser);
     const [name, setName] = useState();
@@ -41,6 +44,12 @@ const MediatorCreateEventScreen = ({ navigation }) => {
     const [pin, setPin] = useState({
         latitude: 24.860966,
         longitude: 66.990501,
+    });
+    const [region, setRegion] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
     });
     const [image1, setImage1] = useState(null);
     const [image2, setImage2] = useState(null);
@@ -302,6 +311,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             Data.discountendDate = discountendDate;
             Data.discountstartTime = discountstartTime;
             Data.discountendTime = discountendTime;
+            Data.qty = 0;
 
             // console.log('Ticket data', Data);
             // nopeee.push(Data);
@@ -324,10 +334,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
         setActionTriggered('ACTION_1');
     }
 
-    const OnSetLocation = (pin) => {
+    const OnSetLocation = () => {
         // console.log(pin);
-        if (pin) {
-            setLocation(pin)
+        if (region) {
+            // setLocation(pin)
             setLocationModalVisible(false)
         }
         else {
@@ -396,6 +406,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             Data.startTime = startTime;
             Data.endTime = endTime;
             Data.location = location;
+            Data.Address = region;
             Data.totalTicketPrice = totalTicketPrice;
             Data.TicketModaldata = TicketModaldata;
             Data.owneruid = currentuser.uid;
@@ -408,6 +419,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             Data.fourthimageUrl = fourthimageUrl;
             Data.fifthimageUrl = fifthimageUrl;
             Data.sixthimageUrl = sixthimageUrl;
+            timeStamp = new Date().toDateString()
             // console.log(Data);
             // return;
             firestore()
@@ -635,7 +647,8 @@ const MediatorCreateEventScreen = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar backgroundColor={COLORS.black} />
             <View style={styles.container}>
                 <View style={{
                     alignItems: 'center',
@@ -736,15 +749,15 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                         }} />
                                     </TouchableOpacity>
                                     :
-                                    <TouchableOpacity 
-                                    onPress={pickImage2}
-                                    style={{
-                                        height: 98,
-                                        backgroundColor: COLORS.mainlight,
-                                        borderRadius: 10,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}>
+                                    <TouchableOpacity
+                                        onPress={pickImage2}
+                                        style={{
+                                            height: 98,
+                                            backgroundColor: COLORS.mainlight,
+                                            borderRadius: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
                                         <Image source={require('../../../assets/add.png')} style={{
                                             width: 20,
                                             height: 20,
@@ -769,15 +782,15 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                         }} />
                                     </TouchableOpacity>
                                     :
-                                    <TouchableOpacity 
-                                    onPress={pickImage3}
-                                    style={{
-                                        height: 98,
-                                        backgroundColor: COLORS.mainlight,
-                                        borderRadius: 10,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}>
+                                    <TouchableOpacity
+                                        onPress={pickImage3}
+                                        style={{
+                                            height: 98,
+                                            backgroundColor: COLORS.mainlight,
+                                            borderRadius: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
                                         <Image source={require('../../../assets/add.png')} style={{
                                             width: 20,
                                             height: 20,
@@ -1366,461 +1379,515 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                             }
                         </View>
                     </View>
-                    <DateTimePickerModal
-                        isVisible={isStartDatePickerVisible}
-                        mode="date"
-                        // display='spinner'
-                        onConfirm={handleConfirmStartDate}
-                        onCancel={hideStartDatePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isEndDatePickerVisible}
-                        mode="date"
-                        // display='spinner'
-                        onConfirm={handleConfirmEndDate}
-                        onCancel={hideEndDatePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isStartTimePickerVisible}
-                        mode="time"
-                        // display='spinner'
-                        onConfirm={handleConfirmStartTime}
-                        onCancel={hideStartTimePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isEndTimePickerVisible}
-                        mode="time"
-                        // display='spinner'
-                        onConfirm={handleConfirmEndTime}
-                        onCancel={hideEndTimePicker}
-                    />
+                </ScrollView>
+                <DateTimePickerModal
+                    isVisible={isStartDatePickerVisible}
+                    mode="date"
+                    // display='spinner'
+                    onConfirm={handleConfirmStartDate}
+                    onCancel={hideStartDatePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isEndDatePickerVisible}
+                    mode="date"
+                    // display='spinner'
+                    onConfirm={handleConfirmEndDate}
+                    onCancel={hideEndDatePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isStartTimePickerVisible}
+                    mode="time"
+                    // display='spinner'
+                    onConfirm={handleConfirmStartTime}
+                    onCancel={hideStartTimePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isEndTimePickerVisible}
+                    mode="time"
+                    // display='spinner'
+                    onConfirm={handleConfirmEndTime}
+                    onCancel={hideEndTimePicker}
+                />
 
 
-                    {/* for tickert select picker  */}
-                    <DateTimePickerModal
-                        isVisible={isDiscountStartDatePickerVisible}
-                        mode="date"
-                        // display='spinner'
-                        onConfirm={handleDiscountConfirmStartDate}
-                        onCancel={hideDiscountStartDatePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isDiscountEndDatePickerVisible}
-                        mode="date"
-                        // display='spinner'
-                        onConfirm={handleDiscountConfirmEndDate}
-                        onCancel={hideDiscountEndDatePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isDiscountStartTimePickerVisible}
-                        mode="time"
-                        // display='spinner'
-                        onConfirm={handleDiscountConfirmStartTime}
-                        onCancel={hideDiscountStartTimePicker}
-                    />
-                    <DateTimePickerModal
-                        isVisible={isDiscountEndTimePickerVisible}
-                        mode="time"
-                        // display='spinner'
-                        onConfirm={handleDiscountConfirmEndTime}
-                        onCancel={hideDiscountEndTimePicker}
-                    />
+                {/* for tickert select picker  */}
+                <DateTimePickerModal
+                    isVisible={isDiscountStartDatePickerVisible}
+                    mode="date"
+                    // display='spinner'
+                    onConfirm={handleDiscountConfirmStartDate}
+                    onCancel={hideDiscountStartDatePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isDiscountEndDatePickerVisible}
+                    mode="date"
+                    // display='spinner'
+                    onConfirm={handleDiscountConfirmEndDate}
+                    onCancel={hideDiscountEndDatePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isDiscountStartTimePickerVisible}
+                    mode="time"
+                    // display='spinner'
+                    onConfirm={handleDiscountConfirmStartTime}
+                    onCancel={hideDiscountStartTimePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={isDiscountEndTimePickerVisible}
+                    mode="time"
+                    // display='spinner'
+                    onConfirm={handleDiscountConfirmEndTime}
+                    onCancel={hideDiscountEndTimePicker}
+                />
 
 
 
-                    <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={LocationModalVisible}
-                        onRequestClose={() => {
-                            setLocationModalVisible(!LocationModalVisible);
-                        }}
-                    >
-                        {actionTriggered === 'ACTION_1' ?
-                            <View style={{ alignItems: 'center' }}>
-                                <View style={{ marginTop: 0 }}>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={LocationModalVisible}
+                    onRequestClose={() => {
+                        setLocationModalVisible(!LocationModalVisible);
+                    }}
+                >
+                    {actionTriggered === 'ACTION_1' ?
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={{ marginTop: 0 }}>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: 20,
+                                    height: 50
+                                }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            flex: 1,
+                                        }}
+                                        onPress={() => navigation.goBack()}>
+                                        <Icon name='arrow-back' size={20} onPress={() => setLocationModalVisible(false)} color={COLORS.black} />
+                                    </TouchableOpacity>
                                     <View style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingHorizontal: 20,
-                                        height: 50
+                                        flex: 2,
                                     }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                flex: 1,
-                                            }}
-                                            onPress={() => navigation.goBack()}>
-                                            <Icon name='arrow-back' size={20} onPress={() => setLocationModalVisible(false)} color={COLORS.black} />
-                                        </TouchableOpacity>
-                                        <View style={{
-                                            flex: 2,
-                                        }}>
-                                            <Text style={{
-                                                color: COLORS.black,
-                                                fontSize: 20,
-                                                fontWeight: 'bold'
-                                            }}> Add Location </Text>
-                                        </View>
+                                        <Text style={{
+                                            color: COLORS.black,
+                                            fontSize: 20,
+                                            fontWeight: 'bold'
+                                        }}> Add Location </Text>
                                     </View>
-                                    <View style={{
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'center',
-                                    }}>
-                                        <MapView
-                                            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                                            style={styles.map}
-                                            initialRegion={{
+                                </View>
+                                <View style={{
+                                    flex: 1,
+                                    marginTop: 20
+                                }}>
+                                    <GooglePlacesAutocomplete
+                                        placeholder="Type a place"
+                                        query={{
+                                            key: api,
+                                            // language: 'en',
+                                            // components: "country:pk",
+                                            types: "establishment",
+                                            radius: 30000,
+                                            location: `${region.latitude}, ${region.longitude}`
+                                        }}
+                                        fetchDetails={true}
+                                        // ref={ref => setSearchTextRef(ref)}
+                                        // placeholder='Search'
+                                        // fetchDetails={true}
+                                        autoFocus={true}
+                                        // keyboardShouldPersistTaps={'handled'}
+                                        // listUnderlayColor={'transparent'}
+                                        // minLength={1} // minimum length of text to search
+                                        // returnKeyType={'search'}
+                                        // listViewDisplayed={'auto'}
+                                        GooglePlacesSearchQuery={{
+                                            rankby: "distance"
+                                        }}
+                                        // onFail={error => console.log(error)}
+                                        // onNotFound={() => console.log('no results')}
+                                        onPress={(data, details = null) => {
+                                            console.log('======>data', data, '====>details', details)
+                                            setRegion({
+                                                latitude: details.geometry.location.lat,
+                                                longitude: details.geometry.location.lng,
+                                            })
+                                            setLocation(data.description)
+                                        }
+                                        }
+                                        // query={{
+                                        //     key: api,
+                                        //     language: 'en',
+                                        //     components: "country:pk",
+                                        //     types: "establishment",
+                                        //     radius: 30000,
+                                        //     location: `${region.latitude}, ${region.longitude}`
+                                        // }}
+                                        // nearbyPlacesAPI='GooglePlacesSearch'
+                                        styles={{
+                                            container: {
+                                                flex: 0, position: 'absolute', width: "100%", zIndex: 1,
+                                                // marginHorizontal: 20,
+                                                // marginTop: 10,
+                                            },
+                                            listView: { backgroundColor: "white" }
+                                        }}
+                                    // filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
+                                    // debounce={200}
+                                    />
+                                    <MapView
+                                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                                        style={styles.map}
+                                        initialRegion={{
+                                            latitude: region.latitude,
+                                            longitude: region.longitude,
+                                            latitudeDelta: 0.0922,
+                                            longitudeDelta: 0.0421,
+                                        }}
+                                    >
+                                        <Marker
+                                            coordinate={{
                                                 latitude: 24.860966,
                                                 longitude: 66.990501,
-                                                latitudeDelta: 0.0922,
-                                                longitudeDelta: 0.0421,
                                             }}
-                                        >
-                                            <Marker
-                                                coordinate={{
-                                                    latitude: 24.860966,
-                                                    longitude: 66.990501,
-                                                }}
-                                                // image={require('../../../assets/map.png')}
-                                                draggable={true}
-                                                onDragEnd={(e) => {
-                                                    console.log('Drag end', e.nativeEvent.coordinate)
-                                                    setPin({
-                                                        latitude: e.nativeEvent.coordinate.latitude,
-                                                        longitude: e.nativeEvent.coordinate.longitude,
-                                                    })
-                                                }}
-                                                title={'Test Marker'}
-                                                description={'This is description of marker'} >
-                                                <Image
-                                                    source={require('../../../assets/map.png')}
-                                                    style={{ width: 26, height: 28 }}
-                                                    resizeMode="contain"
-                                                />
-                                            </Marker>
-                                            <Circle center={pin} radius={200} />
-                                        </MapView>
-                                        <View
-                                            style={{
-                                                position: 'absolute',//use absolute position to show button on top of the map
-                                                top: '70%', //for center align
-                                                alignSelf: 'center' //for align to right
+                                            // image={require('../../../assets/map.png')}
+                                            draggable={true}
+                                            onDragEnd={(e) => {
+                                                console.log('Drag end', e.nativeEvent.coordinate)
+                                                setPin({
+                                                    latitude: e.nativeEvent.coordinate.latitude,
+                                                    longitude: e.nativeEvent.coordinate.longitude,
+                                                })
                                             }}
-                                        >
-                                            <CustomeButton title={'Add Location'} onpress={() => OnSetLocation(pin)} />
-                                        </View>
+                                            title={'Test Marker'}
+                                            description={'This is description of marker'} >
+                                            <Image
+                                                source={require('../../../assets/map.png')}
+                                                style={{ width: 26, height: 28 }}
+                                                resizeMode="contain"
+                                            />
+                                        </Marker>
+                                        <Circle center={pin} radius={200} />
+                                    </MapView>
+                                    <View
+                                        style={{
+                                            position: 'absolute',//use absolute position to show button on top of the map
+                                            top: '70%', //for center align
+                                            alignSelf: 'center' //for align to right
+                                        }}
+                                    >
+                                        <CustomeButton title={'Add Location'} onpress={() => OnSetLocation()} />
                                     </View>
                                 </View>
                             </View>
-                            :
-                            actionTriggered === 'ACTION_2' ?
+                        </View>
+                        :
+                        actionTriggered === 'ACTION_2' ?
+                            <View style={{
+                                height: '100%',
+                                backgroundColor: COLORS.white
+                            }}>
                                 <View style={{
-                                    height: '100%',
-                                    backgroundColor: COLORS.white
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: 20,
+                                    height: 50
+                                }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            flex: 1,
+                                        }}
+                                        onPress={() => navigation.goBack()}>
+                                        <Icon name='arrow-back' size={20} onPress={() => setLocationModalVisible(false)} color={COLORS.black} />
+                                    </TouchableOpacity>
+                                    <View style={{
+                                        flex: 2,
+                                    }}>
+                                        <Text style={{
+                                            color: COLORS.black,
+                                            fontSize: 20,
+                                            fontWeight: 'bold'
+                                        }}> Ticket Details </Text>
+                                    </View>
+                                </View>
+                                <View style={{
+                                    marginHorizontal: 5,
                                 }}>
                                     <View style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingHorizontal: 20,
-                                        height: 50
+                                        // height:height,
+                                        marginBottom: 20,
+                                        backgroundColor: COLORS.white,
                                     }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                flex: 1,
-                                            }}
-                                            onPress={() => navigation.goBack()}>
-                                            <Icon name='arrow-back' size={20} onPress={() => setLocationModalVisible(false)} color={COLORS.black} />
-                                        </TouchableOpacity>
-                                        <View style={{
-                                            flex: 2,
-                                        }}>
-                                            <Text style={{
-                                                color: COLORS.black,
-                                                fontSize: 20,
-                                                fontWeight: 'bold'
-                                            }}> Ticket Details </Text>
-                                        </View>
-                                    </View>
-                                    <View style={{
-                                        marginHorizontal: 5,
-                                    }}>
-                                        <View style={{
-                                            // height:height,
-                                            marginBottom: 20,
-                                            backgroundColor: COLORS.white,
-                                        }}>
-                                            <ScrollView vertical showsVerticalScrollIndicator={false}>
-                                                <View style={{ alignItems: 'center', }}>
-                                                    <Image source={require('../../../assets/tickets.png')} resizeMode='contain'
+                                        <ScrollView vertical showsVerticalScrollIndicator={false}>
+                                            <View style={{ alignItems: 'center', }}>
+                                                <Image source={require('../../../assets/tickets.png')} resizeMode='contain'
+                                                    style={{
+                                                        width: '70%',
+                                                        height: 300,
+                                                        borderWidth: 1,
+                                                        borderRadius: 10,
+                                                        borderColor: COLORS.light,
+                                                        elevation: 8,
+                                                    }}
+                                                />
+                                            </View>
+
+                                            <View>
+                                                <Text style={{ color: COLORS.black, paddingHorizontal: 20 }}> Ticket Title </Text>
+                                                <View style={{
+                                                    marginTop: 5,
+                                                    borderRadius: 5,
+                                                    height: 50,
+                                                    marginHorizontal: 20,
+                                                    backgroundColor: COLORS.white,
+                                                    elevation: 5
+                                                }}>
+                                                    <Picker
+                                                        selectedValue={ticketTitle}
+                                                        onValueChange={(itemValue, itemIndex) =>
+                                                            setTicketTitle(itemValue)
+                                                        }
                                                         style={{
-                                                            width: '70%',
-                                                            height: 300,
-                                                            borderWidth: 1,
-                                                            borderRadius: 10,
-                                                            borderColor: COLORS.light,
-                                                            elevation: 8,
-                                                        }}
-                                                    />
+                                                            color: COLORS.gray,
+                                                            // height: 85,
+                                                            marginTop: -2
+                                                        }}>
+                                                        <Picker.Item label="Early Bird general admissions" value="Early Bird general admissions" />
+                                                        <Picker.Item label="Early Bird VIP" value="Early Bird VIP" />
+                                                        <Picker.Item label="Regular Admissions" value="Regular Admissions" />
+                                                        <Picker.Item label="VIP Admissions" value="VIP Admissions" />
+                                                        <Picker.Item label="Front row seats" value="Front row seats" />
+                                                    </Picker>
                                                 </View>
-
-                                                <View>
-                                                    <Text style={{ color: COLORS.black, paddingHorizontal: 20 }}> Ticket Title </Text>
-                                                    <View style={{
-                                                        marginTop: 5,
-                                                        borderRadius: 5,
-                                                        height: 50,
-                                                        marginHorizontal: 20,
-                                                        backgroundColor: COLORS.white,
-                                                        elevation: 5
-                                                    }}>
-                                                        <Picker
-                                                            selectedValue={ticketTitle}
-                                                            onValueChange={(itemValue, itemIndex) =>
-                                                                setTicketTitle(itemValue)
+                                            </View>
+                                            <View style={{ alignItems: 'center' }}>
+                                                <View style={{ marginTop: 10 }}>
+                                                    <Text style={{ color: COLORS.black }}> Price Per Ticket </Text>
+                                                    <View style={styles.NumberInput}>
+                                                        <TextInput
+                                                            value={pricePerTicket}
+                                                            placeholder={'price'}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            onChangeText={pricePerTicket => setPricePerTicket(pricePerTicket)
                                                             }
-                                                            style={{
-                                                                color: COLORS.gray,
-                                                                // height: 85,
-                                                                marginTop: -2
-                                                            }}>
-                                                            <Picker.Item label="Early Bird general admissions" value="Early Bird general admissions" />
-                                                            <Picker.Item label="Early Bird VIP" value="Early Bird VIP" />
-                                                            <Picker.Item label="Regular Admissions" value="Regular Admissions" />
-                                                            <Picker.Item label="VIP Admissions" value="VIP Admissions" />
-                                                            <Picker.Item label="Front row seats" value="Front row seats" />
-                                                        </Picker>
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            style={styles.TextInput}
+                                                        />
                                                     </View>
                                                 </View>
-                                                <View style={{ alignItems: 'center' }}>
-                                                    <View style={{ marginTop: 10 }}>
-                                                        <Text style={{ color: COLORS.black }}> Price Per Ticket </Text>
-                                                        <View style={styles.NumberInput}>
-                                                            <TextInput
-                                                                value={pricePerTicket}
-                                                                placeholder={'price'}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                onChangeText={pricePerTicket => setPricePerTicket(pricePerTicket)
-                                                                }
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                style={styles.TextInput}
-                                                            />
-                                                        </View>
+                                            </View>
+                                            <View style={{ alignItems: 'center' }}>
+                                                <View style={{ marginTop: 10 }}>
+                                                    <Text style={{ color: COLORS.black }}> Total Tickets </Text>
+                                                    <View style={styles.NumberInput}>
+                                                        <TextInput
+                                                            value={totalTickets}
+                                                            placeholder={'total tickets'}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            onChangeText={totalTickets => setTotalTickets(totalTickets)
+                                                            }
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            style={styles.TextInput}
+                                                        />
                                                     </View>
                                                 </View>
-                                                <View style={{ alignItems: 'center' }}>
-                                                    <View style={{ marginTop: 10 }}>
-                                                        <Text style={{ color: COLORS.black }}> Total Tickets </Text>
-                                                        <View style={styles.NumberInput}>
-                                                            <TextInput
-                                                                value={totalTickets}
-                                                                placeholder={'total tickets'}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                onChangeText={totalTickets => setTotalTickets(totalTickets)
-                                                                }
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                style={styles.TextInput}
-                                                            />
-                                                        </View>
+                                            </View>
+                                            <View style={{ alignItems: 'center' }}>
+                                                <View style={{ marginTop: 10 }}>
+                                                    <Text style={{ color: COLORS.black }}> Discount Per Tickets </Text>
+                                                    <View style={styles.NumberInput}>
+                                                        <TextInput
+                                                            value={discountPerTicket}
+                                                            placeholder={'discount'}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            onChangeText={discountPerTicket => setDiscountPerTicket(discountPerTicket)
+                                                            }
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            style={styles.TextInput}
+                                                        />
                                                     </View>
                                                 </View>
-                                                <View style={{ alignItems: 'center' }}>
-                                                    <View style={{ marginTop: 10 }}>
-                                                        <Text style={{ color: COLORS.black }}> Discount Per Tickets </Text>
-                                                        <View style={styles.NumberInput}>
-                                                            <TextInput
-                                                                value={discountPerTicket}
-                                                                placeholder={'discount'}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                onChangeText={discountPerTicket => setDiscountPerTicket(discountPerTicket)
-                                                                }
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                style={styles.TextInput}
-                                                            />
-                                                        </View>
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                marginHorizontal: 20,
+                                                width: '100%'
+                                            }}>
+                                                <View style={{ marginTop: 10, width: '45%', }}>
+                                                    <Text style={{ color: COLORS.black }}> Discount Start Date </Text>
+                                                    <View style={{
+                                                        height: 45,
+                                                        backgroundColor: COLORS.white,
+                                                        borderRadius: 5,
+                                                        elevation: 4,
+                                                        paddingRight: 10,
+                                                        marginRight: 2,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                    }}>
+                                                        <TextInput
+                                                            style={styles.TextInput}
+                                                            placeholder={'Start Date'}
+                                                            value={discountStartDate}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            // error={dateOfBirthError}
+                                                            onChangeText={setDiscountStartDate}
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            // activeOutlineColor={COLORS.fontColor}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            // onFocus={() => { setDateOfBirthError(false) }}
+                                                            editable={true}
+                                                            onPressIn={showDiscountStartDatePicker}
+                                                        />
+                                                        <Image source={require('../../../assets/events.png')} resizeMode='contain' style={{
+                                                            tintColor: COLORS.black,
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
                                                     </View>
                                                 </View>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    marginHorizontal: 20,
-                                                    width: '100%'
-                                                }}>
-                                                    <View style={{ marginTop: 10, width: '45%', }}>
-                                                        <Text style={{ color: COLORS.black }}> Discount Start Date </Text>
-                                                        <View style={{
-                                                            height: 45,
-                                                            backgroundColor: COLORS.white,
-                                                            borderRadius: 5,
-                                                            elevation: 4,
-                                                            paddingRight: 10,
-                                                            marginRight: 2,
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'space-between',
-                                                            alignItems: 'center',
-                                                        }}>
-                                                            <TextInput
-                                                                style={styles.TextInput}
-                                                                placeholder={'Start Date'}
-                                                                value={discountStartDate}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                // error={dateOfBirthError}
-                                                                onChangeText={setDiscountStartDate}
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                // activeOutlineColor={COLORS.fontColor}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                // onFocus={() => { setDateOfBirthError(false) }}
-                                                                editable={true}
-                                                                onPressIn={showDiscountStartDatePicker}
-                                                            />
-                                                            <Image source={require('../../../assets/events.png')} resizeMode='contain' style={{
-                                                                tintColor: COLORS.black,
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ marginTop: 10, width: '45%' }}>
-                                                        <Text style={{ color: COLORS.black }}>Discount End Date </Text>
-                                                        <View style={{
-                                                            height: 45,
-                                                            backgroundColor: COLORS.white,
-                                                            borderRadius: 5,
-                                                            elevation: 4,
-                                                            paddingRight: 10,
-                                                            marginLeft: 2,
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'space-between',
-                                                            alignItems: 'center'
-                                                        }}>
-                                                            <TextInput
-                                                                style={styles.TextInput}
-                                                                placeholder={'End Date'}
-                                                                value={discountendDate}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                // error={dateOfBirthError}
-                                                                onChangeText={setDiscountEndDate}
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                // activeOutlineColor={COLORS.fontColor}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                // onFocus={() => { setDateOfBirthError(false) }}
-                                                                editable={true}
-                                                                onPressIn={showDiscountEndDatePicker}
-                                                            />
-                                                            <Image source={require('../../../assets/events.png')} resizeMode='contain' style={{
-                                                                tintColor: COLORS.black,
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
+                                                <View style={{ marginTop: 10, width: '45%' }}>
+                                                    <Text style={{ color: COLORS.black }}>Discount End Date </Text>
+                                                    <View style={{
+                                                        height: 45,
+                                                        backgroundColor: COLORS.white,
+                                                        borderRadius: 5,
+                                                        elevation: 4,
+                                                        paddingRight: 10,
+                                                        marginLeft: 2,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <TextInput
+                                                            style={styles.TextInput}
+                                                            placeholder={'End Date'}
+                                                            value={discountendDate}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            // error={dateOfBirthError}
+                                                            onChangeText={setDiscountEndDate}
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            // activeOutlineColor={COLORS.fontColor}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            // onFocus={() => { setDateOfBirthError(false) }}
+                                                            editable={true}
+                                                            onPressIn={showDiscountEndDatePicker}
+                                                        />
+                                                        <Image source={require('../../../assets/events.png')} resizeMode='contain' style={{
+                                                            tintColor: COLORS.black,
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
                                                     </View>
                                                 </View>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    marginHorizontal: 20,
-                                                    width: '100%',
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                marginHorizontal: 20,
+                                                width: '100%',
 
-                                                }}>
-                                                    <View style={{ marginTop: 10, width: '45%', }}>
-                                                        <Text style={{ color: COLORS.black }}>Discount Start Time </Text>
-                                                        <View style={{
-                                                            height: 45,
-                                                            backgroundColor: COLORS.white,
-                                                            borderRadius: 5,
-                                                            elevation: 4,
-                                                            paddingRight: 10,
-                                                            marginRight: 2,
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'space-between',
-                                                            alignItems: 'center'
+                                            }}>
+                                                <View style={{ marginTop: 10, width: '45%', }}>
+                                                    <Text style={{ color: COLORS.black }}>Discount Start Time </Text>
+                                                    <View style={{
+                                                        height: 45,
+                                                        backgroundColor: COLORS.white,
+                                                        borderRadius: 5,
+                                                        elevation: 4,
+                                                        paddingRight: 10,
+                                                        marginRight: 2,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
 
-                                                        }}>
-                                                            <TextInput
-                                                                style={styles.TextInput}
-                                                                placeholder={'Start Time'}
-                                                                value={discountstartTime}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                error={dateOfBirthError}
-                                                                onChangeText={setDiscountStartTime}
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                // onFocus={() => { setDateOfBirthError(false) }}
-                                                                // editable={true}
-                                                                onPressIn={showDiscountStartTimePicker}
-                                                            />
-                                                            <Image source={require('../../../assets/clock.png')} resizeMode='contain' style={{
-                                                                width: 15,
-                                                                height: 15,
-                                                                tintColor: COLORS.black,
-                                                            }} />
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ marginTop: 10, width: '45%' }}>
-                                                        <Text style={{ color: COLORS.black }}>Discount End Time </Text>
-                                                        <View style={{
-                                                            height: 45,
-                                                            backgroundColor: COLORS.white,
-                                                            borderRadius: 5,
-                                                            elevation: 4,
-                                                            paddingRight: 10,
-                                                            marginLeft: 2,
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'space-between',
-                                                            alignItems: 'center'
-                                                        }}>
-                                                            <TextInput
-                                                                style={styles.TextInput}
-                                                                placeholder={'End Time'}
-                                                                value={discountendTime}
-                                                                // error={dateOfBirthError}
-                                                                onChangeText={setDiscountEndTime}
-                                                                placeholderTextColor={COLORS.gray}
-                                                                selectionColor={COLORS.black}
-                                                                underlineColor={COLORS.white}
-                                                                // activeOutlineColor={COLORS.fontColor}
-                                                                activeUnderlineColor={COLORS.white}
-                                                                // onFocus={() => { setDateOfBirthError(false) }}
-                                                                onPressIn={showDiscountEndTimePicker}
-                                                            />
-                                                            <Image source={require('../../../assets/clock.png')} resizeMode='contain' style={{
-                                                                tintColor: COLORS.black,
-                                                                width: 15,
-                                                                height: 15,
-                                                            }} />
-                                                        </View>
+                                                    }}>
+                                                        <TextInput
+                                                            style={styles.TextInput}
+                                                            placeholder={'Start Time'}
+                                                            value={discountstartTime}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            error={dateOfBirthError}
+                                                            onChangeText={setDiscountStartTime}
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            // onFocus={() => { setDateOfBirthError(false) }}
+                                                            // editable={true}
+                                                            onPressIn={showDiscountStartTimePicker}
+                                                        />
+                                                        <Image source={require('../../../assets/clock.png')} resizeMode='contain' style={{
+                                                            width: 15,
+                                                            height: 15,
+                                                            tintColor: COLORS.black,
+                                                        }} />
                                                     </View>
                                                 </View>
-                                                <View style={{
-                                                    alignItems: 'center',
-                                                    marginTop: 50,
-                                                    marginBottom: 100
-                                                }}>
-                                                    <CustomeButton
-                                                        onpress={() => OnAddTicket()}
-                                                        title={'Add Ticket'} color={COLORS.white} />
+                                                <View style={{ marginTop: 10, width: '45%' }}>
+                                                    <Text style={{ color: COLORS.black }}>Discount End Time </Text>
+                                                    <View style={{
+                                                        height: 45,
+                                                        backgroundColor: COLORS.white,
+                                                        borderRadius: 5,
+                                                        elevation: 4,
+                                                        paddingRight: 10,
+                                                        marginLeft: 2,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <TextInput
+                                                            style={styles.TextInput}
+                                                            placeholder={'End Time'}
+                                                            value={discountendTime}
+                                                            // error={dateOfBirthError}
+                                                            onChangeText={setDiscountEndTime}
+                                                            placeholderTextColor={COLORS.gray}
+                                                            selectionColor={COLORS.black}
+                                                            underlineColor={COLORS.white}
+                                                            // activeOutlineColor={COLORS.fontColor}
+                                                            activeUnderlineColor={COLORS.white}
+                                                            // onFocus={() => { setDateOfBirthError(false) }}
+                                                            onPressIn={showDiscountEndTimePicker}
+                                                        />
+                                                        <Image source={require('../../../assets/clock.png')} resizeMode='contain' style={{
+                                                            tintColor: COLORS.black,
+                                                            width: 15,
+                                                            height: 15,
+                                                        }} />
+                                                    </View>
                                                 </View>
-                                            </ScrollView>
-                                        </View>
+                                            </View>
+                                            <View style={{
+                                                alignItems: 'center',
+                                                marginTop: 50,
+                                                marginBottom: 100
+                                            }}>
+                                                <CustomeButton
+                                                    onpress={() => OnAddTicket()}
+                                                    title={'Add Ticket'} color={COLORS.white} />
+                                            </View>
+                                        </ScrollView>
                                     </View>
-
-
                                 </View>
-                                :
-                                null}
-                    </Modal>
 
-                </ScrollView>
+
+                            </View>
+                            :
+                            null}
+                </Modal>
+
             </View >
         </SafeAreaView >
     )
@@ -1830,10 +1897,9 @@ export default MediatorCreateEventScreen
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
         // alignItems: 'center',
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
+        flex: 1,
     },
     contentContainer: {
         // borderRadius:50,

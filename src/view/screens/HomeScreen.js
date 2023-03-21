@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, ActivityIndicator, Dimensions, Modal, ScrollView, ImageBackground } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, ActivityIndicator, Dimensions, Modal, ScrollView, ImageBackground, Alert, PermissionsAndroid, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import COLORS from '../../consts/Colors';
 import HeaderTabOne from '../components/HeaderTabOne';
@@ -6,14 +6,27 @@ import Swiper from 'react-native-deck-swiper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
-import { chatuser, selectPackages, selectUser } from '../../../redux/reducers/Reducers'
+import { chatuser, selectChatuser, selectPackages, selectUser } from '../../../redux/reducers/Reducers'
 import Notifictaions from '../../view/components/Notifictaions';
+import SVGImg from '../../assets/conform.svg';
+import SVGImg1 from '../../assets/diamond.svg';
+import SVGImg2 from '../../assets/dot.svg';
+
+import Geolocation from '@react-native-community/geolocation';
+import { getDistance, getPreciseDistance } from 'geolib';
 const { height, width } = Dimensions.get('window');
 
 
 
 function RenderCard({ data, navigation }) {
+    const user2 = useSelector(selectUser);
     const [flake, setFlake] = useState('')
+    const years = new Date().getFullYear() - new Date(data?.userDetails?.Dates).getFullYear();
+    const distance = getPreciseDistance(
+        { latitude: user2?.Location?.latitude, longitude: user2?.Location?.longitude, },
+        { latitude: data?.userDetails?.Location.latitude, longitude: data?.userDetails?.Location.longitude }
+    ) * 0.000621;
+
     return (
         <View style={{
             marginTop: -50,
@@ -184,17 +197,31 @@ function RenderCard({ data, navigation }) {
                         fontSize: 20, fontWeight: 'bold',
                         color: COLORS.black,
                         marginRight: 5
-                    }}>{data?.userDetails?.Name}</Text>
-                    <Text style={{
-                        fontSize: 20,
-                        color: COLORS.black,
-                        marginRight: 5
-                    }}>{data?.userDetails?.Age}</Text>
-                    <Image source={require('../../assets/conform.png')} resizeMode='contain'
+                    }}>{data?.userDetails?.Name},</Text>
+                    <View>
+                        <Text style={{
+                            fontSize: 20,
+                            color: COLORS.black,
+                            marginRight: 5
+                        }}>{years ? years : 0}</Text>
+                    </View>
+                    {/* <Image source={require('../../assets/conform.png')} resizeMode='contain'
                         style={{
                             width: 25,
                             height: 25,
-                        }} />
+                        }} /> */}
+                    <View style={{
+                        alignItems: 'center',
+                    }}>
+                        <SVGImg width={20} height={20} />
+                    </View>
+                    <View style={{
+                        alignItems: 'center',
+                        paddingHorizontal: 3
+                    }}>
+                        <SVGImg2 width={5} height={5} />
+                    </View>
+                    <SVGImg1 width={20} height={20} />
                 </View>
             </View>
 
@@ -217,8 +244,8 @@ function RenderCard({ data, navigation }) {
                         marginRight: 5,
                         backgroundColor: COLORS.main,
                         padding: 3,
-                        borderRadius: 5
-                    }}>2.1 Miles Away</Text>
+                        borderRadius: 5,
+                    }}>{distance ? distance.toFixed(2) : 0} Miles Away</Text>
                 </View>
             </View>
 
@@ -310,10 +337,15 @@ const HomeScreen = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [recentMessage, setRecentMessage] = useState([]);
     const [unreadMessage, setUnreadMessage] = useState([]);
+    const [actionTrigger, setActionTrigger] = useState([]);
+    // const [unreadMessage, setUnreadMessage] = useState([]);
     const user = useSelector(selectUser);
     const userPackage = useSelector(selectPackages);
     const CurrentUser = auth().currentUser.uid;
+    const chatUser = useSelector(selectChatuser);
     const dispatch = useDispatch();
+
+    // console.log('=====================>',chatUser);
 
 
 
@@ -489,6 +521,8 @@ const HomeScreen = ({ navigation }) => {
                 if (!ChatUserId == '') {
                     try {
                         const MatchedUser = []
+                        console.log(ChatUserId);
+
                         ChatUserId.map(item => {
                             firestore().collection('Users').doc(item).onSnapshot(docSnapshot => {
                                 // console.log('Match User: ', documentSnapshot.data());
@@ -496,9 +530,12 @@ const HomeScreen = ({ navigation }) => {
                                     // console.log('data here');
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
+                                            console.log(
+                                                docSnapshot.data().userDetails
+                                            );
 
                                             const docid = docSnapshot.data().userDetails.uid > CurrentUser ? CurrentUser + "-" + docSnapshot.data().userDetails.uid : docSnapshot.data().userDetails.uid + "-" + CurrentUser
-                                            // console.log(docid);
+                                            console.log(docid);
 
                                             const messageRef = firestore().collection('chatrooms')
                                                 .doc(docid)
@@ -509,11 +546,11 @@ const HomeScreen = ({ navigation }) => {
                                                 const allmsg = querySnap.docs.map(docSanp => {
                                                     const data = docSanp.data();
                                                     // setRecentMessage(data.text)
-                                                    console.log(data);
+                                                    // console.log(data);
                                                 })
                                             })
                                             // docSnapshot.data().userDetails.recentMessages = recentMessage
-                                            // MatchedUser.push(docSnapshot.data().userDetails)
+                                            MatchedUser.push(docSnapshot.data().userDetails)
                                         } else {
                                             console.log('no match found');
                                         }
@@ -542,19 +579,18 @@ const HomeScreen = ({ navigation }) => {
                         const MatchedUser = []
                         ChatUserId.map(item => {
                             firestore().collection('Users').doc(item).onSnapshot(docSnapshot => {
-                                // console.log('Match User: ', documentSnapshot.data());
+                                // console.log('Match User: ', item);
                                 if (docSnapshot.data()?.PrivateChat) {
                                     // console.log('data here');
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
                                             const docid = docSnapshot.data().userDetails.uid > CurrentUser ? CurrentUser + "-" + docSnapshot.data().userDetails.uid : docSnapshot.data().userDetails.uid + "-" + CurrentUser
-                                            // console.log(item);
 
                                             const messageRef = firestore().collection('chatrooms')
-                                            .doc(docid)
-                                            .collection('messages')
-                                            // .limit(1)
-                                            .orderBy('createdAt', "desc")
+                                                .doc(docid)
+                                                .collection('messages')
+                                                // .limit(1)
+                                                .orderBy('createdAt', "desc")
                                             messageRef.onSnapshot((querySnap) => {
                                                 const unreaded = []
                                                 const recentmsg = []
@@ -677,8 +713,10 @@ const HomeScreen = ({ navigation }) => {
         }
         else {
             fetchMaleUsers();
+            // console.log('male');
         }
         setLoading(false)
+
     }
 
     const fetchMaleUsers = async () => {
@@ -700,24 +738,34 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
+                            // console.log('distance234==>', distance );
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -742,24 +790,33 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -784,24 +841,34 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
-                                    // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                    // console.log('User ID=======================1: ', documentSnapshot.data()) 
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
+                                    console.log('test');
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -828,24 +895,33 @@ const HomeScreen = ({ navigation }) => {
                     querySnapshot.forEach((documentSnapshot) => {
                         const data = documentSnapshot.data().userDetails;
                         const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                        // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                         if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                            const distance = getPreciseDistance(
+                                { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                            ) * 0.000621.toFixed(2);
+                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                 // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
                             }
-                            else if (!user.filterMinAge || !user.filterMinAge) {
+                            else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
                             }
                         }
                         else if (user.filterGender == 'Both') {
-                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                            const distance = getPreciseDistance(
+                                { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                            ) * 0.000621.toFixed(2);
+                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                 // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
                             }
-                            else if (!user.filterMinAge || !user.filterMinAge) {
+                            else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
                             }
@@ -875,7 +951,7 @@ const HomeScreen = ({ navigation }) => {
                 await firestore()
                     .collection('Users')
                     // .where("userDetails.Gender", '==', "Female")
-                    .limit(2)
+                    // .limit(2)
                     .onSnapshot(querySnapshot => {
                         // console.log('Total user: ', querySnapshot.size);
                         const users = [];
@@ -883,24 +959,35 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
+
+
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -926,25 +1013,34 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                     // console.log(documentSnapshot.data());
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -969,24 +1065,39 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                ) * 0.000621.toFixed(2);
+                                // console.log(distance); 
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
+
+                                    // const distance = geolib.getPreciseDistance(user.Location, data.Location)
+
+                                    // console.log('distance==>', distance * 0.000621);
+                                    // console.log('distance==>', geolib.convertDistance('mi', distance));
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                const distance = getPreciseDistance(
+                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                ) * 0.000621.toFixed(2);
+                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
-                                else if (!user.filterMinAge || !user.filterMinAge) {
+                                else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
                                 }
@@ -1012,29 +1123,40 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                             // console.log('=====>',data.Gender);
                             if (data.Gender == 'Female') {
                                 // console.log('asdjk'); 
                                 if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    const distance = getPreciseDistance(
+                                        { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                        { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                    ) * 0.000621.toFixed(2);
+
+                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
                                         // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                         // console.log('yetduh');
                                     }
-                                    else if (!user.filterMinAge || !user.filterMinAge) {
+                                    else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                         // console.log('etg');
                                     }
                                 }
                                 else if (user.filterGender == 'Both') {
-                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge) {
+                                    const distance = getPreciseDistance(
+                                        { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
+                                        { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
+                                    ) * 0.000621.toFixed(2);
+
+                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
                                         // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                     }
-                                    else if (!user.filterMinAge || !user.filterMinAge) {
+                                    else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                     }
@@ -1056,7 +1178,19 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         fetchusersMain();
         fetchUsersUid();
-        // fetchCurrentUsers();
+        // if (user.Location) {
+        //     console.log('location found');
+        // }
+        // else {
+        //     // setActionTrigger('ACTION_1')
+        //     // setModalVisible(true)
+        // }
+        // getCurrentPosition()
+        locationPermission()
+
+        getCurrentLocation()
+
+        // console.log(userPackage);
     }, [userPackage])
 
     useEffect(() => {
@@ -1163,16 +1297,96 @@ const HomeScreen = ({ navigation }) => {
         setswipedAllCards(true)
     };
 
+
+    const getCurrentPosition = async () => {
+        // Geolocation.getCurrentPosition(info => console.log('hello',info));
+
+        // await Geolocation.getCurrentPosition(
+        //     (pos) => {
+        //         console.log('location', pos.coords);
+        //         firestore()
+        //             .collection('Users').doc(CurrentUser).update({
+        //                 'userDetails.Location': pos.coords,
+        //             })
+        //         // setPosition(JSON.stringify(pos));
+        //     },
+        //     (error) =>
+        //         // console.log('GetCurrentPosition Error', JSON.stringify(error);
+        //         Alert.alert('GetCurrentPosition Error', JSON.stringify(error)
+        //         ),
+        //     { enableHighAccuracy: true }
+        // );
+
+
+    };
+
+
+    const getCurrentLocation = () => {
+        setTimeout(() => {
+            Geolocation.getCurrentPosition(
+                position => {
+                    const cords = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        // heading: position.coords.heading,
+                    };
+                    firestore()
+                        .collection('Users').doc(CurrentUser).update({
+                            'userDetails.Location': cords,
+                        })
+                    // console.log('===>', cords);
+                    // resolve(cords);
+                },
+                error => { console.log(error) }
+            );
+        }, 5000);
+    }
+
+    const locationPermission = () => {
+        new Promise(async (resolve, reject) => {
+            if (Platform.OS === 'ios') {
+                try {
+                    const permissionStatus = await Geolocation.requestAuthorization(
+                        'whenInUse',
+                    );
+                    if (permissionStatus === 'granted') {
+                        return resolve('granted');
+                    }
+                    reject('Permission not granted');
+                } catch (error) {
+                    return reject(error);
+                }
+            }
+            return PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        resolve('granted');
+                    }
+                    return reject('Location Permission denied');
+                })
+                .catch(error => {
+                    console.log('Ask Location permission error: ', error);
+                    return reject(error);
+                });
+        });
+    }
     // const useSwiper = useRef(null).current;
     // const handleOnSwipedLeft = () => useSwiper.swipeLeft()
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor={COLORS.black} />
-            <HeaderTabOne onpress={() => navigation.openDrawer()} Lefticon={require('../../assets/menu3.png')} logo={require('../../assets/splashlogo.png')} />
-            {modalData && (
+            <HeaderTabOne
+                onpress={() => navigation.openDrawer()}
+                Lefticon={require('../../assets/menu3.png')}
+                Righticon={require('../../assets/menu2.png')}
+                logo={require('../../assets/splashlogo.png')}
+            />
+            {modalData ? (
                 <Modal
                     animationType="slide"
-                    transparent={false}
+                    transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
                         setModalVisible(!modalVisible);
@@ -1474,75 +1688,81 @@ const HomeScreen = ({ navigation }) => {
                                                     <Text style={{ fontSize: 12 }}>Single</Text>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info4.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Education}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info3.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>Height, {modalData.userDetails.Hieght}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info8.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Gender}</Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            {modalData.userDetails.Education &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info4.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Education}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {modalData.userDetails.Hieght &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info3.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>Height, {modalData.userDetails.Hieght}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {modalData.userDetails.Gender &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info8.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Gender}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
                                             <TouchableOpacity style={{
                                                 paddingHorizontal: 10,
                                                 marginRight: 5,
@@ -1566,98 +1786,106 @@ const HomeScreen = ({ navigation }) => {
                                                     <Text style={{ fontSize: 12 }}>English</Text>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info6.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Drink}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info9.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Kids}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info5.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Nature}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{
-                                                paddingHorizontal: 10,
-                                                marginRight: 5,
-                                                paddingVertical: 10,
-                                                // height: 40,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: COLORS.light,
-                                                borderRadius: 30,
-                                                marginBottom: 10,
-                                            }}>
-                                                <View>
-                                                    <Image source={require('../../assets/modal/info2.png')} resizeMode='contain'
-                                                        style={{
-                                                            height: 20,
-                                                            width: 20,
-                                                            marginRight: 5,
-                                                        }} />
-                                                </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 12 }}>{modalData.userDetails.Smoke}</Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            {modalData.userDetails.Drink &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info6.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Drink}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {modalData.userDetails.Kids &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info9.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Kids}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {modalData.userDetails.Nature &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info5.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Nature}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {modalData.userDetails.Smoke &&
+                                                <TouchableOpacity style={{
+                                                    paddingHorizontal: 10,
+                                                    marginRight: 5,
+                                                    paddingVertical: 10,
+                                                    // height: 40,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.light,
+                                                    borderRadius: 30,
+                                                    marginBottom: 10,
+                                                }}>
+                                                    <View>
+                                                        <Image source={require('../../assets/modal/info2.png')} resizeMode='contain'
+                                                            style={{
+                                                                height: 20,
+                                                                width: 20,
+                                                                marginRight: 5,
+                                                            }} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{ fontSize: 12 }}>{modalData.userDetails.Smoke}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
                                         </View>
                                     </View>
 
@@ -1701,7 +1929,7 @@ const HomeScreen = ({ navigation }) => {
                                                     borderRadius: 20,
                                                     marginRight: 10,
                                                 }} />
-                                                <Image source={{ uri: modalData.userDetails.image1 }} resizeMode='contain' style={{
+                                                <Image source={{ uri: modalData.userDetails.image1 }} resizeMode='cover' style={{
                                                     width: 250,
                                                     height: 150,
                                                     borderRadius: 20,
@@ -1748,13 +1976,103 @@ const HomeScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-                </Modal >
-            )}
+                </Modal>
+            ) :
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    {actionTrigger == 'ACTION_1' ?
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            // alignItems: 'center',
+                            backgroundColor: COLORS.gray,
+                            opacity: 0.9
+                        }}>
+                            <View style={{
+                                margin: 20,
+                                backgroundColor: 'white',
+                                opacity: 1,
+                                borderRadius: 20,
+                                padding: 25,
+                                alignItems: 'center',
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5,
+                                paddingHorizontal: 40
+                            }}>
+                                <Text style={{
+                                    marginBottom: 10,
+                                    color: COLORS.black,
+                                    fontWeight: 'bold',
+                                    fontSize: 16,
+                                    textAlign: 'center',
+                                }}>Allow ‘Dates & Honey’ to use
+                                    your location</Text>
+                                <Text style={{
+                                    marginBottom: 10,
+                                    textAlign: 'center',
+                                    fontSize: 12,
+                                }}>
+                                    We will use your location to find people
+                                    nearby you.
+                                </Text>
+                                <Image source={require('../../assets/currentloc.png')} resizeMode='cover' />
+                                <TouchableOpacity
+                                    onPress={() => { setModalVisible(false), setActionTrigger(null) }}
+                                    style={{
+                                        borderBottomColor: COLORS.gray2,
+                                        borderBottomWidth: 1,
+                                        width: width / 1.2,
+                                        marginHorizontal: 20,
+                                        paddingVertical: 10,
+                                        alignItems: 'center'
+                                    }}>
+                                    <Text style={{
+                                        color: '#2A3182'
+                                    }}>
+                                        Allow Once
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => { setModalVisible(false), setActionTrigger(null) }}
+                                    style={{
+                                        // borderColor: COLORS.black,
+                                        borderBottomColor: COLORS.gray2,
+                                        borderBottomWidth: 1,
+                                        width: width / 1.2,
+                                        marginHorizontal: 20,
+                                        paddingVertical: 10,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        // backgroundColor: COLORS.main
+                                    }}>
+                                    <Text style={{
+                                        color: '#2A3182'
+                                    }}>
+                                        Allow while using the app
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        : null}
+                </Modal>
+            }
 
             <View style={styles.container}>
 
                 <View style={{
-                    height: '75%',
+                    height: height / 1.4,
                     backgroundColor: COLORS.white,
                     // flex:3,
                     // justifyContent:'flex-end',
@@ -1811,7 +2129,7 @@ const HomeScreen = ({ navigation }) => {
                                                 backgroundColor: 'black',
                                                 borderColor: 'black',
                                                 color: 'white',
-                                                borderWidth: 1
+                                                borderWidth: 1,
                                             },
                                             wrapper: {
                                                 flexDirection: 'column',
@@ -1829,14 +2147,14 @@ const HomeScreen = ({ navigation }) => {
                                                 backgroundColor: 'red',
                                                 borderColor: 'red',
                                                 color: 'white',
-                                                borderWidth: 1
+                                                borderWidth: 1,
                                             },
                                             wrapper: {
                                                 flexDirection: 'column',
                                                 alignItems: 'flex-start',
                                                 justifyContent: 'flex-start',
                                                 marginTop: 30,
-                                                marginLeft: 30
+                                                marginLeft: 30,
                                             }
                                         }
                                     },
@@ -1847,12 +2165,12 @@ const HomeScreen = ({ navigation }) => {
                                                 backgroundColor: 'black',
                                                 borderColor: 'black',
                                                 color: 'white',
-                                                borderWidth: 1
+                                                borderWidth: 1,
                                             },
                                             wrapper: {
                                                 flexDirection: 'column',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
                                             }
                                         }
                                     }
@@ -2009,9 +2327,10 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={{
                     // height: '35%',
-                    height: '25%',
+                    height: height / 0.6,
+                    // backgroundColor:COLORS.main,
                     // position: 'absolute',
-                    marginTop: -5,
+                    marginTop: -25,
                     width: '100%',
                 }}>
                     <View style={{

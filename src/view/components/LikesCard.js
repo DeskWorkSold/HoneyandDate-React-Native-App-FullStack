@@ -4,6 +4,7 @@ import COLORS from '../../consts/Colors'
 import { selectUser } from '../../../redux/reducers/Reducers';
 import { useSelector } from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
+import Notifictaions from './Notifictaions';
 
 
 const LikesCard = ({ image, name, description, navigation, item }) => {
@@ -11,10 +12,10 @@ const LikesCard = ({ image, name, description, navigation, item }) => {
 
   
   const onLikeCard = () => {
-    // console.log(item);
+    // console.log(item.uid);
     // return
     if (!item == '') {
-      // console.log('Submit data', DataId);
+      // console.log('Submit data', item);
       // return;
       firestore()
         .collection('Users').doc(user.uid).update({
@@ -23,7 +24,7 @@ const LikesCard = ({ image, name, description, navigation, item }) => {
           }),
         })
         .then(() => {
-          console.log('You like', Data.userDetails.Name);
+          console.log('You like', item.Name);
           // navigation.navigate('MessagesScreen')
           Notifictaions(
             Docuser = item.uid,
@@ -32,7 +33,7 @@ const LikesCard = ({ image, name, description, navigation, item }) => {
             type = 'Swap',
             RequestStatus = 'Unaccepted',
             noticeID = user.uid,
-            NoticeName = user.name,
+            NoticeName = user.Name,
           )
         });
     } else {

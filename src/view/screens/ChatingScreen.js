@@ -20,19 +20,17 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import CustomeButton from '../components/CustomeButton';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useRef } from 'react';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
 import { set } from 'immer/dist/internal';
-import GoogleMapKey from '../../consts/GoogleMapKey';
 import moment from 'moment';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import GoogleMapKey from '../../consts/GoogleMapKey';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-
 const ChatingScreen = ({ navigation, route }) => {
-    // console.log('==>' , GoogleMapKey);
     const userName = route.params.userName;
     const userImg = route.params.userImg;
     const uid = route.params.uid;
@@ -60,6 +58,7 @@ const ChatingScreen = ({ navigation, route }) => {
     const [locationModalVisible, setLocationModalVisible] = useState(false);
     const [actionTriggered, setActionTriggered] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [tempCancleDate, setTempCancleDates] = useState(null);
     const [pin, setPin] = useState({
         latitude: 24.9026764,
         longitude: 67.11445119999999,
@@ -77,11 +76,12 @@ const ChatingScreen = ({ navigation, route }) => {
     const [nextTime, setNextTime] = useState();
     const [CurrentTime, setCurrentTime] = useState();
     const [SecondUserProposal, setSecondUserProposal] = useState();
+    const [loading, setLoading] = useState(false);
 
-    const api = GoogleMapKey.GOOGLE_MAP_KEY
+    const api = GoogleMapKey?.GOOGLE_MAP_KEY
     const dispatch = useDispatch()
     // const cat = useSelector(selectPorposalCategory)
-    // console.log('=====>', cat);
+    // console.log('=====>', api);
 
 
     // console.log('userName: ', userName);
@@ -89,6 +89,7 @@ const ChatingScreen = ({ navigation, route }) => {
 
     const [showhide, setShowHide] = useState(false)
     const [sendchat, setSendChat] = useState('')
+    const [searchTextRef, setSearchTextRef] = useState('')
 
     const SwitchMode = (value) => (
         setShowHide(value)
@@ -531,7 +532,7 @@ const ChatingScreen = ({ navigation, route }) => {
                     ProposalTempDate: tempDates,
                     ProposalTime: time,
                     ProposalAddress: location,
-                    ProposalLocation: pin,
+                    ProposalLocation: region,
                     ProposalDescription: description,
                     ProposalStatus: false,
                     text: null,
@@ -1282,7 +1283,7 @@ const ChatingScreen = ({ navigation, route }) => {
                 ProposalLocation: '',
                 ProposalDescription: '',
                 ProposalStatus: '',
-                read:false,
+                read: false,
                 text: null,
                 user: {
                     _id: Currentuser.uid,
@@ -1457,12 +1458,52 @@ const ChatingScreen = ({ navigation, route }) => {
     }
 
 
+    const TempCancleDate = (item) => {
+        setModal(true), setDeleteModal('DeleteModal')
+        // console.log(item);
+        setTempCancleDates(item)
+    }
+
+    const CancleDate = () => {
+        setLoading(true)
+        const test = []
+        acceptedProposal.map(a => {
+            if (a._id != tempCancleDate._id) {
+                test.push(a);
+            }
+        })
+        try {
+            firestore()
+                .collection('Proposals')
+                .doc(Currentuser.uid)
+                .set({
+                    Proposals: test,
+                }, { merge: true })
+                .then(() => {
+                    ToastAndroid.show('Date canceled!', ToastAndroid.SHORT)
+                    setLoading(false)
+                    setModal(false)
+                })
+            firestore()
+                .collection('Users')
+                .doc(Currentuser.uid)
+                .update({
+                    'userDetails.Flake': firestore.FieldValue.increment(1),
+                })
+        }
+        catch (e) {
+            console.log(e);
+        }
+        // console.log(test);
+    }
+
     const OnSetLocation = () => {
         if (region) {
             console.log('selected pin', region);
             console.log('selected pin', location);
-            setLocation('location')
+            // setLocation('location')
             // setAddressText(location)
+            // return;
             setLocationModalVisible(false)
         }
         else {
@@ -1997,6 +2038,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                                     backgroundColor: COLORS.white,
                                                     marginVertical: 10,
                                                     marginHorizontal: 20,
+                                                    width: '60%',
                                                     borderRadius: 10,
                                                     elevation: 3,
                                                 }}>
@@ -2508,6 +2550,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                                     marginHorizontal: 20,
                                                     borderRadius: 10,
                                                     elevation: 3,
+                                                    // width: '70%',
                                                 }}>
                                                 <View style={{
                                                     flexDirection: 'row',
@@ -2598,7 +2641,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                                     </View>
                                                 </View>
                                                 <TouchableOpacity
-                                                    onPress={() => { setModal(true), setDeleteModal('DeleteModal') }}
+                                                    onPress={() => TempCancleDate(item)}
                                                     activeOpacity={0.8}
                                                     style={{
                                                         backgroundColor: COLORS.black,
@@ -2729,52 +2772,70 @@ const ChatingScreen = ({ navigation, route }) => {
                                     </View>
                                 </View>
                                 <View style={{
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                    flex: 1,
+                                    marginTop: 20
                                 }}>
                                     <GooglePlacesAutocomplete
-                                        placeholder='Search'
-                                        fetchDetails={true}
-                                        autoFocus={false}
-                                        GooglePlacesSearchQuery={{
-                                            rankby: "distance"
-                                        }}
-                                        onPress={(data, details = null) => {
-                                            // 'details' is provided when fetchDetails = true
-                                            console.log('data here ===>', data, 'details ===>', details);
-                                            setRegion({
-                                                latitude: details.geometry.location.lat,
-                                                longitude: details.geometry.location.lng,
-                                                latitudeDelta: 0.0922,
-                                                longitudeDelta: 0.0421
-                                            })
-                                            setLocation(data.description)
-                                        }}
+                                        placeholder="Type a place"
                                         query={{
                                             key: api,
-                                            language: 'en',
-                                            components: "country:pk",
+                                            // language: 'en',
+                                            // components: "country:pk",
                                             types: "establishment",
                                             radius: 30000,
                                             location: `${region.latitude}, ${region.longitude}`
                                         }}
+                                        fetchDetails={true}
+                                        // ref={ref => setSearchTextRef(ref)}
+                                        // placeholder='Search'
+                                        // fetchDetails={true}
+                                        autoFocus={true}
+                                        // keyboardShouldPersistTaps={'handled'}
+                                        // listUnderlayColor={'transparent'}
+                                        // minLength={1} // minimum length of text to search
+                                        // returnKeyType={'search'}
+                                        // listViewDisplayed={'auto'}
+                                        GooglePlacesSearchQuery={{
+                                            rankby: "distance"
+                                        }}
+                                        // onFail={error => console.log(error)}
+                                        // onNotFound={() => console.log('no results')}
+                                        onPress={(data, details = null) => {
+                                            console.log('======>data', data, '====>details', details)
+                                            setRegion({
+                                                latitude: details.geometry.location.lat,
+                                                longitude: details.geometry.location.lng,
+                                            })
+                                            setLocation(data.description)
+                                        }
+                                        }
+                                        // query={{
+                                        //     key: api,
+                                        //     language: 'en',
+                                        //     components: "country:pk",
+                                        //     types: "establishment",
+                                        //     radius: 30000,
+                                        //     location: `${region.latitude}, ${region.longitude}`
+                                        // }}
+                                        // nearbyPlacesAPI='GooglePlacesSearch'
                                         styles={{
                                             container: {
-                                                flex: 1, position: 'relative', width: "100%", zIndex: 1,
+                                                flex: 0, position: 'absolute', width: "100%", zIndex: 1,
                                                 // marginHorizontal: 20,
-                                                marginTop: 10,
+                                                // marginTop: 10,
                                             },
                                             listView: { backgroundColor: "white" }
                                         }}
+                                    // filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
+                                    // debounce={200}
                                     />
                                     <MapView
                                         // ref={mapRef}
                                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                                         style={styles.map}
                                         initialRegion={{
-                                            latitude: 24.9026764,
-                                            longitude: 67.11445119999999,
+                                            latitude: region.latitude,
+                                            longitude: region.longitude,
                                             latitudeDelta: 0.0922,
                                             longitudeDelta: 0.0421,
                                         }}
@@ -2789,7 +2850,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                             draggable={true}
                                             onDragEnd={(e) => {
                                                 console.log('Drag end', e.nativeEvent.coordinate)
-                                                setPin({
+                                                setRegion({
                                                     latitude: e.nativeEvent.coordinate.latitude,
                                                     longitude: e.nativeEvent.coordinate.longitude,
                                                 })
@@ -2828,7 +2889,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                     </MapView>
                                     <View
                                         style={{
-                                            position: 'absolute',//use absolute position to show button on top of the map
+                                            position: 'absolute', //use absolute position to show button on top of the map
                                             top: '70%', //for center align
                                             alignSelf: 'center' //for align to right
                                         }}
@@ -2864,59 +2925,73 @@ const ChatingScreen = ({ navigation, route }) => {
                                 shadowOpacity: 0.25,
                                 shadowRadius: 4,
                                 elevation: 5,
+                                width: '80%',
+                                height: '30%',
+                                justifyContent: 'center'
                             }}>
-                                <Text style={{
-                                    marginBottom: 10,
-                                    color: COLORS.black,
-                                    fontWeight: 'bold'
-                                    // textAlign: 'center',
-                                }}>Cancle Date!</Text>
-                                <Text style={{
-                                    marginBottom: 10,
+                                {!loading == true ?
+                                    <>
+                                        <Text style={{
+                                            marginBottom: 10,
+                                            color: COLORS.black,
+                                            fontWeight: 'bold'
+                                            // textAlign: 'center',
+                                        }}>Cancle Date!</Text>
+                                        <Text style={{
+                                            marginBottom: 10,
 
-                                }}>
-                                    If you cancel now, you will get flake on your profile. You can remove flakes for $10 pet flake. On your profile
-                                </Text>
-                                <View style={{
-                                    alignItems: 'center',
-                                    paddingHorizontal: 20,
-                                    flexDirection: 'row',
-                                }}>
-                                    <TouchableOpacity
-                                        onPress={() => { setModal(false), setDeleteModal('') }}
-                                        style={{
-                                            width: '50%',
-                                            borderWidth: 1,
-                                            borderColor: COLORS.black,
-                                            borderRadius: 10,
-                                            marginHorizontal: 5,
-                                            paddingVertical: 10,
+                                        }}>
+                                            If you cancel now, you will get flake on your profile. You can remove flakes for $10 pet flake. On your profile
+                                        </Text>
+                                        <View style={{
                                             alignItems: 'center',
+                                            paddingHorizontal: 20,
+                                            flexDirection: 'row',
                                         }}>
-                                        <Text style={{
-                                            color: COLORS.black
-                                        }}>
-                                            Back
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{
-                                        width: '50%',
-                                        borderWidth: 1,
-                                        borderColor: COLORS.black,
-                                        borderRadius: 10,
-                                        marginHorizontal: 5,
-                                        paddingVertical: 10,
-                                        alignItems: 'center',
-                                        backgroundColor: COLORS.black
+                                            <TouchableOpacity
+                                                onPress={() => { setModal(false), setDeleteModal('') }}
+                                                style={{
+                                                    width: '50%',
+                                                    borderWidth: 1,
+                                                    borderColor: COLORS.black,
+                                                    borderRadius: 10,
+                                                    marginHorizontal: 5,
+                                                    paddingVertical: 10,
+                                                    alignItems: 'center',
+                                                }}>
+                                                <Text style={{
+                                                    color: COLORS.black
+                                                }}>
+                                                    Back
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => CancleDate()}
+                                                style={{
+                                                    width: '50%',
+                                                    borderWidth: 1,
+                                                    borderColor: COLORS.black,
+                                                    borderRadius: 10,
+                                                    marginHorizontal: 5,
+                                                    paddingVertical: 10,
+                                                    alignItems: 'center',
+                                                    backgroundColor: COLORS.black
+                                                }}>
+                                                <Text style={{
+                                                    color: COLORS.white
+                                                }}>
+                                                    Cancle Date
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </>
+                                    :
+                                    <View style={{
                                     }}>
-                                        <Text style={{
-                                            color: COLORS.white
-                                        }}>
-                                            Cancle Date
-                                        </Text>
-                                    </TouchableOpacity>
+                                        <ActivityIndicator size="small" color={COLORS.main} animating={loading} />
+                                    </View>
+                                }
 
-                                </View>
                             </View>
                         </View>
                         :

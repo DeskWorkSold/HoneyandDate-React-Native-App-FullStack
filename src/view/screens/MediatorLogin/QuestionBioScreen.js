@@ -5,14 +5,14 @@ import CustomeButton from '../../components/CustomeButton';
 
 
 const MediatorQuestionBioScreen = ({ navigation, route }) => {
-  const { Kids, PartnerGender, name, image1, image2, image3, image4, image5, Date, Gender } = route.params;
+  const { Kids, PartnerGender, name, image1, image2, image3, image4, image5, DateOfBirth, Gender } = route.params;
   const [bio, setbio] = useState();
 
   const onQuestionProfessionally = () => {
     if(bio){
       // console.log('bio', bio);
       navigation.navigate('MediatorQuestionProfessionallyScreen', {
-        Bio: bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        Bio: bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else{

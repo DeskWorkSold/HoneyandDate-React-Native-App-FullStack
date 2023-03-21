@@ -7,12 +7,64 @@ import { selectEvents } from '../../../redux/reducers/Reducers';
 
 
 
-const EventsCategory = ({ navigation, data, value, setValue }) => {
+const EventsCategory = ({ navigation, data, value, setValue, filterdata, setfilterdata }) => {
     const events = useSelector(selectEvents);
+    // console.log('ok', filterdata);
+
+
     const ShowCategory = (index) => {
         const showCategory = data[index].name
         setValue(index)
+        if (showCategory) {
+            const test = [];
+            if (showCategory == 'New Events') {
+                // setfilterdata(filterdata);
+                const newData = filterdata.filter((item) => {
+                    test.push(item);
+                });
+            }
+            else if (showCategory == 'Todays Event') {
+                const today = new Date().toDateString()
+                const newData = filterdata.filter((item) => {
+                    let edate = item.timeStamp.toDate().toDateString()
+                    if (edate == today) {
+                        console.log(item);
+                        test.push(item);
+                    }
+                    // console.log(today , edate);
+                });
+            }
+            else if (showCategory == 'Last Events') {
+                const today = new Date().toDateString()
+                const newData = filterdata.filter((item) => {
+                    let edate = item.timeStamp.toDate().toDateString()
+                    if (edate != today) {
+                        test.push(item);
+                    }
+                });
+            }
+            console.log('here', test);
+            setfilterdata(test)
+        } else {
+            // setFoodsTemp(foods)
+        }
     }
+
+    // const filterMenu = (id) => {
+    //     console.log(id);
+    //     if (id) {
+    //         const test = [];
+    //         const newData = foods.filter((item) => {
+    //             if (item.categoryid == id) {
+    //                 console.log(item);
+    //                 test.push(item);
+    //             }
+    //         });
+    //         setFoodsTemp(test)
+    //     } else {
+    //         setFoodsTemp(foods)
+    //     }
+    // }
     return (
         <>
             {data?.map((item, index) => (

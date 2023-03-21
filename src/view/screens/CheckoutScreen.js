@@ -4,7 +4,7 @@ import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { RadioButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, selectaddToCart, selectEvents, selectPaymentCardDetails, selectPaymentMethod, selectTicketsAddToCard, selectUser, ticketsAddtoCard } from '../../../redux/reducers/Reducers';
+import { addToCart, Buypackages, packages, selectaddToCart, selectBuypackages, selectEvents, selectPackages, selectPaymentCardDetails, selectPaymentMethod, selectTicketsAddToCard, selectUser, ticketsAddtoCard } from '../../../redux/reducers/Reducers';
 import firestore from '@react-native-firebase/firestore';
 import { addItemToCart } from '../../../redux/reducers/actions/action';
 import { StackActions } from '@react-navigation/native';
@@ -16,7 +16,9 @@ const CheckoutScreen = ({ navigation }) => {
     const PaymentCardDetails = useSelector(selectPaymentCardDetails);
     const PaymentMethod = useSelector(selectPaymentMethod);
     const [platFormFee, setPlatFormFee] = useState(4);
-    const EventsId = SelectedEvent.item.uid;
+    const BuyMemberShips = useSelector(selectBuypackages)
+    // const EventsId = SelectedEvent.item.uid;
+    // console.log(BuyMemberShips);
     const dispatch = useDispatch();
 
 
@@ -24,11 +26,12 @@ const CheckoutScreen = ({ navigation }) => {
 
     // for ecommerce 
     const AddToCard = useSelector(selectaddToCart)
-    const total = AddToCard?.map((item) => Number(item.Totalprice)).reduce((perv, curr) => perv + curr + platFormFee, 0);
+    const total = AddToCard?.map((item) => Number(item?.Totalprice)).reduce((perv, curr) => perv + curr + platFormFee, 0);
     const totalUSD = total?.toLocaleString("en", {
         style: "currency",
         currency: "USD",
     });
+
 
 
     const TicketAddToCard = useSelector(selectTicketsAddToCard)
@@ -40,7 +43,7 @@ const CheckoutScreen = ({ navigation }) => {
 
     const PayAmount = async () => {
         // console.log(cardName, cardHolder, ExpDate, cvc, paymentMethod, TicketAddToCard);
-        if (!PaymentCardDetails.cardName, !PaymentCardDetails.cardNumber, !PaymentCardDetails.ExpDate, !PaymentCardDetails.cvc, !PaymentMethod, !TicketAddToCard) {
+        if (!PaymentCardDetails.cardName, !PaymentCardDetails.cardNumber, !PaymentCardDetails.ExpDate, !PaymentCardDetails.cvc, !PaymentMethod) {
             if (!PaymentCardDetails.cardName) {
                 ToastAndroid.show("Please enter card holder name!", ToastAndroid.SHORT);
                 // setInputCardName(true)
@@ -59,10 +62,6 @@ const CheckoutScreen = ({ navigation }) => {
             }
             else if (!PaymentMethod) {
                 ToastAndroid.show("Please select paymentMethod!", ToastAndroid.SHORT);
-                // setInputCvc(true)
-            }
-            else if (!TicketAddToCard) {
-                ToastAndroid.show("Please select your tickets order and try again!", ToastAndroid.SHORT);
                 // setInputCvc(true)
             }
         }
@@ -88,36 +87,59 @@ const CheckoutScreen = ({ navigation }) => {
             // );
             // return
             if (!AddToCard.length == 0) {
-                setUploading(true)
-                const uid = Math.random().toString(16).slice(2);
+                // setUploading(true)
+                // console.log(
+                //     'AddToCard', AddToCard,
+                //     ' user?.uid', user?.uid,
+                //     'user?.Name', user?.Name,
+                //     'SelectedEvent?.uid,', SelectedEvent?.uid,
+                //     'uid', uid,
+                //     'Data', Data,
+                //     'totalUSD', totalUSD,
+                //     // 'time', time,
+                // );
+                // return
+                const ids = Math.random().toString(16).slice(2);
+                // console.log(uid);
+                // return
                 try {
+                    setUploading(false)
                     await firestore()
                         .collection('orders')
-                        .doc(uid)
+                        .doc(ids)
                         .set({
                             Order: AddToCard,
                             useruid: user?.uid,
                             userName: user?.Name,
                             // userPhoneNumber: user.PhoneNumber,
-                            eid: EventsId,
-                            uid: uid,
+                            eid: SelectedEvent?.uid,
+                            uid: ids,
                             PaymentInfo: Data,
                             totalAmount: totalUSD,
-                            createdAt: time,
+                            createdAt: firestore.FieldValue.serverTimestamp(),
                         })
                         .then(() => {
                             ToastAndroid.show('Your Food Order Successfully Placed', ToastAndroid.SHORT)
+                            dispatch(addToCart(''))
                             navigation.navigate('EventsScreen');
                             // console.log('Your Food Order Successfully Placed');
-                            dispatch(addToCart(''))
                         })
                     setUploading(false)
                 } catch (error) {
                     console.log('error test1', error);
                 }
             }
-            else {
+            else if (TicketAddToCard) {
+                // console.log(BuyMemberShips);
                 const id = TicketAddToCard.uid
+
+                // console.log(
+                //    'data===>', Data,
+                //    'time===>', time,
+                //    'TicketAddToCard===>', TicketAddToCard,
+                //    'user?.uid===>',  user?.uid,
+                // );
+                // return;
                 try {
                     setUploading(true)
                     await firestore()
@@ -133,6 +155,7 @@ const CheckoutScreen = ({ navigation }) => {
                             },
                         )
                         .then(() => {
+                            dispatch(ticketsAddtoCard(null))
                             ToastAndroid.show('Tickets Purchase successfully', ToastAndroid.SHORT)
                             navigation.navigate('EventTicketsBuy', {
                                 BuyTickets: TicketAddToCard,
@@ -141,17 +164,78 @@ const CheckoutScreen = ({ navigation }) => {
                                 // createdTime: createdTime,
                                 useruid: user?.uid
                             })
-                            dispatch(ticketsAddtoCard(null))
                         })
                     // // setImage(null)
                     setUploading(false)
                 } catch (error) {
                     console.log('error test1', error);
                 }
+            }
+            else {
+                ToastAndroid.show('Network error please try again', ToastAndroid.SHORT)
+                // const id = TicketAddToCard.uid
+                // try {
+                //     setUploading(true)
+                //     await firestore()
+                //         .collection('SellTickets')
+                //         .doc(id)
+                //         .set(
+                //             {
+                //                 PaymentInfo: Data,
+                //                 createdAt: time,
+                //                 TicketAddToCard,
+                //                 useruid: user?.uid,
+                //                 status: 'Done'
+                //             },
+                //         )
+                //         .then(() => {
+                //             ToastAndroid.show('Tickets Purchase successfully', ToastAndroid.SHORT)
+                //             navigation.navigate('EventTicketsBuy', {
+                //                 BuyTickets: TicketAddToCard,
+                //                 paymentCard: Data,
+                //                 // createdDate: createdDate,
+                //                 // createdTime: createdTime,
+                //                 useruid: user?.uid
+                //             })
+                //             dispatch(ticketsAddtoCard(null))
+                //         })
+                //     // // setImage(null)
+                //     setUploading(false)
+                // } catch (error) {
+                //     console.log('error test1', error);
+                // }
 
             }
         }
     }
+
+    const PayAmountMemberships = () => {
+        // console.log(BuyMemberShips);
+        // return
+        const MembershipName = BuyMemberShips?.otherCategory.split(' ')[0]
+        // console.log(MembershipName);
+        setUploading(true)
+        try {
+            const useRef = firestore().collection('Users')
+                .doc(user?.uid)
+            useRef.update({
+                'userDetails.AccountType': MembershipName,
+                'userDetails.PackageId': BuyMemberShips?.id,
+            }).then(() => {
+                dispatch(packages(BuyMemberShips))
+                dispatch(Buypackages(''))
+                ToastAndroid.show('Membership Purchased successfully', ToastAndroid.SHORT)
+                // console.log('Notices send!');
+                navigation.navigate('ProfileScreen')
+                setUploading(false)
+            });
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+
     return (
         <SafeAreaView style={{
             flex: 1,
@@ -383,7 +467,8 @@ const CheckoutScreen = ({ navigation }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                paddingHorizontal: 10
+                                paddingHorizontal: 10,
+                                marginBottom: 5
                             }}>
                                 <View style={styles.NumberInput}>
                                     <Image source={require('../../assets/coupn.png')} resizeMode='contain'
@@ -420,7 +505,7 @@ const CheckoutScreen = ({ navigation }) => {
                             </View>
 
 
-                            {!AddToCard.length == 0 ?
+                            {!AddToCard.length == 0 &&
                                 <View>
                                     <View style={{
                                         flexDirection: 'row',
@@ -457,7 +542,38 @@ const CheckoutScreen = ({ navigation }) => {
                                         <Text>{totalUSD}</Text>
                                     </View>
                                 </View>
-                                :
+                            }
+
+                            {BuyMemberShips &&
+                                <View>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        paddingHorizontal: 20,
+                                        paddingTop: 20,
+                                        paddingBottom: 10,
+                                        justifyContent: 'space-between',
+                                        borderBottomColor: COLORS.light,
+                                        borderBottomWidth: 1
+                                    }}>
+                                        <Text>Membership</Text>
+                                        <Text>{BuyMemberShips.otherCategory}</Text>
+                                    </View>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        paddingHorizontal: 20,
+                                        paddingTop: 20,
+                                        paddingBottom: 10,
+                                        justifyContent: 'space-between',
+                                        borderBottomColor: COLORS.light,
+                                        borderBottomWidth: 1
+                                    }}>
+                                        <Text>Price</Text>
+                                        <Text>${BuyMemberShips.rate}</Text>
+                                    </View>
+                                </View>
+                            }
+
+                            {TicketAddToCard &&
                                 <View>
                                     <View style={{
                                         flexDirection: 'row',
@@ -493,9 +609,7 @@ const CheckoutScreen = ({ navigation }) => {
                                         <Text>Total</Text>
                                         <Text>${TicketAddToCard?.totalPrice}</Text>
                                     </View>
-                                </View>
-                            }
-
+                                </View>}
 
 
                         </View>
@@ -510,10 +624,15 @@ const CheckoutScreen = ({ navigation }) => {
                     }}>
                         {!uploading == true ?
                             <>
-                                {!AddToCard.length == 0 ?
+                                {!AddToCard.length == 0 &&
                                     <CustomeButton onpress={() => PayAmount()}
-                                        title={`Pay Amount ${totalUSD}`} />
-                                    :
+                                        title={`Pay Amounts ${totalUSD}`} />
+                                }
+                                {BuyMemberShips &&
+                                    <CustomeButton onpress={() => PayAmountMemberships()}
+                                        title={`Buy Memberships $${BuyMemberShips?.rate}`} />
+                                }
+                                {TicketAddToCard &&
                                     <CustomeButton onpress={() => PayAmount()}
                                         title={`Pay Amount $${TicketAddToCard?.totalPrice}`} />
                                 }

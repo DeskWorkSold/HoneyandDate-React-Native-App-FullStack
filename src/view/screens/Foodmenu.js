@@ -56,8 +56,8 @@ const data = [
 const Foodmenu = ({ navigation, route }) => {
     // const { EventsId } = route.params;
     const SelectedEvent = useSelector(selectEvents)
-    const EventsId = SelectedEvent.item.uid
-    // console.log('Selected' , Events);
+    const EventsId = SelectedEvent.uid
+    // console.log('Selected' , EventsId);
     // const EventsId = '742729abfb82b' 
     const [search, setSearch] = useState();
     const [loading, setLoading] = useState(false);
@@ -391,12 +391,12 @@ const Foodmenu = ({ navigation, route }) => {
                             </View>
                             :
                             <View style={{
-                                flex:1,
+                                flex: 1,
                                 justifyContent: 'center',
-                                alignItems:'center',
-                                height:'100%'
+                                alignItems: 'center',
+                                height: '100%'
                             }}>
-                                <ActivityIndicator size="large" color={COLORS.main} animating={true} />
+                                <Text>No Foods Available</Text>
                             </View>
                         }
                     </View>

@@ -6,20 +6,28 @@ import CustomeButton from '../../components/CustomeButton';
 
 
 const MediatorQuestionProfessionallyScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
   // console.log(Bio);
   const [experince, setExperince] = useState();
 
   const onMusicSelect = () => {
-    if(experince){
+    if (experince) {
       console.log(experince);
       navigation.navigate('MediatorQuestionMusicScreen', {
-        Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
-    else{
+    else {
       ToastAndroid.show("Please enter your experince!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    // console.log('asdj');
+    // return
+    navigation.navigate('MediatorQuestionMusicScreen', {
+      Experince: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    })
   }
 
   return (
@@ -81,7 +89,7 @@ const MediatorQuestionProfessionallyScreen = ({ navigation, route }) => {
             flexDirection: 'row'
           }}>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={180} onpress={() => navigation.navigate('QuestionWantKidsScreen')}
+              <CustomeButton width={180} onpress={() => onSkip()}
                 title={'Skip'} bcolor={COLORS.light} />
             </View>
             <View style={{ marginHorizontal: 5 }}>

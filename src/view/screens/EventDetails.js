@@ -14,8 +14,8 @@ import HeaderTabOne from '../components/HeaderTabOne';
 import { color } from 'react-native-reanimated';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-const { width } = Dimensions.get("window").width;
-const { height } = Dimensions.get("window").height;
+const { height, width } = Dimensions.get('window');
+
 
 
 const EventBtn = [
@@ -47,8 +47,8 @@ export const CategoriesEvent = [
 
 
 const EventDetails = ({ navigation, route }) => {
-  const details = route.params;
-  // console.log(details.details.item);
+  const { details } = route.params;
+  // console.log(details.startDate);
   const [Events, setEvents] = useState('Explore');
 
 
@@ -93,7 +93,7 @@ const EventDetails = ({ navigation, route }) => {
     }
     else {
       ToastAndroid.show("Doc scaned now buy your tickets!", ToastAndroid.SHORT);
-      navigation.navigate('EventTickets', { details: details.details.item, Doc: result})
+      navigation.navigate('EventTickets', { details: details, Doc: result })
     }
   }
 
@@ -124,7 +124,7 @@ const EventDetails = ({ navigation, route }) => {
                 paddingTop: 10,
                 paddingHorizontal: 20,
               }}>
-                <Image source={{ uri: details.details.item.image1 }} resizeMode='cover'
+                <Image source={{ uri: details.image1 }} resizeMode='cover'
                   style={{
                     width: '100%',
                     height: 200,
@@ -138,17 +138,20 @@ const EventDetails = ({ navigation, route }) => {
                 paddingTop: 10,
                 paddingBottom: 5,
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                width: width
               }}>
-                <View>
+                <View style={{
+                  width: width / 1.5,
+                }}>
                   <Text style={{
                     fontSize: 16,
                     color: COLORS.black,
                     fontWeight: 'bold'
-                  }}>{details.details.item.Title}</Text>
+                  }}>{details.Title}</Text>
                 </View>
                 <View style={{
-                  alignItems: 'center'
+                  alignItems: 'flex-end'
                 }}>
                   <Text style={{
                     fontSize: 10,
@@ -158,7 +161,7 @@ const EventDetails = ({ navigation, route }) => {
                     fontSize: 16,
                     color: COLORS.black,
                     fontWeight: 'bold'
-                  }}>${details.details.item.totalTicketPrice}</Text>
+                  }}>${details.totalTicketPrice}</Text>
                 </View>
               </View>
 
@@ -172,19 +175,28 @@ const EventDetails = ({ navigation, route }) => {
                 <View style={{
                   flexDirection: 'row'
                 }}>
+                  <View style={{
+                    justifyContent:'center'
+                  }}>
                   <Image source={require('../../assets/location.png')} style={{
                     borderTopRightRadius: 20,
                     borderTopLeftRadius: 20,
                     marginRight: 5
                   }} />
-                  <Text style={{
-                    fontSize: 13,
-                    color: COLORS.black,
-                  }}>{details.details.item?.address}</Text>
+                  </View>
+                  <View style={{
+                    width: width / 1.7,
+                    // backgroundColor:COLORS.gray
+                  }}>
+                    <Text style={{
+                      fontSize: 12,
+                      color: COLORS.black,
+                    }}>{details.location}</Text>
+                  </View>
                 </View>
                 <View style={{
-                  alignItems: 'center',
-                  flexDirection: 'row'
+                  flexDirection: 'row',
+                  alignItems:'flex-end',
                 }}>
                   <Image source={require('../../assets/events.png')} resizeMode="contain" style={{
                     marginRight: 5,
@@ -193,9 +205,9 @@ const EventDetails = ({ navigation, route }) => {
                     tintColor: COLORS.black
                   }} />
                   <Text style={{
-                    fontSize: 13,
+                    // fontSize: 1,
                     color: COLORS.black,
-                  }}>{details.details.item.startDate}</Text>
+                  }}>{details.startDate}</Text>
                 </View>
               </View>
 
@@ -213,7 +225,7 @@ const EventDetails = ({ navigation, route }) => {
               }}>
                 <Text style={{
                   fontSize: 12,
-                }}>{details.details.item.description}</Text>
+                }}>{details.description}</Text>
               </View>
 
               <View style={{
@@ -229,43 +241,43 @@ const EventDetails = ({ navigation, route }) => {
                   flexDirection: 'row',
                   paddingHorizontal: 20,
                 }}>
-                  <Image source={{ uri: details.details.item.image1 }} resizeMode='cover' style={{
+                  <Image source={{ uri: details.image1 }} resizeMode='cover' style={{
                     width: 150,
                     height: 80,
                     borderRadius: 10,
                     marginRight: 10,
                   }} />
-                  {details.details.item.secimageUrl &&
-                  <Image source={{ uri: details.details.item.secimageUrl }} resizeMode='cover' style={{
-                    width: 150,
-                    height: 80,
-                    borderRadius: 10,
-                    marginRight: 10,
-                  }} />
+                  {details.secimageUrl &&
+                    <Image source={{ uri: details.secimageUrl }} resizeMode='cover' style={{
+                      width: 150,
+                      height: 80,
+                      borderRadius: 10,
+                      marginRight: 10,
+                    }} />
                   }
-                  {details.details.item.thirdimageUrl &&
-                  <Image source={{ uri: details.details.item.thirdimageUrl }} resizeMode='cover' style={{
-                    width: 150,
-                    height: 80,
-                    borderRadius: 10,
-                    marginRight: 10,
-                  }} />
+                  {details.thirdimageUrl &&
+                    <Image source={{ uri: details.thirdimageUrl }} resizeMode='cover' style={{
+                      width: 150,
+                      height: 80,
+                      borderRadius: 10,
+                      marginRight: 10,
+                    }} />
                   }
-                  {details.details.item.fourthimageUrl &&
-                  <Image source={{ uri: details.details.item.fourthimageUrl }} resizeMode='cover' style={{
-                    width: 150,
-                    height: 80,
-                    borderRadius: 10,
-                    marginRight: 10,
-                  }} />
+                  {details.fourthimageUrl &&
+                    <Image source={{ uri: details.fourthimageUrl }} resizeMode='cover' style={{
+                      width: 150,
+                      height: 80,
+                      borderRadius: 10,
+                      marginRight: 10,
+                    }} />
                   }
-                  {details.details.item.fifthimageUrl &&
-                  <Image source={{ uri: details.details.item.fifthimageUrl }} resizeMode='cover' style={{
-                    width: 150,
-                    height: 80,
-                    borderRadius: 10,
-                    marginRight: 10,
-                  }} />
+                  {details.fifthimageUrl &&
+                    <Image source={{ uri: details.fifthimageUrl }} resizeMode='cover' style={{
+                      width: 150,
+                      height: 80,
+                      borderRadius: 10,
+                      marginRight: 10,
+                    }} />
                   }
                 </View>
               </ScrollView>
@@ -286,7 +298,7 @@ const EventDetails = ({ navigation, route }) => {
                   <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingVertical:10
+                    paddingVertical: 10
                   }}>
                     <Image source={require('../../assets/notify.png')} resizeMode='contain' />
                     <View style={{

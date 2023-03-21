@@ -6,11 +6,12 @@ export const userSlice = createSlice({
     mediatoruser: 'mediatoruser',
     ticketAddtoCard: 'ticketAddtoCard',
     status: 'status',
-    packages: 'status',
+    packages: 'packages',
+    Buypackages: 'Buypackages',
     chatuser: 'chatuser',
     itemsInCart: 'itemsInCart',
     events: 'events',
-    porposalCat:'porposalCat',
+    porposalCat: 'porposalCat',
     paymentMethod: 'paymentMethod',
     paymentCardDetails: 'paymentCardDetails',
     ADD_ITEM: 'ADD_ITEM',
@@ -23,6 +24,7 @@ export const userSlice = createSlice({
         status: false,
         porposalCat: null,
         packages: null,
+        Buypackages: null,
         chatuser: null,
         events: null,
         paymentMethod: null,
@@ -63,6 +65,11 @@ export const userSlice = createSlice({
             console.log(state.packages, " : New Packages");
 
             state.packages = action.payload;
+        },
+        Buypackages: (state, action) => {
+            console.log(state.Buypackages, " : New BuyPackages");
+
+            state.Buypackages = action.payload;
         },
         chatuser: (state, action) => {
             console.log(state.chatuser, " : New chatuser");
@@ -142,7 +149,7 @@ export const userSlice = createSlice({
 
             state.paymentCardDetails = action.payload;
         },
-        
+
         logout: (state) => {
             console.log(state.user, " : Delete user");
 
@@ -155,11 +162,12 @@ export const userSlice = createSlice({
     },
 });
 
-export const { login, mediatorLogin, ticketsAddtoCard, status, packages, logout, chatuser, events, addToCart, removeFromCart, incrementQty, decrementQty, PaymentMethod, PaymentCardDetails, PorposalCategory } = userSlice.actions;
+export const { login, mediatorLogin, ticketsAddtoCard, status, packages, Buypackages, logout, chatuser, events, addToCart, removeFromCart, incrementQty, decrementQty, PaymentMethod, PaymentCardDetails, PorposalCategory } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectStatus = (state) => state.user.status;
 export const selectPackages = (state) => state.user.packages;
+export const selectBuypackages = (state) => state.user.Buypackages;
 export const selectChatuser = (state) => state.user.chatuser;
 export const selectEvents = (state) => state.user.events;
 export const selectaddToCart = (state) => state.user.itemsInCart;

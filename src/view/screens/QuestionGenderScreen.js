@@ -2,6 +2,8 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
+
 
 
 const GenderData = [
@@ -29,15 +31,17 @@ const GenderData = [
 
 
 const QuestionGenderScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth } = route.params;
   const [gender, setGender] = useState();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [checked, setChecked] = React.useState('Apple'); //initial choice
 
+  console.log(DateOfBirth);
+
   const onQuestionYourInterestScreen = () => {
     console.log(GenderData[selectedCategoryIndex].name);
     const selectedGender = GenderData[selectedCategoryIndex].name;
-    navigation.navigate('QuestionYourInterestScreen', { Gender: selectedGender, Date: Date, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
+    navigation.navigate('QuestionYourInterestScreen', { Gender: selectedGender, DateOfBirth: DateOfBirth, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
   }
 
 
@@ -62,10 +66,7 @@ const QuestionGenderScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

@@ -2,6 +2,8 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
+
 
 const PoliticalData = [
   {
@@ -27,7 +29,7 @@ const PoliticalData = [
 ]
 
 const QuestionPoliticalviewScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music } = route.params;
   const [political, setpolitical] = useState();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   // console.log(Music);
@@ -38,7 +40,7 @@ const QuestionPoliticalviewScreen = ({ navigation, route }) => {
     console.log(PoliticalData[selectedCategoryIndex].name);
     const selectedPolitics = PoliticalData[selectedCategoryIndex].name;
     if(selectedPolitics){
-      navigation.navigate('QuestionPoliticalPartnerviewScreen', { PoliticalView: selectedPolitics, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionPoliticalPartnerviewScreen', { PoliticalView: selectedPolitics, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else{
       ToastAndroid.show("Please select Political view!", ToastAndroid.SHORT);
@@ -66,10 +68,7 @@ const QuestionPoliticalviewScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

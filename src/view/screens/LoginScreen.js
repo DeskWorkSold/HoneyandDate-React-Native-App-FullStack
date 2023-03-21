@@ -4,6 +4,8 @@ import COLORS from '../../consts/Colors';
 import CustomeButton from '../components/CustomeButton';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import SVGImg from '../../assets/logo.svg';
+
 
 
 const LoginScreen = ({ navigation }) => {
@@ -64,10 +66,7 @@ const LoginScreen = ({ navigation }) => {
 
             <View style={{ alignItems: 'center' }}>
                 <View style={{ paddingTop: 40 }}>
-                    <Image source={require('../../assets/logo.png')} resizeMode="contain" style={{
-                        width: 124,
-                        height: 92,
-                    }} />
+                    <SVGImg width={144} height={103} />
                 </View>
 
                 <View style={{
@@ -90,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{
-                    paddingTop:20,
+                    paddingTop: 20,
                 }}>
                     <CustomeButton onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
                 </View>

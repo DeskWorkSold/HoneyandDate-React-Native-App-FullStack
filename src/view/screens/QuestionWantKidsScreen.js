@@ -2,6 +2,8 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
+
 
 const WantKidData = [
   {
@@ -28,23 +30,23 @@ const WantKidData = [
 
 
 const QuestionWantKidsScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender } = route.params;
   // console.log(PartnerGender);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [kids, setKids] = useState();
-
+  console.log(DateOfBirth);
 
   const onBioPress = () => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     const selectedGender = WantKidData[selectedCategoryIndex].name;
     // console.log('test',selectedGender);
-    navigation.navigate('QuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+    navigation.navigate('QuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
   }
 
   const onSkip = () => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     // console.log('test',selectedGender);
-    navigation.navigate('QuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender })
+    navigation.navigate('QuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
 
   }
 
@@ -69,10 +71,7 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

@@ -4,6 +4,8 @@ import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { launchImageLibrary } from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
+import SVGImg from '../../assets/camera.svg';
+
 
 
 const QuestionPhotoScreen = ({ navigation }) => {
@@ -12,10 +14,11 @@ const QuestionPhotoScreen = ({ navigation }) => {
   const [image3, setImage3] = useState(null);
   const [image4, setImage4] = useState(null);
   const [image5, setImage5] = useState(null);
-//    
-// console.log(user);
+  //    
+  // console.log(user);
   const onNamePress = () => {
     // console.log(image1, image2, image3, image4, image5);
+    // return
     if (!image1 && !image2 && !image3 && !image4 && !image5) {
       ToastAndroid.show("Please select your image first!", ToastAndroid.SHORT);
     }
@@ -97,12 +100,23 @@ const QuestionPhotoScreen = ({ navigation }) => {
           }}>
 
             {image1 ? (
-              <Image source={{ uri: image1 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
+              <TouchableOpacity
+                onPress={pickImage1}
+                style={{
+                  height: 150,
+                  width: 90,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  marginHorizontal: 10,
+                }}>
+                <Image source={{ uri: image1 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 onPress={pickImage1}
@@ -114,20 +128,13 @@ const QuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../assets/camera.png')} resizeMode='contain' />
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
             {image2 ? (
-              <Image source={{ uri: image2 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
-            ) : (
               <TouchableOpacity
-                // onPress={pickImage2}
+                onPress={pickImage2}
                 style={{
                   height: 150,
                   width: 90,
@@ -136,21 +143,32 @@ const QuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../assets/camera.png')} resizeMode='contain' />
+                <Image source={{ uri: image2 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={pickImage2}
+                style={{
+                  height: 150,
+                  width: 90,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  marginHorizontal: 10,
+                }}>
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
 
             {image3 ? (
-              <Image source={{ uri: image3 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
-            ) : (
               <TouchableOpacity
-                // onPress={pickImage3}
+                onPress={pickImage3}
                 style={{
                   height: 150,
                   width: 90,
@@ -159,7 +177,25 @@ const QuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../assets/camera.png')} resizeMode='contain' />
+                <Image source={{ uri: image3 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={pickImage3}
+                style={{
+                  height: 150,
+                  width: 90,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  marginHorizontal: 10,
+                }}>
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
@@ -171,15 +207,8 @@ const QuestionPhotoScreen = ({ navigation }) => {
           }}>
 
             {image4 ? (
-              <Image source={{ uri: image4 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
-            ) : (
               <TouchableOpacity
-                // onPress={pickImage4}
+                onPress={pickImage4}
                 style={{
                   height: 150,
                   width: 90,
@@ -188,20 +217,31 @@ const QuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../assets/camera.png')} resizeMode='contain' />
+                <Image source={{ uri: image4 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={pickImage4}
+                style={{
+                  height: 150,
+                  width: 90,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  marginHorizontal: 10,
+                }}>
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
             {image5 ? (
-              <Image source={{ uri: image5 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
-            ) : (
               <TouchableOpacity
-                // onPress={pickImage5}
+                onPress={pickImage5}
                 style={{
                   height: 150,
                   width: 90,
@@ -210,16 +250,29 @@ const QuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../assets/camera.png')} resizeMode='contain' />
+                <Image source={{ uri: image5 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={pickImage5}
+                style={{
+                  height: 150,
+                  width: 90,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.light,
+                  marginHorizontal: 10,
+                }}>
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
           </View>
-
-
         </View>
-
-
-
 
 
         <View style={styles.footer}>

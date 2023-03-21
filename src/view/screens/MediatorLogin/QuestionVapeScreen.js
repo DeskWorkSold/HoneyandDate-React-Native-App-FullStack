@@ -19,7 +19,7 @@ const VapeData = [
 ]
 
 const MediatorQuestionVapeScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke } = route.params;
   console.log(Smoke);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
@@ -28,7 +28,7 @@ const MediatorQuestionVapeScreen = ({ navigation, route }) => {
     console.log(VapeData[selectedCategoryIndex].name);
     const selectedPolitics = VapeData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('MediatorQuestionMarijuanaScreen', { Vape: selectedPolitics, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('MediatorQuestionMarijuanaScreen', { Vape: selectedPolitics, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select do you use vape!", ToastAndroid.SHORT);
@@ -36,7 +36,9 @@ const MediatorQuestionVapeScreen = ({ navigation, route }) => {
   }
 
   const SkipScreen = () => {
-    navigation.navigate('MediatorQuestionMarijuanaScreen', { Vape: null, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('MediatorQuestionMarijuanaScreen', {
+      Vape: null, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    })
   }
 
   const ListVapeData = ({ data, value, setValue, cancle }) => {

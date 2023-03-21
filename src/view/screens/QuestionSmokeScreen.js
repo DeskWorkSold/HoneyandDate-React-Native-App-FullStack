@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
 
 const SmokeData = [
   {
@@ -31,22 +32,23 @@ const SmokeData = [
 ]
 
 const QuestionSmokeScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
+  console.log(DateOfBirth);
 
   const onSmokeScreen = () => {
     console.log(SmokeData[selectedCategoryIndex].name);
     const selectedPolitics = SmokeData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('QuestionVapeScreen', { Smoke: selectedPolitics, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionVapeScreen', { Smoke: selectedPolitics, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select do you smoke!", ToastAndroid.SHORT);
     }
   }
   const SkipScreen = () => {
-    navigation.navigate('QuestionVapeScreen', { Smoke: null, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionVapeScreen', { Smoke: null, Lookingfor: Lookingfor, Nature: Nature, PartnerNature: PartnerNature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 
@@ -71,10 +73,7 @@ const QuestionSmokeScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

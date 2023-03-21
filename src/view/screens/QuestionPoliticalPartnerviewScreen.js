@@ -2,6 +2,8 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg from '../../assets/tik.svg';
+
 
 const PoliticalData = [
   {
@@ -31,7 +33,7 @@ const PoliticalData = [
 ]
 
 const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView } = route.params;
   const [politicalpartner, setpoliticalpartner] = useState();
   // console.log(PoliticalView);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -40,10 +42,10 @@ const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
   const onIntroandExtro = () => {
     console.log(PoliticalData[selectedCategoryIndex].name);
     const selectedPolitics = PoliticalData[selectedCategoryIndex].name;
-    if(selectedPolitics){
-      navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: selectedPolitics, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    if (selectedPolitics) {
+      navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: selectedPolitics, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
-    else{
+    else {
       ToastAndroid.show("Please select Partner Political view!", ToastAndroid.SHORT);
     }
   }
@@ -70,10 +72,7 @@ const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end',
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>

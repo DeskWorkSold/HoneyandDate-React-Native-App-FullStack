@@ -27,7 +27,7 @@ const PoliticalData = [
 ]
 
 const MediatorQuestionPoliticalviewScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music } = route.params;
   const [political, setpolitical] = useState();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   // console.log(Music);
@@ -38,7 +38,7 @@ const MediatorQuestionPoliticalviewScreen = ({ navigation, route }) => {
     console.log(PoliticalData[selectedCategoryIndex].name);
     const selectedPolitics = PoliticalData[selectedCategoryIndex].name;
     if(selectedPolitics){
-      navigation.navigate('MediatorQuestionPoliticalPartnerviewScreen', { PoliticalView: selectedPolitics, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('MediatorQuestionPoliticalPartnerviewScreen', { PoliticalView: selectedPolitics, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else{
       ToastAndroid.show("Please select Political view!", ToastAndroid.SHORT);

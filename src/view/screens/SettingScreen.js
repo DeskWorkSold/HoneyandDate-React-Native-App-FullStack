@@ -589,6 +589,7 @@ const SettingScreen = ({ navigation }) => {
                         <View style={{
                             alignItems: 'center',
                             paddingTop: 10,
+                            marginBottom: 80
                         }}>
                             <View style={{
                                 flexDirection: 'row'
@@ -638,7 +639,7 @@ const SettingScreen = ({ navigation }) => {
                                 <TouchableOpacity activeOpacity={0.7}
                                     onPress={() => OnLogOut()}>
                                     <View style={{
-                                        backgroundColor: COLORS.white,
+                                        backgroundColor: COLORS.main,
                                         elevation: 5,
                                         width: 150,
                                         height: 50,
@@ -654,7 +655,7 @@ const SettingScreen = ({ navigation }) => {
                             </View>
                         </View>
 
-                        <View style={{
+                        {/* <View style={{
                             alignItems: 'center',
                             marginBottom: 80
                         }}>
@@ -670,7 +671,7 @@ const SettingScreen = ({ navigation }) => {
                                         title={'Continue'} color={COLORS.white} />
                                 </View>
                             </View>
-                        </View>
+                        </View> */}
 
 
                     </View>

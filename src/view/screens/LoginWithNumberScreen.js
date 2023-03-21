@@ -89,7 +89,7 @@ const LoginWithNumberScreen = ({ navigation }) => {
           <PhoneInput
             ref={phoneInput}
             defaultValue={phoneNumber}
-            defaultCode="PK"
+            defaultCode="US"
             layout="first"
             // withShadow
             autoFocus

@@ -7,9 +7,9 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../redux/reducers/Reducers';
+import SVGImg from '../../assets/tik.svg';
 
-
-
+ 
 const EducationData = [
   {
     id: '1',
@@ -24,7 +24,7 @@ const EducationData = [
 
 
 const QuestionClingyScreen = ({ navigation, route }) => {
-  const { RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, Dates, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   // console.log(image1);
   // console.log(Nature,PartnerNature);
 
@@ -49,8 +49,13 @@ const QuestionClingyScreen = ({ navigation, route }) => {
     if (clingy) {
       // return;
       try {
-        // setUploading(true)
+        setUploading(true)
         const imageUrl = await uploadImage();
+        const imageUrl2 = await uploadImage2();
+        const imageUrl3 = await uploadImage3();
+        const imageUrl4 = await uploadImage4();
+        const imageUrl5 = await uploadImage5();
+        // const imageUrl6 = await uploadImage();
         var Data = new Object();
         Data.Clingy = clingy;
         Data.Interest = Interest;
@@ -112,17 +117,21 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         Data.Kids = Kids;
         Data.PartnerGender = PartnerGender;
         Data.Gender = Gender;
-        Data.Dates = Dates;
-        Data.image5 = image5;
-        Data.image4 = image4;
-        Data.image3 = image3;
-        Data.image2 = image2;
+        Data.Dates = DateOfBirth;
+        Data.image5 = imageUrl5;
+        Data.image4 = imageUrl4;
+        Data.image3 = imageUrl3;
+        Data.image2 = imageUrl2;
         Data.image1 = imageUrl;
         Data.CompanyType = CompanyType;
         Data.PositioninCompany = PositioninCompany;
         Data.CompanyName = CompanyName;
         Data.uid = CurrentUser
-        Data.PhoneNumber = userPhoneNumber
+        Data.PhoneNumber = userPhoneNumber ? userPhoneNumber : null;
+        Data.Location = {
+          latitude: 24.9028039,
+          longitude: 67.1145385,
+        }
         // Data.filterGender = 'Female'
         // console.log('test data: ', Data);
         // return;
@@ -196,6 +205,199 @@ const QuestionClingyScreen = ({ navigation, route }) => {
 
   };
 
+  const uploadImage2 = async () => {
+    if (image2 == null) {
+      return null;
+    }
+    const uploadUri = image2;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage3 = async () => {
+    if (image3 == null) {
+      return null;
+    }
+    const uploadUri = image3;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage4 = async () => {
+    if (image4 == null) {
+      return null;
+    }
+    const uploadUri = image4;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage5 = async () => {
+    if (image5 == null) {
+      return null;
+    }
+    const uploadUri = image5;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+
   const SelectedClingy = (index) => {
     setSelectedCategoryIndex(index)
     setclingy(EducationData[selectedCategoryIndex].name)
@@ -224,10 +426,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>
@@ -326,7 +525,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
                 height: 50,
                 borderRadius: 10,
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}>
                 <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
               </View>

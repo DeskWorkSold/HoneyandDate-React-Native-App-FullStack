@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useSelector } from 'react-redux';
 import { selectChatuser, selectUser } from '../../../redux/reducers/Reducers';
+import SVGImg1 from '../../assets/menu.svg';
 import Slider from '@react-native-community/slider';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -222,7 +223,7 @@ const LikeDetailScreen = ({ navigation }) => {
     const filterGender = filteruser[selectGender]
     const filterMinAge = Math.floor(minimumAge * 100)
     const filterMaxAge = Math.floor(maximumAge * 100)
-    const filterDistance = Math.floor(distance * 100)
+    const filterDistance = Math.floor(distance * 500)
 
     if (filterMinAge < 17 || filterDistance < 20 || !filterGender) {
       if (filterMinAge < 17) {
@@ -269,7 +270,7 @@ const LikeDetailScreen = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
@@ -280,9 +281,9 @@ const LikeDetailScreen = ({ navigation }) => {
           backgroundColor: COLORS.white,
           height: '8%'
         }}>
-          <View style={{ flex: 1, paddingHorizontal: 20 }}>
-
-          </View>
+          <TouchableOpacity style={{ flex: 1, paddingHorizontal: 20 }}>
+            <SVGImg1 width={46} height={46} />
+          </TouchableOpacity>
 
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={{
@@ -293,10 +294,12 @@ const LikeDetailScreen = ({ navigation }) => {
           </View>
 
           <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 20 }}>
-            <TouchableOpacity
-              onPress={() => setShowFilter(true)}
-            >
-              <Image source={require('../../assets/menu2.png')} resizeMode='contain' />
+            <TouchableOpacity onPress={() => setShowFilter(true)}>
+              <Text style={{
+                // fontWeight: 'bold',
+                // fontSize: 20,
+                color: COLORS.blue
+              }}>Matches</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -422,8 +425,8 @@ const LikeDetailScreen = ({ navigation }) => {
                         <Text>6:13PM</Text>
                       </View>
                       <View style={{
-                        width: '40%',
-                        paddingHorizontal: 20
+                        // width: '40%',
+                        // paddingHorizontal: 20
                       }}>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('CongratsMatchScreen', {
@@ -480,6 +483,213 @@ const LikeDetailScreen = ({ navigation }) => {
               )}
             </View>
 
+            <View style={{
+              // alignItems: 'center',
+              // justifyContent:'center',
+              paddingHorizontal: 10,
+            }}>
+              {likedusers ? (
+                <View style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: "space-between",
+                  width: '100%',
+                  paddingHorizontal: 10
+                }}>
+                  {likedusers.map((item, index) => (
+                    <View key={index}
+                      style={{
+                        marginTop: 20,
+                        width: '45%',
+                        marginHorizontal: 5,
+                      }}>
+                      <LikesCard image={{ uri: item.image1 }} name={item.Name} navigation={navigation}
+                        description='Model at Instagram' item={item} />
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 15,
+                  width: '100%',
+                }}>
+                  <Text>
+                    User's not found who's like to chat with you..
+                  </Text>
+                </View>
+              )}
+
+            </View>
+            <View style={{
+              paddingHorizontal: 20,
+              paddingTop: 20
+            }}>
+              <View style={{
+                padding: 0
+              }}>
+                <Text style={{
+                  color: COLORS.black,
+                  fontSize: 20,
+                  fontWeight: 'bold'
+                }}>Suggested Options</Text>
+              </View>
+              <View style={{
+                paddingBottom: 20,
+                paddingTop: 5
+              }}>
+                <Text>Suggested by Our concierge Team and Other Members
+                  Never by Bots or Ai</Text>
+              </View>
+            </View>
+            <View style={{
+              marginHorizontal: 20,
+              padding: 20,
+              alignItems: 'center',
+              borderRadius: 20,
+              elevation: 5,
+              backgroundColor: COLORS.light
+            }}>
+              <View>
+                <Text style={{
+                  fontWeight: 'bold',
+                  color: COLORS.black,
+                  paddingVertical: 5,
+                }}>Upgrade to Premium to Unlock</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowFilter(true)}
+                activeOpacity={0.8}
+                style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  backgroundColor: COLORS.main,
+                  borderRadius: 10,
+                  alignItems: 'center'
+                }}>
+                <Image source={require('../../assets/Crown.png')} resizeMode="contain" style={{
+                  width: 22.14,
+                  height: 14.79,
+                }} />
+                <Text style={{
+                  color: COLORS.black,
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                  paddingLeft: 5
+                }}>Upgrade</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* test  */}
+            <View style={{
+              // alignItems: 'center',
+              // justifyContent:'center',
+              paddingHorizontal: 10,
+            }}>
+              {likedusers ? (
+                <View style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: "space-between",
+                  width: '100%',
+                  paddingHorizontal: 10
+                }}>
+                  {likedusers.map((item, index) => (
+                    <View key={index}
+                      style={{
+                        marginTop: 20,
+                        width: '45%',
+                        marginHorizontal: 5,
+                      }}>
+                      <LikesCard image={{ uri: item.image1 }} name={item.Name} navigation={navigation}
+                        description='Model at Instagram' item={item} />
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 15,
+                  width: '100%',
+                }}>
+                  <Text>
+                    User's not found who's like to chat with you..
+                  </Text>
+                </View>
+              )}
+
+            </View>
+
+
+
+
+            <View style={{
+              paddingHorizontal: 20,
+              paddingTop: 20
+            }}>
+              <View style={{
+                padding: 0
+              }}>
+                <Text style={{
+                  color: COLORS.black,
+                  fontSize: 20,
+                  fontWeight: 'bold'
+                }}>Bot matches from AI</Text>
+              </View>
+              <View style={{
+                paddingBottom: 20,
+                paddingTop: 5
+              }}>
+                <Text>Suggested by AI based on your profile</Text>
+              </View>
+            </View>
+            <View style={{
+              marginHorizontal: 20,
+              padding: 20,
+              alignItems: 'center',
+              borderRadius: 20,
+              elevation: 5,
+              backgroundColor: COLORS.light
+            }}>
+              <View>
+                <Text style={{
+                  fontWeight: 'bold',
+                  color: COLORS.black,
+                  paddingVertical: 5,
+                }}>Upgrade to Premium to Unlock</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowFilter(true)}
+                activeOpacity={0.8}
+                style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  backgroundColor: COLORS.main,
+                  borderRadius: 10,
+                  alignItems: 'center'
+                }}>
+                <Image source={require('../../assets/Crown.png')} resizeMode="contain" style={{
+                  width: 22.14,
+                  height: 14.79,
+                }} />
+                <Text style={{
+                  color: COLORS.black,
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                  paddingLeft: 5
+                }}>Upgrade</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* temp2  */}
             <View style={{
               // alignItems: 'center',
               // justifyContent:'center',
@@ -741,7 +951,7 @@ const LikeDetailScreen = ({ navigation }) => {
                         fontSize: 16,
                         // fontWeight: 'bold',
                         color: COLORS.black
-                      }}>Distance(miles) {Math.floor(distance * 100)}</Text>
+                      }}>Distance(miles) {Math.floor(distance * 500)}</Text>
                     </View>
                     <View style={{
                     }}>

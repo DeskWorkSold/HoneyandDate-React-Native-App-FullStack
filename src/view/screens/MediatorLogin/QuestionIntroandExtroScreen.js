@@ -16,7 +16,7 @@ const IntroExtroData = [
 
 
 const MediatorQuestionIntroandExtroScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, Date, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView } = route.params;
+  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView } = route.params;
   // console.log(PoliticalPartnerView);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
@@ -24,7 +24,7 @@ const MediatorQuestionIntroandExtroScreen = ({ navigation, route }) => {
     console.log(IntroExtroData[selectedCategoryIndex].name);
     const selectedPolitics = IntroExtroData[selectedCategoryIndex].name;
     if(selectedPolitics){
-      navigation.navigate('MediatorQuestionPIntroandExtroScreen', { IntroandExtro: selectedPolitics, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, Date: Date, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('MediatorQuestionPIntroandExtroScreen', { IntroandExtro: selectedPolitics, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else{
       ToastAndroid.show("Please select your nature!", ToastAndroid.SHORT);

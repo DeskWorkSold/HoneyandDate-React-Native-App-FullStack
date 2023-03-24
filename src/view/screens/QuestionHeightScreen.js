@@ -2,11 +2,13 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Toas
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg1 from '../../assets/arrowleft.svg';
+import Slider from '@react-native-community/slider';
 
 
 
 const QuestionHeightScreen = ({ navigation, route }) => {
-  const { PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { PartnerDisability, Disability, DescribePartner, DescribeYou, languages, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [height, setHeight] = useState();
   const [heighType, setHeightType] = useState(false);
 
@@ -28,7 +30,17 @@ const QuestionHeightScreen = ({ navigation, route }) => {
   const onQuestionHeightPartnerScreen = () => {
     if (height) {
       // console.log(height);
-      navigation.navigate('QuestionHeightPartnerScreen', { Height: height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionHeightPartnerScreen', { Height: height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, languages: languages, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    }
+    else {
+      ToastAndroid.show("Please select your Height!", ToastAndroid.SHORT);
+    }
+  }
+
+  const onSkip = () => {
+    if (height) {
+      // console.log(height);
+      navigation.navigate('QuestionHeightPartnerScreen', { Height: null, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, languages: languages, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Height!", ToastAndroid.SHORT);
@@ -45,9 +57,25 @@ const QuestionHeightScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+          </View>
 
           <View style={{
-            paddingTop: 10
+            paddingTop: 0
           }}>
             <Image source={require('../../assets/height.png')}
               resizeMode='contain' style={{
@@ -70,31 +98,24 @@ const QuestionHeightScreen = ({ navigation, route }) => {
           </View>
 
           <View style={{ paddingTop: 20 }}>
-            <View
-              style={styles.TextInput}
-            >
-              <TextInput
-                placeholder='Enter your height!'
-                keyboardType='numeric'
-                value={height}
-                onChangeText={height => onHeight(height)}
-                maxLength={5}
+            <View style={{
+              flexDirection: 'row',
+              paddingHorizontal: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Slider
+                style={{ width: '100%', height: 40, }}
+                minimumValue={0}
+                maximumValue={1}
+                thumbTouchSize={{
+                  width: 40, height: 40
+                }}
+                thumbTintColor={COLORS.main}
+                minimumTrackTintColor={COLORS.main}
+                maximumTrackTintColor={COLORS.gray}
+                onValueChange={(value) => setHeight(value)}
               />
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => setHeightType(!heighType)}>
-                  <Image source={require('../../assets/HIcon.png')} resizeMode='contain'
-                    style={{
-                      width: 15,
-                      height: 15,
-                      marginRight: 2
-                    }} />
-                </TouchableOpacity>
-                {heighType ?
-                  <Text>feets</Text>
-                  :
-                  <Text>Inches</Text>
-                }
-              </View>
             </View>
           </View>
         </View>
@@ -103,15 +124,17 @@ const QuestionHeightScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <View style={{
-            paddingTop: 20,
+            marginBottom: 5
           }}>
             <CustomeButton onpress={() => onQuestionHeightPartnerScreen()}
               title={'Continue'} />
           </View>
+          <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+            title={'Skip'} />
 
           <View style={{
-            paddingTop: 20,
-            width: 310,
+            paddingTop: 10,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -137,12 +160,12 @@ const styles = StyleSheet.create({
 
   },
   contentContainer: {
-    // height: '80%',
+    height: '80%',
     alignItems: 'center',
   },
   footer: {
-    // height: '20%'
-    marginTop: '40%'
+    height: '20%'
+    // marginTop: '40%'
   },
   NumberInput: {
     marginTop: 60,

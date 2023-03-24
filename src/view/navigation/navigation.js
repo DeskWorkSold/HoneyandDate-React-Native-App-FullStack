@@ -140,6 +140,12 @@ import DrawerNavigator from './DrawerNavigator';
 import MediatorApprovalScreen from '../screens/MediatorLogin/MediatorApprovalScreen';
 import MediatorDashboardScreen from '../screens/MediatorLogin/MediatorDashboardScreen';
 import MediatorBottomNavigator from './MediatorBottomNavigator';
+import QuestionPartnerAge from '../screens/QuestionPartnerAge';
+import QuestionDoyouSmoke from '../screens/QuestionDoyouSmoke';
+import QuestionConvertedReligion from '../screens/QuestionConvertedReligion';
+import QuestionHairColorScreen from '../screens/QuestionHairColorScreen';
+import QuestionEyeColorScreen from '../screens/QuestionEyeColorScreen';
+import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
 
 
 
@@ -427,6 +433,14 @@ const MyStack = () => {
                     <Stack.Screen name="QuestionInLifeScreen" component={QuestionInLifeScreen} />
                     <Stack.Screen name="QuestionCuddlingScreen" component={QuestionCuddlingScreen} />
                     <Stack.Screen name="QuestionRelationshipLookingScreen" component={QuestionRelationshipLookingScreen} />
+                    
+                    <Stack.Screen name="QuestionPartnerAge" component={QuestionPartnerAge} />
+                    <Stack.Screen name="QuestionDoyouSmoke" component={QuestionDoyouSmoke} />
+                    <Stack.Screen name="QuestionConvertedReligion" component={QuestionConvertedReligion} />
+                    <Stack.Screen name="QuestionHairColorScreen" component={QuestionHairColorScreen} />
+                    <Stack.Screen name="QuestionEyeColorScreen" component={QuestionEyeColorScreen} />
+                    <Stack.Screen name="QuestionLanguageScreen" component={QuestionLanguageScreen} />
+                    
                     <Stack.Screen name="QuestionClingyScreen" component={QuestionClingyScreen} />
                     <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
                     <Stack.Screen name="QuestionCongratulationScreen" component={QuestionCongratulationScreen} />

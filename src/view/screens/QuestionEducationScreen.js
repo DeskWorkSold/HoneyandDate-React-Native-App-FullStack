@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const Education = [
   {
@@ -42,7 +43,7 @@ const Education = [
 
 
 const QuestionEducationScreen = ({ navigation, route }) => {
-  const { Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
 
@@ -52,11 +53,15 @@ const QuestionEducationScreen = ({ navigation, route }) => {
     console.log(selectitem);
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionRelationshipScreen', { Education: selectitem, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionRelationshipScreen', { Education: selectitem, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionRelationshipScreen', { Education: null, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListEducation = ({ data, value, setValue, cancle }) => {
@@ -97,12 +102,40 @@ const QuestionEducationScreen = ({ navigation, route }) => {
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
-
         <View style={styles.contentContainer}>
 
           <View style={{
-            paddingTop: 20, 
-            alignItems:'center'
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+          <View style={{
+            paddingTop: 0,
+            alignItems: 'center'
           }}>
             <Image source={require('../../assets/education.png')} resizeMode='contain' style={{
               width: 150,
@@ -125,7 +158,7 @@ const QuestionEducationScreen = ({ navigation, route }) => {
           <ScrollView showsVerticalScrollIndicator={false}>
 
             <View style={{
-              alignItems:'center'
+              alignItems: 'center'
             }}>
               <ListEducation data={Education} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
@@ -134,13 +167,20 @@ const QuestionEducationScreen = ({ navigation, route }) => {
 
             <View style={{
               alignItems: 'center',
-              paddingBottom: 5
+              paddingBottom: 5,
+              paddingBottom:10
             }}>
               <View style={{
                 paddingTop: 50,
               }}>
                 <CustomeButton onpress={() => onRelationshipScreen()}
                   title={'Continue'} />
+              </View>
+              <View style={{
+                paddingTop: 10,
+              }}>
+                <CustomeButton onpress={() => onSkip()}
+                  title={'Skip'}  bcolor={COLORS.light} />
               </View>
 
               <View style={{

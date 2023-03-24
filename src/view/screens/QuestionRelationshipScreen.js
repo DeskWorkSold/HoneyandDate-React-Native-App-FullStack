@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const RelationshipType = [
   {
@@ -30,8 +31,9 @@ const RelationshipType = [
 
 
 const QuestionRelationshipScreen = ({ navigation, route }) => {
-  const { Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params; 
+  const { Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  // console.log(Education);
 
 
   const onReligionScreen = () => {
@@ -39,12 +41,18 @@ const QuestionRelationshipScreen = ({ navigation, route }) => {
     console.log(selectitem);
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionReligionScreen', { RelationshipType: selectitem, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionReligionScreen', { RelationshipType: selectitem, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
     }
   }
+  const onSkip = () => {
+    navigation.navigate('QuestionReligionScreen', { RelationshipType: null, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+
+  }
+
+
 
   const ListRelationShips = ({ value, setValue }) => {
     return (
@@ -67,7 +75,7 @@ const QuestionRelationshipScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                 <SVGImg width={20} height={20} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>
@@ -88,10 +96,38 @@ const QuestionRelationshipScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
 
 
           <View style={{
-            paddingTop: 40,
+            paddingTop: 0,
             alignItems: 'center',
             paddingHorizontal: 50,
           }}>
@@ -122,10 +158,16 @@ const QuestionRelationshipScreen = ({ navigation, route }) => {
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          height: '20%'
         }}>
+          <View style={{
+            marginBottom:5
+          }}>
           <CustomeButton onpress={() => onReligionScreen()}
-            title={'Continue'} />
+            title={'Continue'}/>
+          </View>
+          <CustomeButton onpress={() => onSkip()}
+            title={'Skip'} bcolor={COLORS.light} />
 
           <View style={{
             paddingTop: 5,
@@ -154,7 +196,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    height: '85%',
+    height: '80%',
   },
   footer: {
     alignItems: 'center'

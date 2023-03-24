@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const MusicData = [
   {
@@ -44,19 +45,24 @@ const MusicData = [
 ]
 
 const QuestionMusicScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince } = route.params;
+  const { filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [music, setmusic] = useState();
+  // console.log(filterMinAge, filterMaxAge , InTenYear);
 
   const onPoliticalview = () => {
     console.log(MusicData[selectedCategoryIndex].name);
     const selectedMusic = MusicData[selectedCategoryIndex].name;
     if (selectedMusic) {
-      navigation.navigate('QuestionPoliticalviewScreen', { Music: selectedMusic, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionPoliticalviewScreen', { Music: selectedMusic, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your music!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionPoliticalviewScreen', { Music: null, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListMusic = ({ data, value, setValue, cancle }) => {
@@ -100,7 +106,36 @@ const QuestionMusicScreen = ({ navigation, route }) => {
         <View style={styles.contentContainer}>
 
           <View style={{
-            paddingTop: 40,
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+          <View style={{
+            paddingTop: 10,
           }}>
             <Image source={require('../../assets/music.png')}
               resizeMode='contain' />
@@ -143,14 +178,19 @@ const QuestionMusicScreen = ({ navigation, route }) => {
             </View>
 
             <View style={{
-              alignItems: 'center'
+              alignItems: 'center',
+              paddingBottom:20
             }}>
               <View style={{
                 paddingTop: 50,
               }}>
-                <View style={{ marginHorizontal: 5 }}>
+                <View style={{ marginBottom: 5 }}>
                   <CustomeButton onpress={() => onPoliticalview()}
                     title={'Continue'} />
+                </View>
+                <View style={{ marginHorizontal: 0 }}>
+                  <CustomeButton  bcolor={COLORS.light} onpress={() => onSkip()}
+                    title={'Skip'} />
                 </View>
 
               </View>

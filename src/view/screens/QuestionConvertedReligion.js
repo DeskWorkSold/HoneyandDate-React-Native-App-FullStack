@@ -1,0 +1,315 @@
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ToastAndroid } from 'react-native'
+import React, { useState } from 'react'
+import COLORS from '../../consts/Colors'
+import CustomeButton from '../components/CustomeButton';
+import { selectUser } from '../../../redux/reducers/Reducers';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import firestore from '@react-native-firebase/firestore';
+import SVGImg1 from '../../assets/arrowleft.svg';
+
+
+const RelationshipType = [
+  {
+    id: '1',
+    name: 'Is your mom born Christian',
+  },
+  {
+    id: '2',
+    name: 'Is your dad born Christian',
+  },
+  {
+    id: '3',
+    name: 'Catholic',
+  },
+  {
+    id: '4',
+    name: 'Muslim',
+  },
+  {
+    id: '5',
+    name: 'Hinduism',
+  },
+
+  {
+    id: '5',
+    name: 'Buddhism',
+  },
+
+  {
+    id: '5',
+    name: 'Chinese traditional religion',
+  },
+]
+
+export const detailReligion = [
+  {
+    id: '1',
+    name: 'Blind',
+  }, {
+    id: '2',
+    name: 'Deaf',
+  },
+  {
+    id: '3',
+    name: 'Wheel Chair',
+  },
+  {
+    id: '4',
+    name: 'Can be other',
+  }
+]
+
+
+
+const QuestionConvertedReligion = ({ navigation, route }) => {
+  const { ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  // console.log(ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername);
+  const [ServayCategory, setServayCategory] = useState();
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showOptions2, setShowOptions2] = useState(false);
+  const [valueGS, setValueGS] = useState('');
+  const [showtick, setShowtick] = useState(false);
+  const [showtick2, setShowtick2] = useState(false);
+
+  const [LisrtPros, setListPros] = useState(false);
+  const [listCons, setListCons] = useState(false);
+  const [acceptedProposal, setAcceptedProposal] = useState();
+  const Currentuser = useSelector(selectUser);
+
+
+
+  const onConvertedReligion = () => {
+    if (!ServayCategory) {
+      ToastAndroid.show("Please select converted religion!", ToastAndroid.SHORT);
+    }
+    else {
+      if (ServayCategory == 'Yes') {
+        if (!LisrtPros) {
+          ToastAndroid.show("Please explain converted religion!", ToastAndroid.SHORT);
+        }
+        else {
+          console.log('tesst2', ServayCategory, LisrtPros);
+          navigation.navigate('QuestionDietScreen', { ConvertedReligionDetail: LisrtPros, ConvertedReligion: ServayCategory, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+        }
+      }
+      else {
+        console.log('tesst1', ServayCategory, LisrtPros);
+        navigation.navigate('QuestionDietScreen', { ConvertedReligionDetail: null, ConvertedReligion: ServayCategory, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      }
+    }
+  }
+
+  const onSkip = () => {
+    // navigation.navigate('QuestionDietScreen')
+    navigation.navigate('QuestionDietScreen', { ConvertedReligionDetail: null, ConvertedReligion: null, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+  }
+
+
+
+  const renderDropdown = () => {
+    if (showOptions) {
+      return (
+        <View style={{
+          paddingHorizontal: 20
+        }}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <View>
+              <View style={{
+                paddingTop: 20,
+                // flexDirection:'row'
+                // alignItems: 'center',
+              }}>
+                <Text style={{
+                  color: COLORS.black
+                }}>
+                  Please explain
+                </Text>
+                <Text style={{
+                  color: COLORS.black
+                }}>
+                  (Your Mother, your mothers, etc.)
+                </Text>
+              </View>
+
+              <View style={{
+                paddingTop: 20,
+              }}>
+                <TextInput
+                  value={LisrtPros}
+                  onChangeText={LisrtPros => setListPros(LisrtPros)
+                  }
+                  // onChangeText=()
+                  placeholder='Type Here!'
+                  multiline
+                  numberOfLines={8}
+                  style={styles.TextInput} />
+              </View>
+            </View>
+          </View>
+        </View>
+      );
+    }
+  };
+
+  return (
+    <SafeAreaView style={{
+      flex: 1,
+      backgroundColor: COLORS.white
+    }}>
+      <StatusBar backgroundColor={COLORS.black} />
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            paddingTop: 40,
+            paddingHorizontal: 20,
+            flexDirection: 'row'
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 4,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Any converted religion?
+              </Text>
+            </View>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+
+          <TouchableOpacity onPress={() => { setServayCategory('Yes'), setShowOptions(!showOptions) }}>
+            <View style={styles.NumberInput}>
+              <View style={{ width: '90%' }}>
+                <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>Yes</Text>
+              </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                {ServayCategory == 'Yes' && (
+                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setServayCategory('No')}>
+            <View style={styles.NumberInput}>
+              <View style={{ width: '90%' }}>
+                <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>No</Text>
+              </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                {ServayCategory == 'No' && (
+                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+          <View style={{
+            marginHorizontal: 20
+          }}>
+            {ServayCategory == 'Yes' &&
+              renderDropdown()
+            }
+          </View>
+        </View>
+
+        <View style={{
+          height: '30%',
+          alignItems: 'center'
+        }}>
+          <View style={{
+            marginBottom: 5
+          }}>
+            <CustomeButton onpress={() => onConvertedReligion()}
+              title={'Continue'} />
+          </View>
+          <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+            title={'Skip'} />
+          <Text style={{
+            fontSize: 12,
+            paddingTop: 10
+          }}>
+            By continue you agree our Terms and Privacy Policy
+          </Text>
+        </View>
+      </View>
+    </SafeAreaView>
+  )
+}
+
+
+export default QuestionConvertedReligion
+
+const styles = StyleSheet.create({
+  container: {
+    // alignItems: 'center',
+    backgroundColor: COLORS.white,
+  },
+  contentContainer: {
+    alignItems: 'center',
+    marginBottom: 50,
+    height: '70%',
+    backgroundColor: COLORS.white
+  },
+  footer: {
+    alignItems: 'center'
+  },
+  NumberInput: {
+    flexDirection: 'row',
+    marginTop: 20,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    height: 45,
+    width: 340,
+    backgroundColor: COLORS.light,
+    borderRadius: 5,
+  },
+  TextInput: {
+    padding: 10,
+    backgroundColor: COLORS.light,
+    color: COLORS.gray,
+    width: 320,
+    borderRadius: 10,
+    height: 200,
+    textAlignVertical: 'top',
+  },
+  MoreaboutReligion: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    height: 45,
+    width: 340,
+    borderRadius: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.light
+  }
+})

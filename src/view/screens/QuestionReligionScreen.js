@@ -9,6 +9,8 @@ import {
 } from 'sharingan-rn-modal-dropdown';
 import { set } from 'react-native-reanimated';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
+
 
 
 const RelagionType = [
@@ -91,7 +93,7 @@ export const MoreAboutJewaish = [
 
 
 const QuestionReligionScreen = ({ navigation, route }) => {
-  const { RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
   const [valueGS, setValueGS] = useState('');
@@ -104,7 +106,7 @@ const QuestionReligionScreen = ({ navigation, route }) => {
   const [showtick7, setShowtick7] = useState('');
   const [Christian, setChristian] = useState('');
   const [Jewaish, setJewaish] = useState('');
-  // console.log(DateOfBirth);
+  // console.log(PartnerNature, IntroandExtro,);
 
 
 
@@ -113,11 +115,14 @@ const QuestionReligionScreen = ({ navigation, route }) => {
     const selectitem = RelagionType[selectedCategoryIndex].name;
     console.log(selectitem);
     if (selectitem) {
-      navigation.navigate('QuestionDietScreen', { Relagion: selectitem, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionConvertedReligion', { Relagion: selectitem, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your religion!", ToastAndroid.SHORT);
     }
+  }
+  const onSkip = () => {
+    navigation.navigate('QuestionConvertedReligion', { Relagion: null, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 
@@ -160,7 +165,7 @@ const QuestionReligionScreen = ({ navigation, route }) => {
     setSelectedCategoryIndex(index)
     console.log(TypeTestimonial.onpress);
     if (TypeTestimonial.onpress) {
-      navigation.navigate(TypeTestimonial.onpress, { Relagion: TypeTestimonial.name, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate(TypeTestimonial.onpress, { Relagion: TypeTestimonial.name, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     // const selectitem = RelagionType[selectedCategoryIndex].name;
     // console.log(selectitem);
@@ -268,14 +273,28 @@ const QuestionReligionScreen = ({ navigation, route }) => {
           <View style={{
             paddingTop: 40,
             alignItems: 'center',
-            paddingHorizontal: 50,
+            flexDirection: 'row',
+            paddingHorizontal: 20,
           }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center'
-            }}>What is your religion?</Text>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{ flex: 4 }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center'
+              }}>What is your religion?</Text>
+            </View>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+            </View>
           </View>
 
           <View>
@@ -289,10 +308,17 @@ const QuestionReligionScreen = ({ navigation, route }) => {
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          height: '20%'
         }}>
-          <CustomeButton onpress={() => onDietScreen()}
-            title={'Continue'} />
+          <View style={{
+            marginBottom: 5
+          }}>
+            <CustomeButton onpress={() => onDietScreen()}
+              title={'Continue'} />
+          </View>
+
+          <CustomeButton onpress={() => onSkip()}
+            title={'Skip'} bcolor={COLORS.light} />
 
           <View style={{
             paddingTop: 5,
@@ -318,7 +344,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    height: '85%'
+    height: '80%'
   },
   footer: {
     alignItems: 'center'

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const pDietData = [
   {
@@ -42,7 +43,7 @@ const pDietData = [
 
 
 const QuestionPartnerDietScreen = ({ navigation, route }) => {
-  const { Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   // console.log(KosherType);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
@@ -51,11 +52,14 @@ const QuestionPartnerDietScreen = ({ navigation, route }) => {
     const PartnerDiet = pDietData[selectedCategoryIndex].name
     console.log(PartnerDiet);
     if (PartnerDiet) {
-      navigation.navigate('QuestionFavFoodScreen', { PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionFavFoodScreen', { PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Religion!", ToastAndroid.SHORT);
     }
+  }
+  const onSkip = () => {
+    navigation.navigate('QuestionFavFoodScreen', { PartnerDiet: null, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 
@@ -99,9 +103,39 @@ const QuestionPartnerDietScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
 
           <View style={{
-            paddingTop: 20,
+            paddingTop: 0,
             alignItems: 'center'
           }}>
             <Image source={require('../../assets/diet.png')} resizeMode='contain' style={{
@@ -148,8 +182,14 @@ const QuestionPartnerDietScreen = ({ navigation, route }) => {
               <View style={{
                 paddingTop: 50,
               }}>
-                <CustomeButton onpress={() => onFavFoodScreen()}
-                  title={'Continue'} />
+                <View style={{
+                  marginBottom: 5
+                }}>
+                  <CustomeButton onpress={() => onFavFoodScreen()}
+                    title={'Continue'} />
+                </View>
+                <CustomeButton onpress={() => onSkip()}
+                  title={'Skip'} bcolor={COLORS.light} />
               </View>
 
               <View style={{

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const ParentType = [
   {
@@ -117,7 +118,7 @@ export const detailReligion = [
 
 
 const QuestionMoreAboutChristianScreen = ({ navigation, route }) => {
-  const { Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, PartnerNature, Nature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedParentIndex, setSelectedParentIndex] = useState(0);
   const [selectedReligionIndex, setSelectedReligionIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
@@ -131,13 +132,16 @@ const QuestionMoreAboutChristianScreen = ({ navigation, route }) => {
     console.log(religionType, ParentReligion);
 
     if (ParentReligion || religionType) {
-      navigation.navigate('QuestionDietScreen', { ParentReligion: ParentReligion, religionType: religionType, KosherType: null, foodtype: null, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionConvertedReligion', { ParentReligion: ParentReligion, religionType: religionType, KosherType: null, foodtype: null, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your Religion!", ToastAndroid.SHORT);
     }
   }
+  const onSkip = () => {
+    navigation.navigate('QuestionConvertedReligion', { ParentReligion: null, religionType: null, KosherType: null, foodtype: null, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
 
+  }
   const onChristian = () => {
     setShowtick(!showtick)
   }
@@ -326,10 +330,14 @@ const QuestionMoreAboutChristianScreen = ({ navigation, route }) => {
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          height: '20%'
         }}>
-          <CustomeButton onpress={() => onDietScreen()}
-            title={'Continue'} />
+          <View style={{ marginBottom: 5 }}>
+            <CustomeButton onpress={() => onDietScreen()}
+              title={'Continue'} />
+          </View>
+          <CustomeButton onpress={() => onSkip()}
+            title={'Skip'} bcolor={COLORS.light} />
 
           <View style={{
             paddingTop: 5,
@@ -355,7 +363,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '85%',
+    height: '80%',
   },
   footer: {
     alignItems: 'center'

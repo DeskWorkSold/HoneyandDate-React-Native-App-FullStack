@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 
@@ -43,6 +44,13 @@ const QuestionGenderScreen = ({ navigation, route }) => {
     const selectedGender = GenderData[selectedCategoryIndex].name;
     navigation.navigate('QuestionYourInterestScreen', { Gender: selectedGender, DateOfBirth: DateOfBirth, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
   }
+  const SkipScreen = () => {
+    console.log(GenderData[selectedCategoryIndex].name);
+    const selectedGender = GenderData[selectedCategoryIndex].name;
+    navigation.navigate('QuestionYourInterestScreen', { Gender: null, DateOfBirth: DateOfBirth, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
+  }
+
+
 
 
   const ListGender = ({ data, value, setValue, cancle }) => {
@@ -84,30 +92,62 @@ const QuestionGenderScreen = ({ navigation, route }) => {
       <View style={styles.container}>
 
 
+        <View style={{
+          alignItems: 'center',
+          justifyContent:'center',
+          paddingTop: 20,
+          flexDirection: 'row',
+          height:40,
+          justifyContent: 'center',
+          paddingHorizontal: 20,
+
+        }}>
+          <View style={{
+            flex: 1,
+            // backgroundColor: COLORS.gray2
+          }}>
+            <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+          </View>
+          <View style={{
+            flex: 2,
+            // backgroundColor: COLORS.gray,
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: 20
+          }}>
+          </View>
+          <View style={{
+            flex: 1,
+            backgroundColor: COLORS.gray2
+          }}>
+          </View>
+        </View>
+
         <View style={styles.contentContainer}>
-
-          <View style={{
-            paddingTop: 20
-          }}>
-            <Image source={require('../../assets/gender.png')} resizeMode='contain' style={{
-              width: 150,
-              height: 200,
-            }} />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black
-            }}>What do you identify as?</Text>
-          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{
+              paddingTop: 0,
+              alignItems:'center'
+            }}>
+              <Image source={require('../../assets/gender.png')} resizeMode='contain' style={{
+                width: 150,
+                height: 200,
+              }} />
+            </View>
 
 
-          {/* <View style={{
+            <View style={{
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>What do you identify as?</Text>
+            </View>
+
+
+            {/* <View style={{
             paddingTop: 10,
             alignItems: 'center'
           }}>
@@ -116,36 +156,44 @@ const QuestionGenderScreen = ({ navigation, route }) => {
             }}>Enter the full name</Text>
           </View> */}
 
-          <View>
-            <ListGender data={GenderData} value={selectedCategoryIndex}
-              setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
-          </View>
+            <View>
+              <ListGender data={GenderData} value={selectedCategoryIndex}
+                setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
+            </View>
 
+            <View style={styles.footer}>
+
+              <View style={{
+                paddingTop: 20,
+                marginBottom: 10,
+              }}>
+                <CustomeButton onpress={() => onQuestionYourInterestScreen()}
+                  title={'Continue'} />
+              </View>
+              {/* <View style={{ marginBottom: 5 }}>
+                <CustomeButton onpress={() => SkipScreen()}
+                  title={'Skip'} bcolor={COLORS.light} />
+              </View> */}
+
+              <View style={{
+                paddingBottom: 20,
+                // width: 310,
+                alignItems: 'center',
+              }}>
+                <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                  By continue you agree our Terms and Privacy Policy.
+                </Text>
+              </View>
         </View>
-        <View style={styles.footer}>
-
-          <View style={{
-            paddingTop: 20,
-          }}>
-            <CustomeButton onpress={() => onQuestionYourInterestScreen()}
-              title={'Continue'} />
-          </View>
-
-          <View style={{
-            paddingTop: 20,
-            width: 310,
-          }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
-          </View>
-        </View>
+          </ScrollView>
       </View>
-      {/* </View> */}
+
+    </View>
+      {/* </View> */ }
 
 
 
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
@@ -157,11 +205,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '80%',
+    height: '100%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%',
+    // height: '20%',
+    paddingTop:100,
+    paddingBottom:150,
     alignItems: 'center'
   },
   NumberInput: {

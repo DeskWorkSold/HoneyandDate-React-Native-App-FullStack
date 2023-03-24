@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
+
 
 
 const MerijuanaData = [
@@ -22,7 +24,7 @@ const MerijuanaData = [
 
 
 const QuestionDrugsScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna } = route.params;
+  const { Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
   console.log(DateOfBirth);
@@ -32,7 +34,7 @@ const QuestionDrugsScreen = ({ navigation, route }) => {
     console.log(MerijuanaData[selectedCategoryIndex].name);
     const selectedPolitics = MerijuanaData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('QuestionDrinkScreen', { Drugs: selectedPolitics, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionDrinkScreen', { Drugs: selectedPolitics, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select do you use Drugs!", ToastAndroid.SHORT);
@@ -40,7 +42,7 @@ const QuestionDrugsScreen = ({ navigation, route }) => {
   }
 
   const SkipScreen = () => {
-    navigation.navigate('QuestionDrinkScreen', { Drugs: null, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionDrinkScreen', { Drugs: null, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 
@@ -88,10 +90,39 @@ const QuestionDrugsScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
 
+          <View style={{
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
 
           <View style={{
             alignItems: 'center',
-            paddingTop: 50,
+            paddingTop: 10,
             paddingHorizontal: 70,
           }}>
             <Text style={{
@@ -112,23 +143,19 @@ const QuestionDrugsScreen = ({ navigation, route }) => {
 
 
         <View style={styles.footer}>
-
           <View style={{
             paddingTop: 100,
-            flexDirection: 'row'
+            // flexDirection: 'row'
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => SkipScreen()}
-                title={'Skip'} bcolor={COLORS.light} />
-            </View>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => onDrinkScreen()}
+            <View style={{ marginBottom: 5 }}>
+              <CustomeButton  onpress={() => onDrinkScreen()}
                 title={'Continue'} />
             </View>
-
+            <View style={{ marginHorizontal: 0 }}>
+              <CustomeButton  onpress={() => SkipScreen()}
+                title={'Skip'} bcolor={COLORS.light} />
+            </View>
           </View>
-
-
         </View>
 
 

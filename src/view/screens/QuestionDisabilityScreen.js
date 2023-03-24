@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const RelationshipType = [
   {
@@ -65,7 +66,8 @@ const Disability = [
 
 
 const QuestionDisabilityScreen = ({ navigation, route }) => {
-  const { DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { DescribePartner, DescribeYou, languages, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedDisabilityIndex, setDisabilityIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
@@ -74,21 +76,39 @@ const QuestionDisabilityScreen = ({ navigation, route }) => {
   const [showtick, setShowtick] = useState(false);
   const [showtick2, setShowtick2] = useState(false);
   const [Disable, setDisable] = useState();
+  const [ServayCategory, setServayCategory] = useState();
 
 
 
   const onDisabilityPartnerScreen = () => {
-    console.log(Disable);
     // setDisable(detailReligion[selectedCategoryIndex].name)
     // const detailReligion2 = detailReligion[selectedCategoryIndex].name
     // const Disability2 = Disability[selectedDisabilityIndex].name
-    if (Disable) {
-      navigation.navigate('QuestionDisabilityPartnerScreen', { Disability: Disable, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
-    }
-    else {
+    // console.log(ServayCategory ,Disable );
+    // return;
+
+    if (!ServayCategory) {
       ToastAndroid.show("Please select your Disability!", ToastAndroid.SHORT);
     }
+    else {
+      if (ServayCategory == 'Yes') {
+        if (!Disable) {
+          ToastAndroid.show("Please select type of disability!", ToastAndroid.SHORT);
+        }
+        else {
+          navigation.navigate('QuestionDisabilityPartnerScreen', { Disability: Disable, DescribePartner: DescribePartner, DescribeYou: DescribeYou, languages: languages, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+        }
+      }
+      else {
+        navigation.navigate('QuestionDisabilityPartnerScreen', { Disability: ServayCategory, DescribePartner: DescribePartner, DescribeYou: DescribeYou, languages: languages, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      }
+    }
   }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionDisabilityPartnerScreen', { Disability: null, DescribePartner: DescribePartner, DescribeYou: DescribeYou, languages: languages, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+  }
+
 
   const toggleDropdown = () => {
     setShowtick(!showtick)
@@ -146,9 +166,40 @@ const QuestionDisabilityScreen = ({ navigation, route }) => {
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
 
           <View style={{
-            paddingTop: 30,
+            paddingTop: 0,
             alignItems: 'center'
           }}>
             <Image source={require('../../assets/disablility.png')} resizeMode='contain' style={{
@@ -170,17 +221,46 @@ const QuestionDisabilityScreen = ({ navigation, route }) => {
             </Text>
           </View>
 
-          <TouchableOpacity onPress={toggleDropdown}>
+          <TouchableOpacity onPress={() => { setServayCategory('Yes'), setShowOptions(!showOptions) }}>
             <View style={styles.NumberInput}>
               <View style={{ width: '90%' }}>
                 <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>Yes</Text>
               </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                {ServayCategory == 'Yes' && (
+                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+          {ServayCategory == 'Yes' &&
+            renderDropdown()
+          }
+
+          <TouchableOpacity onPress={() => setServayCategory('No')}>
+            <View style={styles.NumberInput}>
+              <View style={{ width: '90%' }}>
+                <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>No</Text>
+              </View>
+              <View style={{
+                alignItems: 'flex-end'
+              }}>
+                {ServayCategory == 'No' && (
+                  <Image source={require('../../assets/tik.png')} resizeMode='contain' style={{
+                    width: 20,
+                    height: 20
+                  }} />
+                )}
+              </View>
             </View>
           </TouchableOpacity>
 
-          {renderDropdown()}
-
-          {Disability.map((item, index) => (
+          {/* {Disability.map((item, index) => (
             <TouchableOpacity key={index} onPress={() => toggleDropdown2(index)}>
               <View style={styles.NumberInput}>
                 <View style={{ width: '90%' }}>
@@ -198,7 +278,7 @@ const QuestionDisabilityScreen = ({ navigation, route }) => {
                 </View>
               </View>
             </TouchableOpacity>
-          ))}
+          ))} */}
 
         </View>
 
@@ -206,10 +286,17 @@ const QuestionDisabilityScreen = ({ navigation, route }) => {
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          height: '20%'
         }}>
-          <CustomeButton onpress={() => onDisabilityPartnerScreen()}
-            title={'Continue'} />
+          <View style={{
+            marginBottom: 5,
+          }}>
+            <CustomeButton onpress={() => onDisabilityPartnerScreen()}
+              title={'Continue'} />
+          </View>
+
+          <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+            title={'Skip'} />
 
           <View style={{
             paddingTop: 5,
@@ -235,7 +322,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '85%',
+    height: '80%',
   },
   footer: {
     alignItems: 'center'

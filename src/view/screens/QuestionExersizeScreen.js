@@ -5,6 +5,7 @@ import CustomeButton from '../components/CustomeButton';
 import RadioForm from 'react-native-simple-radio-button';
 import { RadioButton } from 'react-native-paper';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const ExerciseData = [
@@ -37,21 +38,26 @@ const ExerciseData = [
 
 
 const QuestionExersizeScreen = ({ navigation, route }) => {
-  const { FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [checked, setChecked] = useState('not public'); //initial choice
+  const [checked, setChecked] = useState(null); //initial choice
 
 
   const onExersizePartnerScreen = () => {
     const Exercise = ExerciseData[selectedCategoryIndex].name
     console.log(Exercise, checked);
-    if (Exercise || checked) {
-      navigation.navigate('QuestionExersizePartnerScreen', { ExerciseStatus: checked, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    if (Exercise && checked) {
+      navigation.navigate('QuestionExersizePartnerScreen', { ExerciseStatus: checked, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
-      ToastAndroid.show("Please select your Religion!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select your excersize type!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionExersizePartnerScreen', { ExerciseStatus: null, Exercise: null, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+
   }
 
 
@@ -78,7 +84,7 @@ const QuestionExersizeScreen = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                   <SVGImg width={20} height={20} />
+                  <SVGImg width={20} height={20} />
                 ) : (<View></View>
                 )}
               </View>
@@ -97,10 +103,42 @@ const QuestionExersizeScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
 
           <View style={{
-            paddingTop: 30,
-            alignItems:'center'
+            paddingTop: 0,
+            alignItems: 'center'
           }}>
             <Image source={require('../../assets/exersize2.png')} resizeMode='contain' style={{
               width: 220,
@@ -122,10 +160,9 @@ const QuestionExersizeScreen = ({ navigation, route }) => {
               exercise ? be Honest</Text>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
 
             <View style={{
-              alignItems:'center'
+              alignItems: 'center'
             }}>
               <ListEducation data={ExerciseData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
@@ -165,8 +202,14 @@ const QuestionExersizeScreen = ({ navigation, route }) => {
               <View style={{
                 paddingTop: 50,
               }}>
-                <CustomeButton onpress={() => onExersizePartnerScreen()}
-                  title={'Continue'} />
+                <View style={{
+                  marginBottom: 5
+                }}>
+                  <CustomeButton onpress={() => onExersizePartnerScreen()}
+                    title={'Continue'} />
+                </View>
+                <CustomeButton onpress={() => onSkip()}
+                  title={'Skip'} bcolor={COLORS.light} />
               </View>
 
               <View style={{

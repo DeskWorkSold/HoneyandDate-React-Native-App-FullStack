@@ -2,11 +2,11 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
-
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const QuestionInstagramScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink } = route.params;
+  const { Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [instagram, setinstagram] = useState();
 
@@ -15,14 +15,14 @@ const QuestionInstagramScreen = ({ navigation, route }) => {
   const onOccupationScreen = () => {
     // console.log(instagram);
     if (instagram) {
-      navigation.navigate('QuestionOccupationScreen', { InstaUsername: instagram, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionOccupationScreen', { InstaUsername: instagram, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please enter instagram user name!", ToastAndroid.SHORT);
     }
   }
   const SkipScreen = () => {
-    navigation.navigate('QuestionOccupationScreen', { InstaUsername: null, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionOccupationScreen', { InstaUsername: null, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 
@@ -33,9 +33,38 @@ const QuestionInstagramScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
 
           <View style={{
-            paddingTop: 20,
+            paddingTop: 0,
             flexDirection: 'row',
           }}>
             <Image source={require('../../assets/insta.png')} resizeMode='contain' style={{
@@ -83,15 +112,17 @@ const QuestionInstagramScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <View style={{
-            flexDirection: 'row'
+            paddingTop:10,
+            alignItems:'center'
+            // flexDirection: 'row'
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => SkipScreen()}
-                title={'Skip'} bcolor={COLORS.light} />
+            <View style={{ marginBottom: 5 }}>
+              <CustomeButton onpress={() => onOccupationScreen()}
+                title={'Continue'} />
             </View>
             <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={170} onpress={() => onOccupationScreen()}
-                title={'Continue'} />
+              <CustomeButton onpress={() => SkipScreen()}
+                title={'Skip'} bcolor={COLORS.light} />
             </View>
           </View>
 
@@ -116,11 +147,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '90%',
+    height: '80%',
     alignItems: 'center',
   },
   footer: {
-    height: '10%',
+    height: '20%',
     alignItems: 'center',
   },
   NumberInput: {

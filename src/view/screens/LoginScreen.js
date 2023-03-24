@@ -88,9 +88,7 @@ const LoginScreen = ({ navigation }) => {
                     </Text>
                 </View>
 
-                <View style={{
-                    paddingTop: 20,
-                }}>
+                <View style={{ paddingTop: 20, }}>
                     <CustomeButton onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
                 </View>
 
@@ -98,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginHorizontal: 45,
-                    paddingTop: 35
+                    paddingTop: 35,
                 }}>
                     <View style={{ flex: 1, height: 1, backgroundColor: COLORS.white }} />
                     <View>

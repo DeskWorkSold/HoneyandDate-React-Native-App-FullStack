@@ -292,7 +292,6 @@ const LikeDetailScreen = ({ navigation }) => {
               color: COLORS.black
             }}>Liked you</Text>
           </View>
-
           <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 20 }}>
             <TouchableOpacity onPress={() => setShowFilter(true)}>
               <Text style={{

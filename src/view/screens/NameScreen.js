@@ -4,6 +4,7 @@ import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../../redux/reducers/Reducers';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 
@@ -45,6 +46,34 @@ const NameScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+        <View style={{
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
 
           <View style={{
             paddingTop: 40

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 
@@ -43,9 +44,10 @@ const QuestionYourInterestScreen = ({ navigation, route }) => {
   }
   const onSkip = () => {
     console.log('skip');
-    console.log(GenderData[selectedCategoryIndex].name);
-    const selectedGender = GenderData[selectedCategoryIndex].name;
-    navigation.navigate('QuestionClingyScreen', { RelationshipLookingType: null, Cuddling: null, InLife: null, InBed: null, MovieType: null, NextLongestRelationship: null, LongestRelationship: null, OpenTo: null, DealBreaker: null, DealMakers: null, Firstrefname: null, FirstRefemail: null, FirstRefnumber: null, Secrefname: null, SecRefemail: null, SecRefnumber: null, PartnerBuildType: null, BuildType: null, PartnerMaxHeight: null, PartnerMinHeight: null, Height: null, PartnerDisability: null, Disability: null, DescribePartner: null, DescribeYou: null, PartnerEthnicity: null, Ethnicity: null, PartnerExercise: null, ExerciseStatus: null, Exercise: null, FavFood: null, PartnerDiet: null, Diet: null, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, Relagion: null, RelationshipType: null, Education: null, Interest: null, CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: null, Drink: null, Drugs: null, Marijauna: null, Vape: null, Smoke: null, Lookingfor: null, PartnerNature: null, Nature: null, PoliticalPartnerView: null, PoliticalView: null, Music: null, Experince: null, Bio: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: selectedGender, Kids: null })
+    navigation.navigate('QuestionWantKidsScreen', { PartnerGender: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
+    // console.log(GenderData[selectedCategoryIndex].name);
+    // const selectedGender = GenderData[selectedCategoryIndex].name;
+    // navigation.navigate('QuestionClingyScreen', { RelationshipLookingType: null, Cuddling: null, InLife: null, InBed: null, MovieType: null, NextLongestRelationship: null, LongestRelationship: null, OpenTo: null, DealBreaker: null, DealMakers: null, Firstrefname: null, FirstRefemail: null, FirstRefnumber: null, Secrefname: null, SecRefemail: null, SecRefnumber: null, PartnerBuildType: null, BuildType: null, PartnerMaxHeight: null, PartnerMinHeight: null, Height: null, PartnerDisability: null, Disability: null, DescribePartner: null, DescribeYou: null, PartnerEthnicity: null, Ethnicity: null, PartnerExercise: null, ExerciseStatus: null, Exercise: null, FavFood: null, PartnerDiet: null, Diet: null, ParentReligion: null, religionType: null, foodtype: null, KosherType: null, Relagion: null, RelationshipType: null, Education: null, Interest: null, CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: null, Drink: null, Drugs: null, Marijauna: null, Vape: null, Smoke: null, Lookingfor: null, PartnerNature: null, Nature: null, PoliticalPartnerView: null, PoliticalView: null, Music: null, Experince: null, Bio: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: selectedGender, Kids: null })
   }
 
   const ListGender = ({ data, value, setValue, cancle }) => {
@@ -88,10 +90,41 @@ const QuestionYourInterestScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+        <View style={{
+          alignItems: 'center',
+          justifyContent:'center',
+          paddingTop: 20,
+          flexDirection: 'row',
+          height:40,
+          justifyContent: 'center',
+          paddingHorizontal: 20,
+
+        }}>
+          <View style={{
+            flex: 1,
+            // backgroundColor: COLORS.gray2
+          }}>
+            <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+          </View>
+          <View style={{
+            flex: 2,
+            // backgroundColor: COLORS.gray,
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: 20
+          }}>
+          </View>
+          <View style={{
+            flex: 1,
+            backgroundColor: COLORS.gray2
+          }}>
+          </View>
+        </View>
+
 
           <View style={{
             alignItems: 'center',
-            paddingTop: 40,
+            paddingTop: 20,
           }}>
             <Text style={{
               fontSize: 20,
@@ -113,21 +146,21 @@ const QuestionYourInterestScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
-            flexDirection: 'row',
+            // flexDirection: 'row',
             marginHorizontal: 20
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onSkip()}
-                title={'Skip All'} bcolor={COLORS.light} />
+            <View style={{ marginBottom: 5 }}>
+              <CustomeButton onpress={() => onQuestionWantKidsScreen()}
+                title={'Continue'}  />
             </View>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onQuestionWantKidsScreen()}
-                title={'Continue'} />
-            </View>
+            {/* <View>
+              <CustomeButton onpress={() => onSkip()}
+                title={'Skip'} bcolor={COLORS.light}/>
+            </View> */}
           </View>
 
           <View style={{
-            paddingTop: 20,
+            // paddingTop: 20,
             width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
@@ -152,13 +185,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '80%',
+    height: '75%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%',
+    height: '25%',
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingBottom:20
   },
   NumberInput: {
     marginTop: 20,

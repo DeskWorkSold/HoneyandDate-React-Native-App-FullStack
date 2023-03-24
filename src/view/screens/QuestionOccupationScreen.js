@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { Item } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const TypeTestimonial = [
   {
@@ -44,14 +45,57 @@ const PositionTestimonial = [
 
 
 const QuestionOccupationScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [occupation, setoccupation] = useState();
+  const [typeTestimonial, setTypeTestimonial] = useState(TypeTestimonial);
+  const [temptypeTestimonial, setTempTypeTestimonial] = useState(TypeTestimonial);
   const [type, setType] = useState();
   const [position, setposition] = useState();
+  const [positionTestimonial, setPositionTestimonial] = useState(PositionTestimonial);
+  const [temppositionTestimonial, setTempPositionTestimonial] = useState(PositionTestimonial);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedPositionIndex, setSelectedPositionIndex] = useState(0);
 
-  console.log(DateOfBirth);
+  // console.log(DateOfBirth);
+
+  const searchFilterType = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      const newData = typeTestimonial.filter((item) => {
+        const itemData = item.name ? item.name.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      // setFilteredDataSource(newData);
+      setTempTypeTestimonial(newData);
+      setType(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setTempTypeTestimonial(typeTestimonial);
+      setType(text);
+    }
+  };
+  const searchFilterPosition = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      const newData = positionTestimonial.filter((item) => {
+        const itemData = item.name ? item.name.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      // setFilteredDataSource(newData);
+      setTempPositionTestimonial(newData);
+      setposition(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setTempPositionTestimonial(positionTestimonial);
+      setposition(text);
+    }
+  };
 
 
   const onInterestScreen = () => {
@@ -61,14 +105,14 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
     // console.log(CompanyType,PositioninCompany);
     if (occupation) {
       // const Occupation = occupation;
-      navigation.navigate('QuestionInterestScreen', { CompanyName: occupation, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionInterestScreen', { CompanyName: occupation, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please enter company name!", ToastAndroid.SHORT);
     }
   }
   const SkipScreen = () => {
-    navigation.navigate('QuestionInterestScreen', { CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionInterestScreen', { CompanyName: null, PositioninCompany: null, CompanyType: null, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListTestimonial = ({ data, value, setValue, cancle }) => {
@@ -114,33 +158,62 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
-
         <View style={{
-          paddingTop: 40,
+          alignItems: 'center',
+          paddingTop: 20,
           flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Image source={require('../../assets/occupassion.png')} resizeMode='contain' style={{
-            width: 200,
-            height: 200
-          }} />
-        </View>
+          justifyContent: 'center',
+          paddingHorizontal: 20,
 
-
-        <View style={{
-          alignItems: 'center',
-          paddingHorizontal: 70,
         }}>
-          <Text style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: COLORS.black,
-            textAlign: 'center',
-          }}>Occupation</Text>
+          <View style={{
+            flex: 1,
+            // backgroundColor: COLORS.gray2
+          }}>
+            <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+          </View>
+          <View style={{
+            flex: 2,
+            // backgroundColor: COLORS.gray,
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: 20
+          }}>
+          </View>
+          <View style={{
+            flex: 1,
+            backgroundColor: COLORS.gray2
+          }}>
+          </View>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+
+          <View style={{
+            paddingTop: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Image source={require('../../assets/occupassion.png')} resizeMode='contain' style={{
+              width: 200,
+              height: 200
+            }} />
+          </View>
+
+
+          <View style={{
+            alignItems: 'center',
+            paddingHorizontal: 70,
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: COLORS.black,
+              textAlign: 'center',
+            }}>Occupation</Text>
+          </View>
+
           <View style={{
             // alignItems: 'center',
             // paddingHorizontal:20
@@ -173,7 +246,7 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
                   <TextInput
                     value={type}
                     placeholder={'Type of Company'}
-                    onChangeText={type => setType(type)
+                    onChangeText={type => searchFilterType(type)
                     }
                     style={styles.TextInput}
                   />
@@ -192,7 +265,7 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
             <View style={{
               paddingLeft: 10
             }}>
-              <ListTestimonial data={TypeTestimonial} value={selectedCategoryIndex}
+              <ListTestimonial data={temptypeTestimonial} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
 
@@ -208,7 +281,7 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
                   <TextInput
                     value={position}
                     placeholder={'Position in Company'}
-                    onChangeText={position => setposition(position)
+                    onChangeText={position => searchFilterPosition(position)
                     }
                     style={styles.TextInput}
                   />
@@ -227,23 +300,23 @@ const QuestionOccupationScreen = ({ navigation, route }) => {
             <View style={{
               paddingLeft: 10
             }}>
-              <ListTestimonial data={PositionTestimonial} value={selectedPositionIndex}
+              <ListTestimonial data={temppositionTestimonial} value={selectedPositionIndex}
                 setValue={setSelectedPositionIndex} cancle={require('../../assets/cross.png')} />
             </View>
 
 
             <View style={{
               paddingTop: 50,
-              paddingBottom: 10,
-              flexDirection: 'row'
+              paddingBottom: 40,
+              alignItems: 'center'
             }}>
-              <View style={{ marginHorizontal: 5 }}>
-                <CustomeButton width={170} onpress={() => SkipScreen()}
-                  title={'Skip'} bcolor={COLORS.light} />
+              <View style={{ marginBottom: 5 }}>
+                <CustomeButton onpress={() => onInterestScreen()}
+                  title={'Continue'} />
               </View>
               <View style={{ marginHorizontal: 5 }}>
-                <CustomeButton width={170} onpress={() => onInterestScreen()}
-                  title={'Continue'} />
+                <CustomeButton onpress={() => SkipScreen()}
+                  title={'Skip'} bcolor={COLORS.light} />
               </View>
 
             </View>

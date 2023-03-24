@@ -3041,7 +3041,7 @@ const ChatingScreen = ({ navigation, route }) => {
                                             marginLeft: 2,
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
                                         }}>
                                             <TextInput
                                                 value={dates}

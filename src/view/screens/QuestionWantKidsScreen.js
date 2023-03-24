@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const WantKidData = [
@@ -90,9 +91,40 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
 
+        <View style={{
+          alignItems: 'center',
+          justifyContent:'center',
+          paddingTop: 20,
+          flexDirection: 'row',
+          height:40,
+          justifyContent: 'center',
+          paddingHorizontal: 20,
+
+        }}>
+          <View style={{
+            flex: 1,
+            // backgroundColor: COLORS.gray2
+          }}>
+            <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+          </View>
+          <View style={{
+            flex: 2,
+            // backgroundColor: COLORS.gray,
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: 20
+          }}>
+          </View>
+          <View style={{
+            flex: 1,
+            backgroundColor: COLORS.gray2
+          }}>
+          </View>
+        </View>
+
           <View style={{
             alignItems: 'center',
-            paddingTop: 40,
+            paddingTop: 20,
           }}>
             <Text style={{
               fontSize: 20,
@@ -122,22 +154,22 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
           <View style={{
             paddingTop: 20,
-            flexDirection: 'row',
-            marginHorizontal:20
+            // flexDirection: 'row',
+            marginHorizontal: 20,
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onSkip()}
-                title={'Skip'} bcolor={COLORS.light} />
-            </View>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onBioPress()}
+            <View style={{ marginBottom: 5 }}>
+              <CustomeButton onpress={() => onBioPress()}
                 title={'Continue'} />
+            </View>
+            <View style={{ marginHorizontal: 0 }}>
+              <CustomeButton onpress={() => onSkip()}
+              title={'Skip'} bcolor={COLORS.light} />
             </View>
 
           </View>
 
           <View style={{
-            paddingTop: 20,
+            // paddingTop: 20,
             width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
@@ -161,13 +193,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '80%',
+    height: '75%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%',
+    height: '25%',
     alignItems: 'center',
-    paddingHorizontal:20
+    paddingHorizontal: 20
   },
   NumberInput: {
     flexDirection: 'row',

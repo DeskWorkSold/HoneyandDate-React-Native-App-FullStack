@@ -7,6 +7,7 @@ import { Calendar } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 
@@ -54,8 +55,39 @@ const DateOfBirthScreen = ({ navigation, route }) => {
       <View style={styles.container}>
 
         <View style={styles.contentContainer}>
+
           <View style={{
-            paddingTop: 40
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+
+          <View style={{
+            paddingTop: 10
           }}>
             <Image source={require('../../assets/dateofbirth.png')} resizeMode='contain' />
           </View>
@@ -103,9 +135,9 @@ const DateOfBirthScreen = ({ navigation, route }) => {
                 <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
                   <View>
                     <Text style={{
-                      color:COLORS.main,
-                      fontWeight:'bold',
-                      fontSize:20
+                      color: COLORS.main,
+                      fontWeight: 'bold',
+                      fontSize: 20
                     }}>
                       {date.month() + 1}Month {date.year()}
                     </Text>
@@ -114,7 +146,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
               )}
               onPressArrowLeft={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).subtract(1, 'month'))}
               onPressArrowRight={() => setdate((prev) => dayjs(prev.format('YYYY-MM-DD')).add(1, 'month'))}
-              onDayPress={({dateString}) => {
+              onDayPress={({ dateString }) => {
                 console.log(dateString);
                 setCustomDate(dateString)
               }}
@@ -212,7 +244,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
-            width: 310,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.

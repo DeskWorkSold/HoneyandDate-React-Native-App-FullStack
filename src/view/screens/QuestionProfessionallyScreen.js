@@ -3,30 +3,30 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/notify.svg';
-
-
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const QuestionProfessionallyScreen = ({ navigation, route }) => {
   const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
   const [experince, setExperince] = useState();
-  console.log(DateOfBirth);
+  const [experince2, setExperince2] = useState();
+  // console.log(DateOfBirth);
 
   const onMusicSelect = () => {
-    if (experince) {
-      console.log(experince);
-      navigation.navigate('QuestionMusicScreen', {
-        Experince: experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    if (experince && experince2) {
+      console.log(experince,experince2);
+      navigation.navigate('QuestionPartnerAge', {
+        Experince: experince, InTenYear: experince2, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else {
-      ToastAndroid.show("Please enter your experince!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please enter both experinces!", ToastAndroid.SHORT);
     }
   }
 
   const onSkip = () => {
-    navigation.navigate('QuestionMusicScreen', {
-      Experince: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    navigation.navigate('QuestionPartnerAge', {
+      Experince: null, InTenYear: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
     })
   }
 
@@ -40,15 +40,37 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
 
           <View style={{
             alignItems: 'center',
-            paddingTop: 40,
+            paddingTop: 20,
             flexDirection: 'row',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
           }}>
-            <SVGImg width={19} height={19} />
-            <Text style={{
-              color: COLORS.black,
-              paddingLeft:5
-            }}>Response is Not Public</Text>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+              <SVGImg width={19} height={19} />
+              <Text style={{
+                color: COLORS.black,
+                paddingLeft: 5,
+                textAlign: 'center'
+              }}>Response is Not Public</Text>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
           </View>
 
 
@@ -72,8 +94,36 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
               placeholder='Type Here!'
               multiline
               value={experince}
-              numberOfLines={8}
+              numberOfLines={4}
               onChangeText={experince => setExperince(experince)}
+              style={styles.TextInput} />
+          </View>
+
+
+          <View style={{
+            alignItems: 'center',
+            paddingHorizontal: 50,
+            paddingTop: 20,
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: COLORS.black,
+              textAlign: 'center',
+            }}>Where do you see yourself
+              professionally  and personally
+              in ten years?</Text>
+          </View>
+
+          <View style={{
+            paddingTop: 20,
+          }}>
+            <TextInput
+              placeholder='Type Here!'
+              multiline
+              value={experince2}
+              numberOfLines={4}
+              onChangeText={experince2 => setExperince2(experince2)}
               style={styles.TextInput} />
           </View>
 
@@ -83,20 +133,20 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
-            flexDirection: 'row'
+            // flexDirection: 'row'
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onSkip()}
-                title={'Skip'} bcolor={COLORS.light} />
-            </View>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton width={160} onpress={() => onMusicSelect()}
+            <View style={{ marginBottom: 5 }}>
+              <CustomeButton onpress={() => onMusicSelect()}
                 title={'Continue'} />
+            </View>
+            <View>
+              <CustomeButton onpress={() => onSkip()}
+                title={'Skip'} bcolor={COLORS.light} />
             </View>
           </View>
 
           <View style={{
-            paddingTop: 20,
+            paddingTop: 10,
             width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
@@ -120,11 +170,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '80%',
+    height: '75%',
     alignItems: 'center',
   },
   footer: {
-    height: '20%',
+    height: '25%',
     alignItems: 'center'
   },
   NumberInput: {
@@ -143,7 +193,7 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     width: 320,
     borderRadius: 10,
-    height: 200,
+    height: 100,
     textAlignVertical: 'top',
   },
 })

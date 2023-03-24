@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg from '../../assets/tik.svg';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 const IntroExtroData = [
   {
@@ -17,19 +18,23 @@ const IntroExtroData = [
 
 
 const QuestionIntroandExtroScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView } = route.params;
+  const { PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   // console.log(PartnerGender);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
 
   const onPIntroandExtro = () => {
     console.log(IntroExtroData[selectedCategoryIndex].name);
     const selectedPolitics = IntroExtroData[selectedCategoryIndex].name;
-    if(selectedPolitics){
-      navigation.navigate('QuestionPIntroandExtroScreen', { IntroandExtro: selectedPolitics, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    if (selectedPolitics) {
+      navigation.navigate('QuestionPIntroandExtroScreen', { IntroandExtro: selectedPolitics, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
-    else{
+    else {
       ToastAndroid.show("Please select your nature!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    navigation.navigate('QuestionPIntroandExtroScreen', { IntroandExtro: null, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListIntroExtro = ({ data, value, setValue, cancle }) => {
@@ -72,9 +77,37 @@ const QuestionIntroandExtroScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
+          <View style={{
+            alignItems: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
 
           <View style={{
-            paddingTop: 40,
+            paddingTop: 0,
           }}>
             <Image source={require('../../assets/group.png')}
               resizeMode='contain' />
@@ -104,11 +137,15 @@ const QuestionIntroandExtroScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <View style={{
-            paddingTop: 60,
+            paddingTop: 0,
           }}>
-            <View style={{ marginHorizontal: 5 }}>
+            <View style={{ marginBottom: 5 }}>
               <CustomeButton onpress={() => onPIntroandExtro()}
                 title={'Continue'} />
+            </View>
+            <View style={{ marginHorizontal: 0 }}>
+              <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+                title={'Skip'} />
             </View>
           </View>
 

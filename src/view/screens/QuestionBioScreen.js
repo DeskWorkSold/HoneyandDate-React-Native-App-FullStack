@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Toas
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
+import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const QuestionBioScreen = ({ navigation, route }) => {
@@ -10,17 +11,26 @@ const QuestionBioScreen = ({ navigation, route }) => {
   console.log(DateOfBirth);
 
   const onQuestionProfessionally = () => {
-    if(bio){
+    if (bio) {
       // console.log('bio', bio);
       navigation.navigate('QuestionProfessionallyScreen', {
         Bio: bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
-    else{
+    else {
       // Alert.alert('please enter bio')
       console.log('not found');
       ToastAndroid.show("Please enter your bio!", ToastAndroid.SHORT);
     }
+  }
+
+  const onSkip = () => {
+    // console.log(WantKidData[selectedCategoryIndex].name);
+    // console.log('test',selectedGender);
+    navigation.navigate('QuestionProfessionallyScreen', {
+      Bio: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+    })
+
   }
 
   return (
@@ -30,7 +40,38 @@ const QuestionBioScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
           <View style={{
-            paddingTop: 10
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
+          }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
+          </View>
+
+          <View style={{
+            paddingTop: 0
           }}>
             <Image source={require('../../assets/bio.png')}
               resizeMode='contain' />
@@ -76,14 +117,20 @@ const QuestionBioScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <View style={{
-            paddingTop: 20,
+            marginBottom: 5,
           }}>
             <CustomeButton onpress={() => onQuestionProfessionally()}
               title={'Continue'} />
           </View>
+          <View style={{ marginHorizontal: 0 }}>
+            <CustomeButton onpress={() => onSkip()}
+              title={'Skip'} bcolor={COLORS.light} />
+          </View>
+
+
 
           <View style={{
-            paddingTop: 20,
+            paddingTop: 10,
             width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
@@ -112,7 +159,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     height: '80%',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   footer: {
     height: '20%'

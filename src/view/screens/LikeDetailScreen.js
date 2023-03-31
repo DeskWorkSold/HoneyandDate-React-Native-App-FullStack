@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useSelector } from 'react-redux';
 import { selectChatuser, selectUser } from '../../../redux/reducers/Reducers';
+import { BlurView } from "@react-native-community/blur";
 import SVGImg1 from '../../assets/menu.svg';
 import Slider from '@react-native-community/slider';
 const windowWidth = Dimensions.get('window').width;
@@ -121,6 +122,7 @@ const filterAdvance = [
 
 const LikeDetailScreen = ({ navigation }) => {
   const [likedusers, setLikedUser] = useState();
+  const [premiumUsers, setPremiumUsers] = useState();
   const [modalDataUid, setModalDataUid] = useState();
   const [showFilter, setShowFilter] = useState(false);
   const [showAdvanceFilter, setShowAdvanceFilter] = useState(false);
@@ -214,8 +216,76 @@ const LikeDetailScreen = ({ navigation }) => {
       })
     // console.log('==>' , likedusers);
   }
+
+
+
+  const fetchPremiumUser = async () => {
+    if (user.PackageId == 654) {
+      await firestore()
+        .collection('Users')
+        .onSnapshot(querySnapshot => {
+          // console.log('Total user: ', querySnapshot.size);
+          const premiumU = [];
+          querySnapshot.forEach((documentSnapshot) => {
+            // console.log(documentSnapshot.data());
+            const user = documentSnapshot.data().userDetails
+            // console.log(user.PackageId);
+            if (user.PackageId == 123 || user.PackageId == 456 || user.PackageId == 654) {
+              premiumU.push(documentSnapshot.data().userDetails);
+            }
+          })
+          setPremiumUsers(premiumU.slice(0, 2))
+          // console.log(premiumU);
+        })
+    }
+    else if (user.PackageId == 456) {
+      await firestore()
+        .collection('Users')
+        // .where("userDetails.PackageId", '==', 123)
+        // .where("userDetails.PackageId", '==', 456)
+        // .where("userDetails.PackageId", '==', 654)
+        // .limit(1)
+        .onSnapshot(querySnapshot => {
+          // console.log('Total user: ', querySnapshot.size);
+          const premiumU = [];
+          querySnapshot.forEach((documentSnapshot) => {
+            // console.log(documentSnapshot.data());
+            const user = documentSnapshot.data().userDetails
+            // console.log(user.PackageId);
+            if (user.PackageId == 654) {
+              premiumU.push(documentSnapshot.data().userDetails);
+            }
+          })
+          setPremiumUsers(premiumU.slice(0, 2))
+          console.log(premiumU);
+        })
+    }
+    else if (user.PackageId == 123) {
+      await firestore()
+        .collection('Users')
+        // .where("userDetails.PackageId", '==', 123)
+        // .where("userDetails.PackageId", '==', 456)
+        // .where("userDetails.PackageId", '==', 654)
+        // .limit(1)
+        .onSnapshot(querySnapshot => {
+          // console.log('Total user: ', querySnapshot.size);
+          const premiumU = [];
+          querySnapshot.forEach((documentSnapshot) => {
+            // console.log(documentSnapshot.data());
+            const user = documentSnapshot.data().userDetails
+            // console.log(user.PackageId);
+            if (user.PackageId == 456 || user.PackageId == 654) {
+              premiumU.push(documentSnapshot.data().userDetails);
+            }
+          })
+          setPremiumUsers(premiumU.slice(0, 2))
+          // console.log(premiumU);
+        })
+    }
+  }
   useEffect(() => {
     fetchLikedUser();
+    fetchPremiumUser();
   }, [])
 
 
@@ -272,36 +342,42 @@ const LikeDetailScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
-      <View style={styles.container}>
-
+      <View style={{
+        paddingHorizontal: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: COLORS.white,
+        height: 70,
+      }}>
         <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: COLORS.white,
-          height: '8%'
+          flex: 1, paddingHorizontal: 0,
+          // backgroundColor: COLORS.gray,
         }}>
-          <TouchableOpacity style={{ flex: 1, paddingHorizontal: 20 }}>
+          <TouchableOpacity>
             <SVGImg1 width={46} height={46} />
           </TouchableOpacity>
-
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={{
-              fontWeight: 'bold',
-              fontSize: 20,
-              color: COLORS.black
-            }}>Liked you</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 20 }}>
-            <TouchableOpacity onPress={() => setShowFilter(true)}>
-              <Text style={{
-                // fontWeight: 'bold',
-                // fontSize: 20,
-                color: COLORS.blue
-              }}>Matches</Text>
-            </TouchableOpacity>
-          </View>
         </View>
+
+        <View style={{ flex: 2, alignItems: 'center' }}>
+          <Text style={{
+            fontWeight: 'bold',
+            fontSize: 20,
+            color: COLORS.black
+          }}>Liked you</Text>
+        </View>
+        <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 10 }}>
+          <TouchableOpacity onPress={() => setShowFilter(true)}>
+            <Text style={{
+              // fontWeight: 'bold',
+              // fontSize: 20,
+              color: '#2A3182'
+            }}>Matches</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.container}>
+
 
         <ScrollView showsVerticalScrollIndicator={false} vertical>
           <View style={{
@@ -589,7 +665,7 @@ const LikeDetailScreen = ({ navigation }) => {
               // justifyContent:'center',
               paddingHorizontal: 10,
             }}>
-              {likedusers ? (
+              {premiumUsers ? (
                 <View style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
@@ -597,15 +673,105 @@ const LikeDetailScreen = ({ navigation }) => {
                   width: '100%',
                   paddingHorizontal: 10
                 }}>
-                  {likedusers.map((item, index) => (
+                  {premiumUsers.map((item, index) => (
                     <View key={index}
                       style={{
                         marginTop: 20,
                         width: '45%',
                         marginHorizontal: 5,
                       }}>
-                      <LikesCard image={{ uri: item.image1 }} name={item.Name} navigation={navigation}
-                        description='Model at Instagram' item={item} />
+                      <View style={{
+                        height: 200,
+                        // width: '100%',-+ 
+                        borderRadius: 10,
+                        backgroundColor: COLORS.white,
+                        elevation: 5,
+                      }}>
+                        <View>
+                          <Image source={{ uri: item.image1 }} resizeMode='cover'
+                            blurRadius={10}
+                            style={{
+                              height: 150,
+                              width: '100%',
+                              borderRadius: 10,
+                            }}
+                          />
+                          <View style={{
+                            position: 'absolute',
+                            marginTop: 110,
+                            paddingHorizontal: 5,
+                          }}>
+                            <Text style={{
+                              color: COLORS.white,
+                              fontWeight: 'bold',
+                            }}>{item.Name}</Text>
+                          </View>
+                          <View style={{
+                            position: 'absolute',
+                            marginTop: 125,
+                            paddingHorizontal: 5
+                          }}>
+                            <Text style={{
+                              color: COLORS.white,
+                              fontSize: 12
+                            }}>Modal at Instagaram</Text>
+                          </View>
+                        </View>
+                        <BlurView
+                          style={styles.absolute}
+                          blurType="light"
+                          blurAmount={10}
+                          reducedTransparencyFallbackColor="white"
+                        />
+
+
+
+                        <View style={{
+                          flexDirection: 'row',
+                          paddingHorizontal: 20,
+                          paddingVertical: 5,
+                          justifyContent: 'center'
+                        }}>
+                          <TouchableOpacity disabled style={{
+                            padding: 5,
+                            marginHorizontal: 10,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            elevation: 5,
+                            backgroundColor: COLORS.white,
+                            borderColor: COLORS.light,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                            <Image source={require('../../assets/message.png')} resizeMode='contain'
+                              style={{
+                                width: 20,
+                                height: 20,
+                              }} />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            disabled
+                            style={{
+                              padding: 5,
+                              borderRadius: 20,
+                              borderWidth: 1,
+                              marginHorizontal: 10,
+                              elevation: 5,
+                              backgroundColor: COLORS.white,
+                              borderColor: COLORS.light,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Image source={require('../../assets/heart.png')} resizeMode='contain'
+                              style={{
+                                tintColor: 'red',
+                                width: 20,
+                                height: 20,
+                              }} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
                     </View>
                   ))}
                 </View>
@@ -673,7 +839,7 @@ const LikeDetailScreen = ({ navigation }) => {
                   paddingVertical: 10,
                   backgroundColor: COLORS.main,
                   borderRadius: 10,
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}>
                 <Image source={require('../../assets/Crown.png')} resizeMode="contain" style={{
                   width: 22.14,
@@ -694,7 +860,7 @@ const LikeDetailScreen = ({ navigation }) => {
               // justifyContent:'center',
               paddingHorizontal: 10,
             }}>
-              {likedusers ? (
+              {premiumUsers ? (
                 <View style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
@@ -702,7 +868,7 @@ const LikeDetailScreen = ({ navigation }) => {
                   width: '100%',
                   paddingHorizontal: 10
                 }}>
-                  {likedusers.map((item, index) => (
+                  {premiumUsers.map((item, index) => (
                     <View key={index}
                       style={{
                         marginTop: 20,
@@ -1164,5 +1330,12 @@ export default LikeDetailScreen
 const styles = StyleSheet.create({
   container: {
     height: '100%'
+  },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
   }
 })

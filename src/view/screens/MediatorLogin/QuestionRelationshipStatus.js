@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
+import SVGImg1 from '../../../assets/tik.svg';
 
 const RelationshipTypes = [
   {
@@ -29,21 +30,24 @@ const RelationshipTypes = [
 
 
 const MediatorQuestionRelationshipStatus = ({ navigation, route }) => {
-  const { email, clingy, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { bio, email, DateOfBirth, name } = route.params;
   // console.log(image1);
 
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
   // console.log(Education);
 
   const onReligionScreen = () => {
-    const selectitem = RelationshipTypes[selectedCategoryIndex].name;
-    console.log(selectitem);
+    const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
     if (selectitem) {
       // const Occupation = occupation;
-      navigation.navigate('MediatorQuestionRequestAcess', { RelationshipStatus: selectitem, email: email, clingy: clingy, RelationshipLookingType: RelationshipLookingType, Cuddling: Cuddling, InLife: InLife, InBed: InBed, MovieType: MovieType, NextLongestRelationship: NextLongestRelationship, LongestRelationship: LongestRelationship, OpenTo: OpenTo, DealBreaker: DealBreaker, DealMakers: DealMakers, Firstrefname: Firstrefname, FirstRefemail: FirstRefemail, FirstRefnumber: FirstRefnumber, Secrefname: Secrefname, SecRefemail: SecRefemail, SecRefnumber: SecRefnumber, PartnerBuildType: PartnerBuildType, BuildType: BuildType, PartnerMaxHeight: PartnerMaxHeight, PartnerMinHeight: PartnerMinHeight, Height: Height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      // console.log(selectitem);
+      // return
+      navigation.navigate('MediatorQuestionHaveKidsScreen', {
+        relationshipStatus: selectitem, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name
+      })
     }
     else {
-      ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select relationship status!", ToastAndroid.SHORT);
     }
   }
 
@@ -68,10 +72,7 @@ const MediatorQuestionRelationshipStatus = ({ navigation, route }) => {
                 alignItems: 'flex-end'
               }}>
                 {value == index ? (
-                  <Image source={require('../../../assets/tik.png')} resizeMode='contain' style={{
-                    width: 20,
-                    height: 20
-                  }} />
+                  <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
                 ) : (<View></View>
                 )}
               </View>
@@ -122,24 +123,35 @@ const MediatorQuestionRelationshipStatus = ({ navigation, route }) => {
 
         </View>
 
-
+        <View style={styles.footer}>
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          // height: '30%',
+          flexDirection: 'row',
         }}>
-          <CustomeButton onpress={() => onReligionScreen()}
-            title={'Continue'} />
-
           <View style={{
-            paddingTop: 5,
-            width: 310,
+            marginRight: 2.5
           }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
+            <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+          </View>
+          <View style={{
+            marginLeft: 2.5
+          }}>
+            <CustomeButton width={170} onpress={() => onReligionScreen()}
+              title={'Continue'} />
           </View>
         </View>
+        <View style={{
+          paddingTop: 10,
+          width: 310,
+          alignItems: 'center'
+        }}>
+          <Text style={{ textAlign: 'center', fontSize: 10 }}>
+            By continue you agree our Terms and Privacy Policy.
+          </Text>
+        </View>
+      </View>
       </View>
 
 
@@ -158,10 +170,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    height: '85%',
+    height: '80%',
   },
   footer: {
-    alignItems: 'center'
+    alignItems: 'center',
+    height:'20%'
   },
   NumberInput: {
     flexDirection: 'row',

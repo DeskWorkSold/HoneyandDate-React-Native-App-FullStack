@@ -31,8 +31,8 @@ const WantKidData = [
 
 
 const QuestionWantKidsScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender } = route.params;
-  // console.log(PartnerGender);
+  const { email, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender } = route.params;
+  // console.log(email);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [kids, setKids] = useState();
   console.log(DateOfBirth);
@@ -41,13 +41,13 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     const selectedGender = WantKidData[selectedCategoryIndex].name;
     // console.log('test',selectedGender);
-    navigation.navigate('QuestionBioScreen', { Kids: selectedGender, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
+    navigation.navigate('QuestionBioScreen', { Kids: selectedGender, email: email, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
   }
 
   const onSkip = () => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     // console.log('test',selectedGender);
-    navigation.navigate('QuestionBioScreen', { Kids: null, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
+    navigation.navigate('QuestionBioScreen', { Kids: null, email: email, PartnerGender: PartnerGender, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender })
 
   }
 
@@ -91,36 +91,36 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
 
-        <View style={{
-          alignItems: 'center',
-          justifyContent:'center',
-          paddingTop: 20,
-          flexDirection: 'row',
-          height:40,
-          justifyContent: 'center',
-          paddingHorizontal: 20,
-
-        }}>
           <View style={{
-            flex: 1,
-            // backgroundColor: COLORS.gray2
-          }}>
-            <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
-          </View>
-          <View style={{
-            flex: 2,
-            // backgroundColor: COLORS.gray,
             alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 20,
             flexDirection: 'row',
-            paddingHorizontal: 20
+            height: 40,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+
           }}>
+            <View style={{
+              flex: 1,
+              // backgroundColor: COLORS.gray2
+            }}>
+              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+            </View>
+            <View style={{
+              flex: 2,
+              // backgroundColor: COLORS.gray,
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 20
+            }}>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: COLORS.gray2
+            }}>
+            </View>
           </View>
-          <View style={{
-            flex: 1,
-            backgroundColor: COLORS.gray2
-          }}>
-          </View>
-        </View>
 
           <View style={{
             alignItems: 'center',
@@ -163,7 +163,7 @@ const QuestionWantKidsScreen = ({ navigation, route }) => {
             </View>
             <View style={{ marginHorizontal: 0 }}>
               <CustomeButton onpress={() => onSkip()}
-              title={'Skip'} bcolor={COLORS.light} />
+                title={'Skip'} bcolor={COLORS.light} />
             </View>
 
           </View>

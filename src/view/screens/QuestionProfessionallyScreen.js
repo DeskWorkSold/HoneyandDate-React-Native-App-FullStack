@@ -7,16 +7,16 @@ import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const QuestionProfessionallyScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
+  const { email, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
   const [experince, setExperince] = useState();
   const [experince2, setExperince2] = useState();
   // console.log(DateOfBirth);
 
   const onMusicSelect = () => {
     if (experince && experince2) {
-      console.log(experince,experince2);
+      console.log(experince, experince2);
       navigation.navigate('QuestionPartnerAge', {
-        Experince: experince, InTenYear: experince2, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        Experince: experince, email: email, InTenYear: experince2, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else {
@@ -26,7 +26,7 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
 
   const onSkip = () => {
     navigation.navigate('QuestionPartnerAge', {
-      Experince: null, InTenYear: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+      Experince: null, email: email, InTenYear: null, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
     })
   }
 

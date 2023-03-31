@@ -5,6 +5,7 @@ import CustomeButton from '../../components/CustomeButton';
 import { Picker } from '@react-native-picker/picker';
 import PhoneInput from 'react-native-phone-number-input';
 import auth from '@react-native-firebase/auth';
+import Loader from '../../components/Loader';
 
 
 
@@ -95,7 +96,7 @@ const MediatorLoginWithNumberScreen = ({ navigation }) => {
           <PhoneInput
             ref={phoneInput}
             defaultValue={phoneNumber}
-            defaultCode="PK"
+            defaultCode="US"
             layout="first"
             // withShadow
             autoFocus
@@ -154,16 +155,8 @@ const MediatorLoginWithNumberScreen = ({ navigation }) => {
               <CustomeButton onpress={() => OnhandleSubmit()}
                 title={'Continue'} />
             ) : (
-              <View style={{
-                backgroundColor: COLORS.main,
-                width: 329,
-                height: 50,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
-              </View>
+              <CustomeButton
+                title={'Please wait...'} />
             )}
           </View>
 
@@ -176,6 +169,8 @@ const MediatorLoginWithNumberScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
+
+        <Loader modal={uploading} uploading={uploading} />
       </View>
 
 

@@ -30,7 +30,7 @@ const DrinksData = [
 ]
 
 const QuestionDrinkScreen = ({ navigation, route }) => {
-  const { Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs } = route.params;
+  const { email, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   // console.log(Drugs);
 
@@ -39,7 +39,7 @@ const QuestionDrinkScreen = ({ navigation, route }) => {
     console.log(DrinksData[selectedCategoryIndex].name);
     const selectedPolitics = DrinksData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('QuestionInstagramScreen', { Drink: selectedPolitics, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionInstagramScreen', { Drink: selectedPolitics, email: email, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select do you use Drink!", ToastAndroid.SHORT);
@@ -47,7 +47,7 @@ const QuestionDrinkScreen = ({ navigation, route }) => {
   }
 
   const SkipScreen = () => {
-    navigation.navigate('QuestionInstagramScreen', { Drink: null, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionInstagramScreen', { Drink: null, email: email, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListDrinks = ({ data, value, setValue, cancle }) => {
@@ -92,7 +92,7 @@ const QuestionDrinkScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
 
-        <View style={{
+          <View style={{
             alignItems: 'center',
             paddingTop: 20,
             flexDirection: 'row',
@@ -155,8 +155,8 @@ const QuestionDrinkScreen = ({ navigation, route }) => {
 
           <View style={{
             // flexDirection: 'row'
-            paddingTop:20,
-            alignItems:'center'
+            paddingTop: 20,
+            alignItems: 'center'
           }}>
             <View style={{ marginBottom: 5 }}>
               <CustomeButton onpress={() => onInstagramScreen()}

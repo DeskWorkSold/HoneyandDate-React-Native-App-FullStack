@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
 import { launchImageLibrary } from 'react-native-image-picker';
+import SVGImg from '../../../assets/camera.svg';
 
 
-const MediatorQuestionPhotoScreen = ({ navigation }) => {
+const MediatorQuestionPhotoScreen = ({ navigation, route }) => {
+  const { organization, HaveKids, relationshipStatus, bio, email, DateOfBirth, name } = route.params;
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
@@ -14,11 +16,11 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
 
   const onNamePress = () => {
     // console.log(image1, image2, image3, image4, image5);
-    if (!image1 && !image2 && !image3 && !image4 && !image5) {
-      ToastAndroid.show("Please select your image first!", ToastAndroid.SHORT);
+    if (image1 || image2 || image3 || image4 || image5) {
+      navigation.navigate('MediatorQuestionRequestAcess', { image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, organization: organization, HaveKids: HaveKids, relationshipStatus: relationshipStatus, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name })
     }
     else {
-      navigation.navigate('MediatorNameScreen', { image1: image1, image2: image2, image3: image3, image4: image4, image5: image5 })
+      ToastAndroid.show("Please select minimum one photo!", ToastAndroid.SHORT);
     }
   }
 
@@ -89,8 +91,8 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
           </View>
 
           <View style={{
-            // flexDirection: 'row',
-            // alignItems: 'flex-end',
+            flexDirection: 'row',
+            alignItems: 'flex-end',
             paddingTop: 40,
             paddingHorizontal: 20
           }}>
@@ -116,20 +118,23 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../../assets/camera.png')} resizeMode='contain' />
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
-            {/* {image2 ? (
-              <Image source={{ uri: image2 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
+            {image2 ? (
+              <TouchableOpacity
+                onPress={pickImage2}>
+                <Image source={{ uri: image2 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                // onPress={pickImage2}
+                onPress={pickImage2}
                 style={{
                   height: 150,
                   width: 90,
@@ -138,21 +143,24 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../../assets/camera.png')} resizeMode='contain' />
+               <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
 
             {image3 ? (
-              <Image source={{ uri: image3 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
+              <TouchableOpacity
+                onPress={pickImage3}>
+                <Image source={{ uri: image3 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                // onPress={pickImage3}
+                onPress={pickImage3}
                 style={{
                   height: 150,
                   width: 90,
@@ -161,27 +169,31 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../../assets/camera.png')} resizeMode='contain' />
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
-            )} */}
+            )}
 
           </View>
 
           <View style={{
             flexDirection: 'row',
-            paddingTop: 40
+            paddingTop: 40,
+            paddingHorizontal: 20
           }}>
 
-            {/* {image4 ? (
-              <Image source={{ uri: image4 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
+            {image4 ? (
+              <TouchableOpacity
+                onPress={pickImage4}>
+                <Image source={{ uri: image4 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                // onPress={pickImage4}
+                onPress={pickImage4}
                 style={{
                   height: 150,
                   width: 90,
@@ -190,20 +202,23 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../../assets/camera.png')} resizeMode='contain' />
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
             )}
 
             {image5 ? (
-              <Image source={{ uri: image5 }} style={{
-                height: 150,
-                width: 90,
-                marginHorizontal: 10,
-                resizeMode: 'cover'
-              }} />
+              <TouchableOpacity
+                onPress={pickImage5}>
+                <Image source={{ uri: image5 }} style={{
+                  height: 150,
+                  width: 90,
+                  marginHorizontal: 10,
+                  resizeMode: 'cover'
+                }} />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                // onPress={pickImage5}
+                onPress={pickImage5}
                 style={{
                   height: 150,
                   width: 90,
@@ -212,9 +227,9 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
                   backgroundColor: COLORS.light,
                   marginHorizontal: 10,
                 }}>
-                <Image source={require('../../../assets/camera.png')} resizeMode='contain' />
+                <SVGImg width={30.5} height={25.5} />
               </TouchableOpacity>
-            )} */}
+            )}
           </View>
 
 
@@ -227,19 +242,28 @@ const MediatorQuestionPhotoScreen = ({ navigation }) => {
         <View style={styles.footer}>
 
           <View style={{
+            alignItems: 'center',
+            paddingBottom: 5,
             paddingTop: 20,
-            flexDirection: 'row'
+            // height: '30%',
+            flexDirection: 'row',
           }}>
-            <View style={{ marginHorizontal: 5 }}>
-              <CustomeButton onpress={() => onNamePress()}
+            <View style={{
+              marginRight: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+            </View>
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => onNamePress()}
                 title={'Continue'} />
             </View>
-
           </View>
 
           <View style={{
             paddingTop: 20,
-            width: 310,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.

@@ -22,7 +22,7 @@ const HeaderTabOne = ({ Lefticon, logo, onpress, Righticon, Title }) => {
                     {Lefticon ?
                         <SVGImg1 width={46} height={46} />
                         :
-                        <Image source={Lefticon} resizeMode='contain' />
+                        <Image source={require('../../assets/menu3.png')} resizeMode='contain' />
                     }
                 </TouchableOpacity>
             </View>

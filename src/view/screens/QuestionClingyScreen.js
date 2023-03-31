@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ToastAndroid, ActivityIndicator } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ToastAndroid, ActivityIndicator, Modal, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
@@ -8,8 +8,9 @@ import storage from '@react-native-firebase/storage';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../redux/reducers/Reducers';
 import SVGImg from '../../assets/tik.svg';
+const { height, width } = Dimensions.get('window');
 
- 
+
 const EducationData = [
   {
     id: '1',
@@ -24,7 +25,7 @@ const EducationData = [
 
 
 const QuestionClingyScreen = ({ navigation, route }) => {
-  const { RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { email, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, EyeColor, HairColor, PartnerMaxHeightType, PartnerMinHeightType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, languages, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   // console.log(image1);
   // console.log(Nature,PartnerNature);
 
@@ -32,6 +33,8 @@ const QuestionClingyScreen = ({ navigation, route }) => {
   const [transferred, setTransferred] = useState(0);
   const [checked, setChecked] = React.useState(''); //initial choice
   const [clingy, setclingy] = useState('');
+  const [modal, setModal] = useState(false);
+
   const CurrentUser = auth().currentUser.uid;
   const userPhoneNumber = auth().currentUser.phoneNumber
   // const [image, setImage] = useState(image1);
@@ -49,6 +52,7 @@ const QuestionClingyScreen = ({ navigation, route }) => {
     if (clingy) {
       // return;
       try {
+        setModal(true)
         setUploading(true)
         const imageUrl = await uploadImage();
         const imageUrl2 = await uploadImage2();
@@ -57,6 +61,16 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         const imageUrl5 = await uploadImage5();
         // const imageUrl6 = await uploadImage();
         var Data = new Object();
+        Data.email = email;
+        Data.filterMaxAge = filterMaxAge;
+        Data.filterMinAge = filterMinAge;
+        Data.ConvertedReligion = ConvertedReligion;
+        Data.ConvertedReligionDetail = ConvertedReligionDetail;
+        Data.languages = languages;
+        Data.PartnerMinHeightType = PartnerMinHeightType;
+        Data.PartnerMaxHeightType = PartnerMaxHeightType;
+        Data.HairColor = HairColor;
+        Data.EyeColor = EyeColor;
         Data.Clingy = clingy;
         Data.Interest = Interest;
         Data.Cuddling = Cuddling;
@@ -107,12 +121,13 @@ const QuestionClingyScreen = ({ navigation, route }) => {
         Data.Vape = Vape;
         Data.Smoke = Smoke;
         Data.Lookingfor = Lookingfor;
-        Data.Nature = Nature;
+        Data.Nature = IntroandExtro;
         Data.PartnerNature = PartnerNature;
         Data.PoliticalPartnerView = PoliticalPartnerView;
         Data.PoliticalView = PoliticalView;
         Data.Music = Music;
         Data.Experince = Experince;
+        Data.InTenYear = InTenYear;
         Data.Bio = Bio;
         Data.Kids = Kids;
         Data.PartnerGender = PartnerGender;
@@ -144,6 +159,8 @@ const QuestionClingyScreen = ({ navigation, route }) => {
             AddToRedux(Data)
             ToastAndroid.show('Welcome to Honey and Dates', ToastAndroid.SHORT)
             navigation.navigate('QuestionCongratulationScreen')
+            setModal(false)
+            setUploading(false)
           })
         // setImage(null)
         setUploading(false)
@@ -519,16 +536,8 @@ const QuestionClingyScreen = ({ navigation, route }) => {
               <CustomeButton onpress={() => onCongratsScreen()}
                 title={'Continue'} />
             ) : (
-              <View style={{
-                backgroundColor: COLORS.main,
-                width: 329,
-                height: 50,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
-              </View>
+              <CustomeButton
+                title={'Please wait...'} />
             )}
           </View>
 
@@ -541,6 +550,26 @@ const QuestionClingyScreen = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
+
+
+
+
+
+        <Modal
+          animationType='fade'
+          transparent={true}
+          visible={modal}>
+          <View style={{
+            width: width,
+            height: height,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: COLORS.light,
+            opacity: .9
+          }}>
+            <ActivityIndicator size="large" color={COLORS.main} animating={uploading} />
+          </View>
+        </Modal>
       </View>
 
     </SafeAreaView>

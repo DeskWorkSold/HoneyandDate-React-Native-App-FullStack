@@ -1,23 +1,27 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, Alert } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, ToastAndroid, Alert } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
+import { TextInput } from 'react-native-paper';
 
 
 const MediatorQuestionBioScreen = ({ navigation, route }) => {
-  const { Kids, PartnerGender, name, image1, image2, image3, image4, image5, DateOfBirth, Gender } = route.params;
+  const { email, name } = route.params;
   const [bio, setbio] = useState();
+  const [inputBio, setInputBio] = useState(false);
 
   const onQuestionProfessionally = () => {
-    if(bio){
+    if (bio) {
       // console.log('bio', bio);
-      navigation.navigate('MediatorQuestionProfessionallyScreen', {
-        Bio: bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+      // return
+      navigation.navigate('MediatorDateOfBirthScreen', {
+        bio: bio, email: email, name: name
       })
     }
-    else{
+    else {
       // Alert.alert('please enter bio')
       console.log('not found');
+      setInputBio(true)
       ToastAndroid.show("Please enter your bio!", ToastAndroid.SHORT);
     }
   }
@@ -29,7 +33,7 @@ const MediatorQuestionBioScreen = ({ navigation, route }) => {
 
         <View style={styles.contentContainer}>
           <View style={{
-            paddingTop: 10
+            paddingTop: '10%'
           }}>
             <Image source={require('../../../assets/bio.png')}
               resizeMode='contain' />
@@ -60,38 +64,59 @@ const MediatorQuestionBioScreen = ({ navigation, route }) => {
             paddingTop: 20,
           }}>
             <TextInput
+              // label='Description'
               placeholder='Type Here!'
-              multiline
-              numberOfLines={8}
+              placeholderTextColor={COLORS.gray}
               value={bio}
-              onChangeText={bio => setbio(bio)}
-              style={styles.TextInput} />
+              mode='outlined'
+              multiline
+              numberOfLines={4}
+              error={inputBio}
+              // onBlur={inputBio}
+              onChangeText={(bio) => setbio(bio)}
+              onFocus={() => setInputBio(false)}
+              activeOutlineColor={COLORS.light}
+              outlineColor={COLORS.light}
+              style={styles.TextInput}
+            />
           </View>
 
 
-        </View>
 
 
-        <View style={styles.footer}>
+          {/* <View style={styles.footer}> */}
 
           <View style={{
-            paddingTop: 20,
+            // paddingTop: 20,
+            paddingTop: '20%',
+            flexDirection: 'row',
+            alignItems: 'center',
           }}>
-            <CustomeButton onpress={() => onQuestionProfessionally()}
-              title={'Continue'} />
+            <View style={{
+              marginRight: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+            </View>
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              <CustomeButton width={170}  onpress={() => onQuestionProfessionally()}
+                title={'Continue'} />
+            </View>
           </View>
 
           <View style={{
-            paddingTop: 20,
-            width: 310,
+            paddingTop: 10,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
             </Text>
           </View>
+          {/* </View> */}
+
+
         </View>
-
-
       </View>
 
 
@@ -109,12 +134,12 @@ const styles = StyleSheet.create({
 
   },
   contentContainer: {
-    height: '80%',
+    height: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   footer: {
-    height: '20%'
+    // height: '20%'
   },
   NumberInput: {
     marginTop: 60,
@@ -123,14 +148,15 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.gray,
     alignItems: 'center',
     marginHorizontal: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   TextInput: {
-    padding: 10,
+    // padding: 10,
     backgroundColor: COLORS.light,
-    color: COLORS.gray,
+    // color: COLORS.gray,
+
     width: 320,
-    borderRadius: 10,
+    // borderRadius: 30,
     height: 200,
     textAlignVertical: 'top',
   },

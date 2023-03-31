@@ -12,7 +12,13 @@ const MediatorApprovalScreen = ({navigation}) => {
 
   const CheckApproval = () => {
     // console.log(MediatorUser?.PanelAccess)
-    if(MediatorUser?.PanelAccess == true){
+    if(MediatorUser?.PanelAccess == true && MediatorUser.MediatorId == 2){
+      setTimeout(() => {
+        navigation.navigate('MediatorMatchCoordinatorBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if(MediatorUser?.PanelAccess == true && MediatorUser.MediatorId == 1){
       setTimeout(() => {
         navigation.navigate('MediatorDashboardScreen');
         console.log('Approval Accepted');

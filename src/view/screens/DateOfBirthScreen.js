@@ -17,7 +17,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
   // console.log(image5);
   const [date, setdate] = useState(dayjs());
   const [arr, setArr] = useState([]);
-  const [customDate, setCustomDate] = useState(new Date());
+  const [customDate, setCustomDate] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isYearModalVisible, setIsYearModalVisible] = useState(false);
   // const cartItems = useSelector((state) => state.reducers.selectedItems.items)
@@ -28,7 +28,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
     const years = new Date().getFullYear() - new Date(customDate).getFullYear();
     // console.log('==>',customDate);
     // return
-    if (!customDate && years < 18) {
+    if (!customDate || years < 18) {
       if (!customDate) {
         ToastAndroid.show("Please select your Birth Date!", ToastAndroid.SHORT);
       }
@@ -37,7 +37,8 @@ const DateOfBirthScreen = ({ navigation, route }) => {
       }
     }
     else {
-      // console.log(years);
+      // console.log(customDate);
+      // return
       navigation.navigate('QuestionGenderScreen', { DateOfBirth: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
     }
   }

@@ -70,64 +70,66 @@ import MediatorLoginWithNumberScreen from '../screens/MediatorLogin/LoginWithNum
 import MediatorLoginWithOTPScreen from '../screens/MediatorLogin/LoginWithOTPScreen';
 import MediatorNameScreen from '../screens/MediatorLogin/NameScreen';
 import MediatorDateOfBirthScreen from '../screens/MediatorLogin/DateOfBirthScreen';
-// import LoginWithEmail from '../screens/MediatorLogin/LoginWithEmail';
-// import NotificationScreen from '../screens/MediatorLogin/NotificationScreen';
-import MediatorQuestionGenderScreen from '../screens/MediatorLogin/QuestionGenderScreen';
-import MediatorQuestionYourInterestScreen from '../screens/MediatorLogin/QuestionYourInterestScreen';
-import MediatorQuestionWantKidsScreen from '../screens/MediatorLogin/QuestionWantKidsScreen';
 import MediatorQuestionBioScreen from '../screens/MediatorLogin/QuestionBioScreen';
-import MediatorQuestionProfessionallyScreen from '../screens/MediatorLogin/QuestionProfessionallyScreen';
-import MediatorQuestionMusicScreen from '../screens/MediatorLogin/QuestionMusicScreen';
-import MediatorQuestionPoliticalviewScreen from '../screens/MediatorLogin/QuestionPoliticalviewScreen';
-import MediatorQuestionPoliticalPartnerviewScreen from '../screens/MediatorLogin/QuestionPoliticalPartnerviewScreen';
-import MediatorQuestionIntroandExtroScreen from '../screens/MediatorLogin/QuestionIntroandExtroScreen';
-import MediatorQuestionPIntroandExtroScreen from '../screens/MediatorLogin/QuestionPIntroandExtroScreen';
 import MediatorQuestionPhotoScreen from '../screens/MediatorLogin/QuestionPhotoScreen';
-import MediatorQuestionTypeofRelationScreen from '../screens/MediatorLogin/QuestionTypeofRelationScreen';
-import MediatorQuestionSmokeScreen from '../screens/MediatorLogin/QuestionSmokeScreen';
-import MediatorQuestionVapeScreen from '../screens/MediatorLogin/QuestionVapeScreen';
-import MediatorQuestionMarijuanaScreen from '../screens/MediatorLogin/QuestionMarijuanaScreen';
-import MediatorQuestionDrugsScreen from '../screens/MediatorLogin/QuestionDrugsScreen';
-import MediatorQuestionDrinkScreen from '../screens/MediatorLogin/QuestionDrinkScreen';
-import MediatorQuestionInstagramScreen from '../screens/MediatorLogin/QuestionInstagramScreen';
-import MediatorQuestionOccupationScreen from '../screens/MediatorLogin/QuestionOccupationScreen';
-import MediatorQuestionInterestScreen from '../screens/MediatorLogin/QuestionInterestScreen';
-import MediatorQuestionEducationScreen from '../screens/MediatorLogin/QuestionEducationScreen';
-import MediatorQuestionRelationshipScreen from '../screens/MediatorLogin/QuestionRelationshipScreen';
-import MediatorQuestionReligionScreen from '../screens/MediatorLogin/QuestionReligionScreen';
-import MediatorQuestionMoreAboutChristianScreen from '../screens/MediatorLogin/QuestionMoreAboutChristianScreen';
-import MediatorQuestionMoreAboutJewishScreen from '../screens/MediatorLogin/QuestionMoreAboutJewishScreen';
-import MediatorQuestionMoreAboutCatholicScreen from '../screens/MediatorLogin/QuestionMoreAboutCatholicScreen';
-import MediatorQuestionMoreAboutMuslimScreen from '../screens/MediatorLogin/QuestionMoreAboutMuslimScreen';
-import MediatorQuestionDietScreen from '../screens/MediatorLogin/QuestionDietScreen';
-import MediatorQuestionPartnerDietScreen from '../screens/MediatorLogin/QuestionPartnerDietScreen';
-import MediatorQuestionFavFoodScreen from '../screens/MediatorLogin/QuestionFavFoodScreen';
-import MediatorQuestionExersizeScreen from '../screens/MediatorLogin/QuestionExersizeScreen';
-import MediatorQuestionExersizePartnerScreen from '../screens/MediatorLogin/QuestionExersizePartnerScreen';
-import MediatorQuestionEthnicityScreen from '../screens/MediatorLogin/QuestionEthnicityScreen';
-import MediatorQuestionEthnicityPartnerScreen from '../screens/MediatorLogin/QuestionEthnicityPartnerScreen';
-import MediatorQuestionDescribeYouScreen from '../screens/MediatorLogin/QuestionDescribeYouScreen';
-import MediatorQuestionDescribePartnerScreen from '../screens/MediatorLogin/QuestionDescribePartnerScreen';
-import MediatorQuestionDisabilityScreen from '../screens/MediatorLogin/QuestionDisabilityScreen';
-import MediatorQuestionDisabilityPartnerScreen from '../screens/MediatorLogin/QuestionDisabilityPartnerScreen';
-import MediatorQuestionHeightScreen from '../screens/MediatorLogin/QuestionHeightScreen';
-import MediatorQuestionHeightPartnerScreen from '../screens/MediatorLogin/QuestionHeightPartnerScreen';
-import MediatorQuestionBuildTypeScreen from '../screens/MediatorLogin/QuestionBuildTypeScreen';
-import MediatorQuestionBuildTypePartnerScreen from '../screens/MediatorLogin/QuestionBuildTypePartnerScreen';
-import MediatorQuestionReferenceEmailScreen from '../screens/MediatorLogin/QuestionReferenceEmailScreen';
-import MediatorQuestionDealBreakandMakeScreen from '../screens/MediatorLogin/QuestionDealBreakandMakeScreen';
-import MediatorQuestionPartnerConditionScreen from '../screens/MediatorLogin/QuestionPartnerConditionScreen';
-import MediatorQuestionLongestRelationshipScreen from '../screens/MediatorLogin/QuestionLongestRelationshipScreen';
-import MediatorQuestionNextRelationshipTimeScreen from '../screens/MediatorLogin/QuestionNextRelationshipTimeScreen';
-import MediatorQuestionMovieTypeScreen from '../screens/MediatorLogin/QuestionMovieTypeScreen';
-import MediatorQuestionInBedScreen from '../screens/MediatorLogin/QuestionInBedScreen';
-import MediatorQuestionInLifeScreen from '../screens/MediatorLogin/QuestionInLifeScreen';
-import MediatorQuestionCuddlingScreen from '../screens/MediatorLogin/QuestionCuddlingScreen';
-import MediatorQuestionRelationshipLookingScreen from '../screens/MediatorLogin/QuestionRelationshipLookingScreen';
-import MediatorQuestionClingyScreen from '../screens/MediatorLogin/QuestionClingyScreen';
+import MediatorQuestionHaveKidsScreen from '../screens/MediatorLogin/QuestionHaveKidsScreen';
 import MediatorLoginWithEmail from '../screens/MediatorLogin/LoginWithEmail';
 import MediatorQuestionRelationshipStatus from '../screens/MediatorLogin/QuestionRelationshipStatus';
 import MediatorQuestionRequestAcess from '../screens/MediatorLogin/QuestionRequestAcess';
+import MediatoreQuestionRequestAcessOther from '../screens/MediatorLogin/QuestionRequestAcessOther';
+import MediatorQuestionOrganizationScreen from '../screens/MediatorLogin/QuestionOrganizationScreen';
+// import LoginWithEmail from '../screens/MediatorLogin/LoginWithEmail';
+// import NotificationScreen from '../screens/MediatorLogin/NotificationScreen';
+// import MediatorQuestionGenderScreen from '../screens/MediatorLogin/QuestionGenderScreen';
+// import MediatorQuestionYourInterestScreen from '../screens/MediatorLogin/QuestionYourInterestScreen';
+// import MediatorQuestionWantKidsScreen from '../screens/MediatorLogin/QuestionWantKidsScreen';
+// import MediatorQuestionProfessionallyScreen from '../screens/MediatorLogin/QuestionProfessionallyScreen';
+// import MediatorQuestionMusicScreen from '../screens/MediatorLogin/QuestionMusicScreen';
+// import MediatorQuestionPoliticalviewScreen from '../screens/MediatorLogin/QuestionPoliticalviewScreen';
+// import MediatorQuestionPoliticalPartnerviewScreen from '../screens/MediatorLogin/QuestionPoliticalPartnerviewScreen';
+// import MediatorQuestionIntroandExtroScreen from '../screens/MediatorLogin/QuestionIntroandExtroScreen';
+// import MediatorQuestionPIntroandExtroScreen from '../screens/MediatorLogin/QuestionPIntroandExtroScreen';
+// import MediatorQuestionTypeofRelationScreen from '../screens/MediatorLogin/QuestionTypeofRelationScreen';
+// import MediatorQuestionSmokeScreen from '../screens/MediatorLogin/QuestionSmokeScreen';
+// import MediatorQuestionVapeScreen from '../screens/MediatorLogin/QuestionVapeScreen';
+// import MediatorQuestionMarijuanaScreen from '../screens/MediatorLogin/QuestionMarijuanaScreen';
+// import MediatorQuestionDrugsScreen from '../screens/MediatorLogin/QuestionDrugsScreen';
+// import MediatorQuestionDrinkScreen from '../screens/MediatorLogin/QuestionDrinkScreen';
+// import MediatorQuestionInstagramScreen from '../screens/MediatorLogin/QuestionInstagramScreen';
+// import MediatorQuestionOccupationScreen from '../screens/MediatorLogin/QuestionOccupationScreen';
+// import MediatorQuestionInterestScreen from '../screens/MediatorLogin/QuestionInterestScreen';
+// import MediatorQuestionEducationScreen from '../screens/MediatorLogin/QuestionEducationScreen';
+// import MediatorQuestionRelationshipScreen from '../screens/MediatorLogin/QuestionRelationshipScreen';
+// import MediatorQuestionReligionScreen from '../screens/MediatorLogin/QuestionReligionScreen';
+// import MediatorQuestionMoreAboutChristianScreen from '../screens/MediatorLogin/QuestionMoreAboutChristianScreen';
+// import MediatorQuestionMoreAboutJewishScreen from '../screens/MediatorLogin/QuestionMoreAboutJewishScreen';
+// import MediatorQuestionMoreAboutCatholicScreen from '../screens/MediatorLogin/QuestionMoreAboutCatholicScreen';
+// import MediatorQuestionMoreAboutMuslimScreen from '../screens/MediatorLogin/QuestionMoreAboutMuslimScreen';
+// import MediatorQuestionDietScreen from '../screens/MediatorLogin/QuestionDietScreen';
+// import MediatorQuestionPartnerDietScreen from '../screens/MediatorLogin/QuestionPartnerDietScreen';
+// import MediatorQuestionFavFoodScreen from '../screens/MediatorLogin/QuestionFavFoodScreen';
+// import MediatorQuestionExersizeScreen from '../screens/MediatorLogin/QuestionExersizeScreen';
+// import MediatorQuestionExersizePartnerScreen from '../screens/MediatorLogin/QuestionExersizePartnerScreen';
+// import MediatorQuestionEthnicityScreen from '../screens/MediatorLogin/QuestionEthnicityScreen';
+// import MediatorQuestionEthnicityPartnerScreen from '../screens/MediatorLogin/QuestionEthnicityPartnerScreen';
+// import MediatorQuestionDescribeYouScreen from '../screens/MediatorLogin/QuestionDescribeYouScreen';
+// import MediatorQuestionDescribePartnerScreen from '../screens/MediatorLogin/QuestionDescribePartnerScreen';
+// import MediatorQuestionDisabilityPartnerScreen from '../screens/MediatorLogin/QuestionDisabilityPartnerScreen';
+// import MediatorQuestionHeightScreen from '../screens/MediatorLogin/QuestionHeightScreen';
+// import MediatorQuestionHeightPartnerScreen from '../screens/MediatorLogin/QuestionHeightPartnerScreen';
+// import MediatorQuestionBuildTypeScreen from '../screens/MediatorLogin/QuestionBuildTypeScreen';
+// import MediatorQuestionBuildTypePartnerScreen from '../screens/MediatorLogin/QuestionBuildTypePartnerScreen';
+// import MediatorQuestionReferenceEmailScreen from '../screens/MediatorLogin/QuestionReferenceEmailScreen';
+// import MediatorQuestionDealBreakandMakeScreen from '../screens/MediatorLogin/QuestionDealBreakandMakeScreen';
+// import MediatorQuestionPartnerConditionScreen from '../screens/MediatorLogin/QuestionPartnerConditionScreen';
+// import MediatorQuestionLongestRelationshipScreen from '../screens/MediatorLogin/QuestionLongestRelationshipScreen';
+// import MediatorQuestionNextRelationshipTimeScreen from '../screens/MediatorLogin/QuestionNextRelationshipTimeScreen';
+// import MediatorQuestionMovieTypeScreen from '../screens/MediatorLogin/QuestionMovieTypeScreen';
+// import MediatorQuestionInBedScreen from '../screens/MediatorLogin/QuestionInBedScreen';
+// import MediatorQuestionInLifeScreen from '../screens/MediatorLogin/QuestionInLifeScreen';
+// import MediatorQuestionCuddlingScreen from '../screens/MediatorLogin/QuestionCuddlingScreen';
+// import MediatorQuestionRelationshipLookingScreen from '../screens/MediatorLogin/QuestionRelationshipLookingScreen';
+// import MediatorQuestionClingyScreen from '../screens/MediatorLogin/QuestionClingyScreen';
 
 
 import HomeScreen from '../screens/HomeScreen';
@@ -146,85 +148,12 @@ import QuestionConvertedReligion from '../screens/QuestionConvertedReligion';
 import QuestionHairColorScreen from '../screens/QuestionHairColorScreen';
 import QuestionEyeColorScreen from '../screens/QuestionEyeColorScreen';
 import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
+import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
 
 
 
 const Stack = createNativeStackNavigator();
-
-const MadiatorStack = ({ navigation }) => (
-    <Stack.Navigator initialRouteName='MediatorLoginWithNumberScreen' screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MediatorLoginWithNumberScreen" component={MediatorLoginWithNumberScreen} />
-        <Stack.Screen name="MediatorLoginWithOTPScreen" component={MediatorLoginWithOTPScreen} />
-        {/* <Stack.Screen name="MediatorLoginWithEmail" component={MediatorLoginWithEmail} /> */}
-        <Stack.Screen name="MediatorQuestionPhotoScreen" component={MediatorQuestionPhotoScreen} />
-        <Stack.Screen name="MediatorNameScreen" component={MediatorNameScreen} />
-        <Stack.Screen name="MediatorDateOfBirthScreen" component={MediatorDateOfBirthScreen} />
-        <Stack.Screen name="MediatorQuestionGenderScreen" component={MediatorQuestionGenderScreen} />
-        <Stack.Screen name="MediatorQuestionYourInterestScreen" component={MediatorQuestionYourInterestScreen} />
-        <Stack.Screen name="MediatorQuestionWantKidsScreen" component={MediatorQuestionWantKidsScreen} />
-        <Stack.Screen name="MediatorQuestionBioScreen" component={MediatorQuestionBioScreen} />
-        <Stack.Screen name="MediatorQuestionProfessionallyScreen" component={MediatorQuestionProfessionallyScreen} />
-        <Stack.Screen name="MediatorQuestionMusicScreen" component={MediatorQuestionMusicScreen} />
-        <Stack.Screen name="MediatorQuestionPoliticalviewScreen" component={MediatorQuestionPoliticalviewScreen} />
-        <Stack.Screen name="MediatorQuestionPoliticalPartnerviewScreen" component={MediatorQuestionPoliticalPartnerviewScreen} />
-        <Stack.Screen name="MediatorQuestionIntroandExtroScreen" component={MediatorQuestionIntroandExtroScreen} />
-        <Stack.Screen name="MediatorQuestionPIntroandExtroScreen" component={MediatorQuestionPIntroandExtroScreen} />
-        <Stack.Screen name="MediatorQuestionTypeofRelationScreen" component={MediatorQuestionTypeofRelationScreen} />
-        <Stack.Screen name="MediatorQuestionSmokeScreen" component={MediatorQuestionSmokeScreen} />
-        <Stack.Screen name="MediatorQuestionVapeScreen" component={MediatorQuestionVapeScreen} />
-        <Stack.Screen name="MediatorQuestionMarijuanaScreen" component={MediatorQuestionMarijuanaScreen} />
-        <Stack.Screen name="MediatorQuestionDrugsScreen" component={MediatorQuestionDrugsScreen} />
-        <Stack.Screen name="MediatorQuestionDrinkScreen" component={MediatorQuestionDrinkScreen} />
-        <Stack.Screen name="MediatorQuestionInstagramScreen" component={MediatorQuestionInstagramScreen} />
-        <Stack.Screen name="MediatorQuestionOccupationScreen" component={MediatorQuestionOccupationScreen} />
-        <Stack.Screen name="MediatorQuestionInterestScreen" component={MediatorQuestionInterestScreen} />
-        <Stack.Screen name="MediatorQuestionEducationScreen" component={MediatorQuestionEducationScreen} />
-        <Stack.Screen name="MediatorQuestionRelationshipScreen" component={MediatorQuestionRelationshipScreen} />
-        <Stack.Screen name="MediatorQuestionReligionScreen" component={MediatorQuestionReligionScreen} />
-        <Stack.Screen name="MediatorQuestionMoreAboutChristianScreen" component={MediatorQuestionMoreAboutChristianScreen} />
-        <Stack.Screen name="MediatorQuestionMoreAboutJewishScreen" component={MediatorQuestionMoreAboutJewishScreen} />
-        <Stack.Screen name="MediatorQuestionMoreAboutCatholicScreen" component={MediatorQuestionMoreAboutCatholicScreen} />
-        <Stack.Screen name="MediatorQuestionMoreAboutMuslimScreen" component={MediatorQuestionMoreAboutMuslimScreen} />
-        <Stack.Screen name="MediatorQuestionDietScreen" component={MediatorQuestionDietScreen} />
-        <Stack.Screen name="MediatorQuestionPartnerDietScreen" component={MediatorQuestionPartnerDietScreen} />
-        <Stack.Screen name="MediatorQuestionFavFoodScreen" component={MediatorQuestionFavFoodScreen} />
-        <Stack.Screen name="MediatorQuestionExersizeScreen" component={MediatorQuestionExersizeScreen} />
-        <Stack.Screen name="MediatorQuestionExersizePartnerScreen" component={MediatorQuestionExersizePartnerScreen} />
-        <Stack.Screen name="MediatorQuestionEthnicityScreen" component={MediatorQuestionEthnicityScreen} />
-        <Stack.Screen name="MediatorQuestionEthnicityPartnerScreen" component={MediatorQuestionEthnicityPartnerScreen} />
-        <Stack.Screen name="MediatorQuestionDescribeYouScreen" component={MediatorQuestionDescribeYouScreen} />
-        <Stack.Screen name="MediatorQuestionDescribePartnerScreen" component={MediatorQuestionDescribePartnerScreen} />
-        <Stack.Screen name="MediatorQuestionDisabilityScreen" component={MediatorQuestionDisabilityScreen} />
-        <Stack.Screen name="MediatorQuestionDisabilityPartnerScreen" component={MediatorQuestionDisabilityPartnerScreen} />
-        <Stack.Screen name="MediatorQuestionHeightScreen" component={MediatorQuestionHeightScreen} />
-        <Stack.Screen name="MediatorQuestionHeightPartnerScreen" component={MediatorQuestionHeightPartnerScreen} />
-        <Stack.Screen name="MediatorQuestionBuildTypeScreen" component={MediatorQuestionBuildTypeScreen} />
-        <Stack.Screen name="MediatorQuestionBuildTypePartnerScreen" component={MediatorQuestionBuildTypePartnerScreen} />
-        <Stack.Screen name="MediatorQuestionReferenceEmailScreen" component={MediatorQuestionReferenceEmailScreen} />
-        <Stack.Screen name="MediatorQuestionDealBreakandMakeScreen" component={MediatorQuestionDealBreakandMakeScreen} />
-        <Stack.Screen name="MediatorQuestionPartnerConditionScreen" component={MediatorQuestionPartnerConditionScreen} />
-        <Stack.Screen name="MediatorQuestionLongestRelationshipScreen" component={MediatorQuestionLongestRelationshipScreen} />
-        <Stack.Screen name="MediatorQuestionNextRelationshipTimeScreen" component={MediatorQuestionNextRelationshipTimeScreen} />
-        <Stack.Screen name="MediatorQuestionMovieTypeScreen" component={MediatorQuestionMovieTypeScreen} />
-        <Stack.Screen name="MediatorQuestionInBedScreen" component={MediatorQuestionInBedScreen} />
-        <Stack.Screen name="MediatorQuestionInLifeScreen" component={MediatorQuestionInLifeScreen} />
-        <Stack.Screen name="MediatorQuestionCuddlingScreen" component={MediatorQuestionCuddlingScreen} />
-        <Stack.Screen name="MediatorQuestionRelationshipLookingScreen" component={MediatorQuestionRelationshipLookingScreen} />
-        <Stack.Screen name="MediatorQuestionClingyScreen" component={MediatorQuestionClingyScreen} />
-        <Stack.Screen name="MediatorLoginWithEmail" component={MediatorLoginWithEmail} />
-        <Stack.Screen name="MediatorQuestionRelationshipStatus" component={MediatorQuestionRelationshipStatus} />
-        <Stack.Screen name="MediatorQuestionRequestAcess" component={MediatorQuestionRequestAcess} />
-    </Stack.Navigator>
-);
-
-const MediatorDashboardStack = ({ navigation }) => (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MediatorApprovalScreen" component={MediatorApprovalScreen} />
-        <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
-    </Stack.Navigator>
-)
-
-
+// const MediatorUser = useSelector(selectMediatorUser);
 
 const MyStack = () => {
     const [initializing, setInitializing] = useState(true);
@@ -239,6 +168,36 @@ const MyStack = () => {
     const [memberships, setMemberships] = useState();
     const [membershipUid, setMembershipUid] = useState();
     const [LoginMediatorAccess, setLoginMediatorAccess] = useState();
+
+
+    const MadiatorStack = ({ navigation }) => (
+        <Stack.Navigator initialRouteName='MediatorLoginWithNumberScreen' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MediatorLoginWithNumberScreen" component={MediatorLoginWithNumberScreen} />
+            <Stack.Screen name="MediatorLoginWithOTPScreen" component={MediatorLoginWithOTPScreen} />
+            <Stack.Screen name="MediatorNameScreen" component={MediatorNameScreen} />
+            <Stack.Screen name="MediatorDateOfBirthScreen" component={MediatorDateOfBirthScreen} />
+            <Stack.Screen name="MediatorLoginWithEmail" component={MediatorLoginWithEmail} />
+            <Stack.Screen name="MediatorQuestionPhotoScreen" component={MediatorQuestionPhotoScreen} />
+            <Stack.Screen name="MediatorQuestionBioScreen" component={MediatorQuestionBioScreen} />
+            <Stack.Screen name="MediatorQuestionHaveKidsScreen" component={MediatorQuestionHaveKidsScreen} />
+            <Stack.Screen name="MediatorQuestionOrganizationScreen" component={MediatorQuestionOrganizationScreen} />
+            <Stack.Screen name="MediatoreQuestionRequestAcessOther" component={MediatoreQuestionRequestAcessOther} />
+            <Stack.Screen name="MediatorQuestionRelationshipStatus" component={MediatorQuestionRelationshipStatus} />
+            <Stack.Screen name="MediatorQuestionRequestAcess" component={MediatorQuestionRequestAcess} />
+        </Stack.Navigator>
+    );
+
+    const MediatorDashboardStack = ({ navigation }) => (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MediatorApprovalScreen" component={MediatorApprovalScreen} />
+            {MediatorUser.MediatorId == 1 && MediatorUser?.PanelAccess == true &&
+                <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
+            }
+            {MediatorUser.MediatorId == 2 && MediatorUser?.PanelAccess == true &&
+                <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+        </Stack.Navigator>
+    )
 
     const MediatorUserLogin = (user) => {
         // console.log('========',user);
@@ -270,8 +229,9 @@ const MyStack = () => {
                     if (documentSnapshot.exists) {
                         const data = documentSnapshot.data().userDetails
                         if (data.Category == 'Mediator') {
-                            console.log(user.uid);
-                            MediatorUserLogin(user.uid);
+                            // console.log(user.uid);
+                            dispatch(mediatorLogin(data))
+                            // MediatorUserLogin(user.uid);
                         }
                         else {
                             dispatchLoginUser(data)
@@ -281,6 +241,7 @@ const MyStack = () => {
                     }
                     else {
                         dispatch(login(null))
+                        dispatch(mediatorLogin(null))
                         console.log('user not exit');
                     }
                 });
@@ -433,14 +394,14 @@ const MyStack = () => {
                     <Stack.Screen name="QuestionInLifeScreen" component={QuestionInLifeScreen} />
                     <Stack.Screen name="QuestionCuddlingScreen" component={QuestionCuddlingScreen} />
                     <Stack.Screen name="QuestionRelationshipLookingScreen" component={QuestionRelationshipLookingScreen} />
-                    
+
                     <Stack.Screen name="QuestionPartnerAge" component={QuestionPartnerAge} />
                     <Stack.Screen name="QuestionDoyouSmoke" component={QuestionDoyouSmoke} />
                     <Stack.Screen name="QuestionConvertedReligion" component={QuestionConvertedReligion} />
                     <Stack.Screen name="QuestionHairColorScreen" component={QuestionHairColorScreen} />
                     <Stack.Screen name="QuestionEyeColorScreen" component={QuestionEyeColorScreen} />
                     <Stack.Screen name="QuestionLanguageScreen" component={QuestionLanguageScreen} />
-                    
+
                     <Stack.Screen name="QuestionClingyScreen" component={QuestionClingyScreen} />
                     <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
                     <Stack.Screen name="QuestionCongratulationScreen" component={QuestionCongratulationScreen} />

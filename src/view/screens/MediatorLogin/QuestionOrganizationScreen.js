@@ -2,6 +2,7 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, Touc
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
+import SVGImg1 from '../../../assets/tik.svg';
 
 const RelationshipTypes = [
   {
@@ -39,34 +40,30 @@ const RelationshipTypes = [
 export const detailReligion = [
   {
     id: '1',
-    name: 'Yes, Blind',
+    name: 'Are they all married',
   }, {
     id: '2',
-    name: 'Yes, Deaf',
-  },
-  {
-    id: '3',
-    name: 'Yes, Wheel Chair',
-  },
-  {
-    id: '4',
-    name: 'Yes, Can be other',
+    name: 'Are they not all married',
   }
 ]
 
 const Disability = [
   {
     id: '1',
+    name: 'Yes',
+  },
+  {
+    id: '2',
     name: 'No',
   },
 ]
 
 
 
-const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
-  const { DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+const MediatorQuestionOrganizationScreen = ({ navigation, route }) => {
+  const { HaveKids, relationshipStatus, bio, email, DateOfBirth, name } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [selectedDisabilityIndex, setDisabilityIndex] = useState(0);
+  const [selectedDisabilityIndex, setDisabilityIndex] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showOptions2, setShowOptions2] = useState(false);
   const [valueGS, setValueGS] = useState('');
@@ -77,15 +74,16 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
 
 
   const onDisabilityPartnerScreen = () => {
-    console.log(Disable);
+    // console.log(Disable);
     // setDisable(detailReligion[selectedCategoryIndex].name)
     // const detailReligion2 = detailReligion[selectedCategoryIndex].name
-    // const Disability2 = Disability[selectedDisabilityIndex].name
-    if (Disable) {
-      navigation.navigate('MediatorQuestionDisabilityPartnerScreen', { Disability: Disable, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    const Disability2 = Disability[selectedDisabilityIndex]?.name
+    if (Disability2) {
+      // console.log(Disability2);
+      navigation.navigate('MediatorQuestionPhotoScreen', { organization: Disability2, HaveKids: HaveKids, relationshipStatus: relationshipStatus, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name })
     }
     else {
-      ToastAndroid.show("Please select your Disability!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select your organization!", ToastAndroid.SHORT);
     }
   }
 
@@ -127,10 +125,7 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
                     alignItems: 'flex-end'
                   }}>
                     {selectedCategoryIndex == index ? (
-                      <Image source={require('../../../assets/tik.png')} resizeMode='contain' style={{
-                        width: 20,
-                        height: 20
-                      }} />
+                       <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
                     ) : (<View></View>
                     )}
                   </View>
@@ -150,15 +145,6 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
         <View style={styles.contentContainer}>
 
           <View style={{
-            paddingTop: 30,
-            alignItems: 'center'
-          }}>
-            <Image source={require('../../../assets/disablility.png')} resizeMode='contain' style={{
-              width: 250,
-              height: 180,
-            }} />
-          </View>
-          <View style={{
             alignItems: 'center',
             paddingTop: 20,
             paddingHorizontal: 70,
@@ -168,11 +154,12 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
               fontWeight: 'bold',
               color: COLORS.black,
               textAlign: 'center'
-            }}>Any Disability
+            }}>Are you belong to
+              organization
             </Text>
           </View>
 
-          <TouchableOpacity onPress={toggleDropdown}>
+          {/* <TouchableOpacity onPress={toggleDropdown}>
             <View style={styles.NumberInput}>
               <View style={{ width: '90%' }}>
                 <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>Yes</Text>
@@ -180,10 +167,10 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
             </View>
           </TouchableOpacity>
 
-          {renderDropdown()}
+          {renderDropdown()} */}
 
           {Disability.map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => toggleDropdown2(index)}>
+            <TouchableOpacity key={index} onPress={() => setDisabilityIndex(index)}>
               <View style={styles.NumberInput}>
                 <View style={{ width: '90%' }}>
                   <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>{item.name}</Text>
@@ -191,11 +178,8 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
                 <View style={{
                   alignItems: 'flex-end'
                 }}>
-                  {showtick2 && (
-                    <Image source={require('../../../assets/tik.png')} resizeMode='contain' style={{
-                      width: 20,
-                      height: 20
-                    }} />
+                  {selectedDisabilityIndex == index && (
+                     <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
                   )}
                 </View>
               </View>
@@ -204,18 +188,28 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
 
         </View>
 
-
-        <View style={{
-          alignItems: 'center',
-          paddingBottom: 5,
-          height: '15%'
-        }}>
-          <CustomeButton onpress={() => onDisabilityPartnerScreen()}
-            title={'Continue'} />
-
+        <View style={styles.footer}>
+          <View style={{
+            alignItems: 'center',
+            paddingBottom: 5,
+            // height: '30%',
+            flexDirection: 'row',
+          }}>
+            <View style={{
+              marginRight: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+            </View>
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => onDisabilityPartnerScreen()}
+                title={'Continue'} />
+            </View>
+          </View>
           <View style={{
             paddingTop: 5,
-            width: 310,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -229,7 +223,7 @@ const MediatorQuestionDisabilityScreen = ({ navigation, route }) => {
 }
 
 
-export default MediatorQuestionDisabilityScreen
+export default MediatorQuestionOrganizationScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -237,10 +231,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '85%',
+    height: '80%',
   },
   footer: {
-    alignItems: 'center'
+    alignItems: 'center',
+    height: '20%'
   },
   NumberInput: {
     flexDirection: 'row',

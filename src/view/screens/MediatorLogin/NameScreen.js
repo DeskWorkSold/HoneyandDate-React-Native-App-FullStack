@@ -1,15 +1,17 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, ToastAndroid, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../../redux/reducers/Reducers';
+import { TextInput } from 'react-native-paper';
+const { height, width } = Dimensions.get('window');
 
 
 
-const MediatorNameScreen = ({ navigation, route }) => {
-  const { image1, image2, image3, image4, image5 } = route.params;
+const MediatorNameScreen = ({ navigation }) => {
   const [name, setname] = useState('');
+  const [inputName, setInputName] = useState(false);
   // console.log(image1, image2, image3, image4, image5);
 
   const OnDateOnBirthScreen = (name) => {
@@ -17,8 +19,10 @@ const MediatorNameScreen = ({ navigation, route }) => {
     if (name == '' || name.length < 5) {
       if (name == '') {
         ToastAndroid.show("Please enter your name!", ToastAndroid.SHORT);
+        setInputName(true)
       }
       else if (name.length < 5) {
+        setInputName(true)
         ToastAndroid.show("Fullname should be 5character log!", ToastAndroid.SHORT);
       }
     }
@@ -30,7 +34,9 @@ const MediatorNameScreen = ({ navigation, route }) => {
       // Data.image4=image4;
       // Data.image5=image5;
       // Data.name=name;
-      navigation.navigate('MediatorDateOfBirthScreen', { image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, name: name })
+      // console.log(name);
+      // return
+      navigation.navigate('MediatorLoginWithEmail', { name: name })
     }
     // dispatch({
     //   type: 'ADD_TO_USER',
@@ -39,7 +45,7 @@ const MediatorNameScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
@@ -77,7 +83,12 @@ const MediatorNameScreen = ({ navigation, route }) => {
           <View style={styles.NumberInput}>
             <TextInput
               value={name}
-              placeholder={'Fullname'}
+              error={inputName}
+              underlineColor={COLORS.transparent}
+              activeUnderlineColor={COLORS.transparent}
+              onFocus={() => setInputName(false)}
+              placeholder={'Full name'}
+              placeholderTextColor={COLORS.gray}
               // error={inputfirstName}
               onChangeText={name => setname(name)
               }
@@ -130,19 +141,16 @@ const styles = StyleSheet.create({
   },
   NumberInput: {
     marginTop: 60,
-    flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray,
     alignItems: 'center',
-    marginHorizontal: 10,
-    paddingHorizontal: 20
   },
   TextInput: {
     padding: 0,
     backgroundColor: COLORS.transparent,
     color: COLORS.gray,
     height: 40,
-    width: 300,
+    width: width / 1.1,
     justifyContent: "center"
   },
 })

@@ -56,7 +56,7 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
         console.log('==>',data);
       })
       ToastAndroid.show('User Sign In Succesfully' , ToastAndroid.SHORT);
-      navigation.navigate('MediatorQuestionPhotoScreen')
+      navigation.navigate('MediatorNameScreen')
     }
     catch(error){
       console.log('Invalid code: ' + error);
@@ -71,7 +71,7 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
     if (user) {
       console.log('user login Succesfully', user);
       ToastAndroid.show('User Sign In Succesfully', ToastAndroid.SHORT);
-      navigation.navigate('MediatorQuestionPhotoScreen')
+      navigation.navigate('MediatorNameScreen')
     }
 
   }

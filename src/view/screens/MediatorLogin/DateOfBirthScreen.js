@@ -13,11 +13,11 @@ import dayjs from 'dayjs';
 
 
 const MediatorDateOfBirthScreen = ({ navigation, route }) => {
-  const { name, image1, image2, image3, image4, image5 } = route.params;
+  const { bio, email, name } = route.params;
   // console.log(name);
   const [date, setdate] = useState(dayjs());
   const [arr, setArr] = useState([]);
-  const [customDate, setCustomDate] = useState(new Date());
+  const [customDate, setCustomDate] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isYearModalVisible, setIsYearModalVisible] = useState(false);
   // const cartItems = useSelector((state) => state.reducers.selectedItems.items)
@@ -28,16 +28,18 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
     const years = new Date().getFullYear() - new Date(customDate).getFullYear();
     // console.log(customDate);
     // return;
-    if (!customDate && years < 18 ) {
-      if(!customDate){
+    if (!customDate || years < 18) {
+      if (!customDate) {
         ToastAndroid.show("Please select your Birth Date!", ToastAndroid.SHORT);
       }
-      else if(years < 18){
+      else if (years < 18) {
         ToastAndroid.show("You must have to be 18+ to continue!", ToastAndroid.SHORT);
       }
     }
     else {
-      navigation.navigate('MediatorQuestionGenderScreen', { DateOfBirth: customDate, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
+      // console.log(customDate);
+      // return
+      navigation.navigate('MediatorQuestionRelationshipStatus', { DateOfBirth: customDate, name: name, email: email, bio: bio })
     }
   }
 
@@ -62,13 +64,13 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1, backgroundColor:COLORS.white}}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
         <View style={styles.contentContainer}>
           <View style={{
-            paddingTop: 40
+            paddingTop: 20
           }}>
             <Image source={require('../../../assets/dateofbirth.png')} resizeMode='contain' />
           </View>
@@ -115,7 +117,11 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
               renderHeader={(year) => (
                 <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
                   <View>
-                    <Text>
+                    <Text style={{
+                      color: COLORS.main,
+                      fontWeight: 'bold',
+                      fontSize: 20
+                    }}>
                       {date.month() + 1}Month {date.year()}
                     </Text>
                   </View>
@@ -211,15 +217,26 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
           }}>
-            <CustomeButton onpress={() => onGenderPress()}
-              title={'Continue'} />
+            <View style={{
+              marginRight: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+            </View>
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => onGenderPress()}
+                title={'Continue'} />
+            </View>
           </View>
 
           <View style={{
             paddingTop: 20,
             width: 310,
-            alignItems:'center'
+            alignItems: 'center'
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -246,7 +263,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: '20%',
-    alignItems:'center'
+    alignItems: 'center'
   },
   NumberInput: {
     alignItems: 'center',

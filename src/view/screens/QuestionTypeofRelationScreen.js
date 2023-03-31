@@ -22,7 +22,7 @@ const DatesData = [
 ]
 
 const QuestionTypeofRelationScreen = ({ navigation, route }) => {
-  const { PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
+  const { email, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   console.log(DateOfBirth);
 
@@ -30,7 +30,7 @@ const QuestionTypeofRelationScreen = ({ navigation, route }) => {
     console.log(DatesData[selectedCategoryIndex].name);
     const selectedPolitics = DatesData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('QuestionSmokeScreen', { Lookingfor: selectedPolitics, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionSmokeScreen', { Lookingfor: selectedPolitics, email: email, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your partner nature!", ToastAndroid.SHORT);
@@ -38,7 +38,7 @@ const QuestionTypeofRelationScreen = ({ navigation, route }) => {
   }
 
   const onSkip = () => {
-    navigation.navigate('QuestionSmokeScreen', { Lookingfor: null, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionSmokeScreen', { Lookingfor: null, email: email, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListDatesData = ({ data, value, setValue, cancle }) => {
@@ -82,7 +82,7 @@ const QuestionTypeofRelationScreen = ({ navigation, route }) => {
 
 
         <View style={styles.contentContainer}>
-        <View style={{
+          <View style={{
             alignItems: 'center',
             paddingTop: 20,
             flexDirection: 'row',
@@ -136,15 +136,15 @@ const QuestionTypeofRelationScreen = ({ navigation, route }) => {
         <View style={styles.footer}>
 
           <View style={{
-            marginBottom: 5 
+            marginBottom: 5
           }}>
             <CustomeButton onpress={() => onSmokeScreen()}
               title={'Continue'} />
           </View>
           <View style={{ marginHorizontal: 0 }}>
-              <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
-                title={'Skip'} />
-            </View>
+            <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+              title={'Skip'} />
+          </View>
 
           <View style={{
             paddingTop: 20,

@@ -6,15 +6,15 @@ import SVGImg1 from '../../assets/arrowleft.svg';
 
 
 const QuestionBioScreen = ({ navigation, route }) => {
-  const { Kids, PartnerGender, name, image1, image2, image3, image4, image5, DateOfBirth, Gender } = route.params;
+  const { email, Kids, PartnerGender, name, image1, image2, image3, image4, image5, DateOfBirth, Gender } = route.params;
   const [bio, setbio] = useState();
-  console.log(DateOfBirth);
+  // console.log(email);
 
   const onQuestionProfessionally = () => {
     if (bio) {
       // console.log('bio', bio);
       navigation.navigate('QuestionProfessionallyScreen', {
-        Bio: bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        Bio: bio, email: email, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else {
@@ -28,7 +28,7 @@ const QuestionBioScreen = ({ navigation, route }) => {
     // console.log(WantKidData[selectedCategoryIndex].name);
     // console.log('test',selectedGender);
     navigation.navigate('QuestionProfessionallyScreen', {
-      Bio: null, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+      Bio: null, email: email, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
     })
 
   }

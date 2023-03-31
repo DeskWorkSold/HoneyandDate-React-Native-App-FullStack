@@ -45,7 +45,7 @@ const MusicData = [
 ]
 
 const QuestionMusicScreen = ({ navigation, route }) => {
-  const { filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
+  const { email, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [music, setmusic] = useState();
   // console.log(filterMinAge, filterMaxAge , InTenYear);
@@ -54,7 +54,7 @@ const QuestionMusicScreen = ({ navigation, route }) => {
     console.log(MusicData[selectedCategoryIndex].name);
     const selectedMusic = MusicData[selectedCategoryIndex].name;
     if (selectedMusic) {
-      navigation.navigate('QuestionPoliticalviewScreen', { Music: selectedMusic, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionPoliticalviewScreen', { Music: selectedMusic, email: email, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select your music!", ToastAndroid.SHORT);
@@ -62,7 +62,7 @@ const QuestionMusicScreen = ({ navigation, route }) => {
   }
 
   const onSkip = () => {
-    navigation.navigate('QuestionPoliticalviewScreen', { Music: null, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionPoliticalviewScreen', { Music: null, email: email, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
   const ListMusic = ({ data, value, setValue, cancle }) => {
@@ -179,7 +179,7 @@ const QuestionMusicScreen = ({ navigation, route }) => {
 
             <View style={{
               alignItems: 'center',
-              paddingBottom:20
+              paddingBottom: 20
             }}>
               <View style={{
                 paddingTop: 50,
@@ -189,7 +189,7 @@ const QuestionMusicScreen = ({ navigation, route }) => {
                     title={'Continue'} />
                 </View>
                 <View style={{ marginHorizontal: 0 }}>
-                  <CustomeButton  bcolor={COLORS.light} onpress={() => onSkip()}
+                  <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
                     title={'Skip'} />
                 </View>
 

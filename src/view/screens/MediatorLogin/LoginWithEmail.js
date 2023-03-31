@@ -1,14 +1,16 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, ToastAndroid, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { TextInput } from 'react-native-paper';
+const { height, width } = Dimensions.get('window');
 
 
 
 const MediatorLoginWithEmail = ({ navigation, route }) => {
-  const { clingy, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { name } = route.params;
   // console.log(Date);
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
@@ -20,12 +22,20 @@ const MediatorLoginWithEmail = ({ navigation, route }) => {
   const EMAIL_REGEX = /@[a-zA-Z0-9]+\.[A-Za-z]+$/;
   const OnhandleSubmit = (email) => {
     // console.log(email, password);
-    if (email === '' || !email === EMAIL_REGEX.test(email)) {
-      ToastAndroid.show('That email address is invalid!', ToastAndroid.SHORT)
-      setInputEmail(true)
+    if (email == '' || !email === EMAIL_REGEX.test(email)) {
+      if (email == '') {
+        ToastAndroid.show('please enter your email address!', ToastAndroid.SHORT)
+        setInputEmail(true)
+      }
+      else if (!email === EMAIL_REGEX.test(email)) {
+        ToastAndroid.show('That email address is invalid!', ToastAndroid.SHORT)
+        setInputEmail(true)
+      }
     }
     else {
-      navigation.navigate('MediatorQuestionRelationshipStatus', { email: email, clingy: clingy, RelationshipLookingType: RelationshipLookingType, Cuddling: Cuddling, InLife: InLife, InBed: InBed, MovieType: MovieType, NextLongestRelationship: NextLongestRelationship, LongestRelationship: LongestRelationship, OpenTo: OpenTo, DealBreaker: DealBreaker, DealMakers: DealMakers, Firstrefname: Firstrefname, FirstRefemail: FirstRefemail, FirstRefnumber: FirstRefnumber, Secrefname: Secrefname, SecRefemail: SecRefemail, SecRefnumber: SecRefnumber, PartnerBuildType: PartnerBuildType, BuildType: BuildType, PartnerMaxHeight: PartnerMaxHeight, PartnerMinHeight: PartnerMinHeight, Height: Height, PartnerDisability: PartnerDisability, Disability: Disability, DescribePartner: DescribePartner, DescribeYou: DescribeYou, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, Relagion: Relagion, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, Nature: Nature, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, Experince: Experince, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      // console.log(email, name);
+      // return
+      navigation.navigate('MediatorQuestionBioScreen', { email: email, name: name })
     }
   }
 
@@ -88,8 +98,11 @@ const MediatorLoginWithEmail = ({ navigation, route }) => {
               <TextInput
                 value={email}
                 error={inputemail}
+                underlineColor={COLORS.transparent}
+                activeUnderlineColor={COLORS.transparent}
                 onFocus={() => setInputEmail(false)}
                 placeholder={'Enter email address'}
+                placeholderTextColor={COLORS.gray}
                 height={200}
                 keyboardType='text'
                 // error={inputfirstName}
@@ -116,16 +129,28 @@ const MediatorLoginWithEmail = ({ navigation, route }) => {
 
 
         <View style={styles.footer}>
-          <View style={{
-            paddingTop: 20,
-          }}>
-            <CustomeButton onpress={() => OnhandleSubmit(email)}
-              title={'Continue'} />
-          </View>
 
           <View style={{
             paddingTop: 20,
-            width: 310,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+            <View style={{
+              marginRight: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
+            </View>
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              <CustomeButton width={170} onpress={() => OnhandleSubmit(email)}
+                title={'Continue'} />
+            </View>
+          </View>
+
+          <View style={{
+            paddingTop: 10,
+            // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -158,15 +183,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray,
     alignItems: 'center',
-    marginHorizontal: 10,
-    paddingHorizontal: 20
   },
   TextInput: {
     padding: 0,
     backgroundColor: COLORS.transparent,
     color: COLORS.gray,
     height: 40,
-    width: 300,
+    width: width / 1.1,
     justifyContent: "center"
   },
 })

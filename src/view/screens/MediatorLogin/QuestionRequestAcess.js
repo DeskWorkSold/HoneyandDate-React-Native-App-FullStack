@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
@@ -7,243 +7,106 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { mediatorLogin } from '../../../../redux/reducers/Reducers';
 import { useDispatch } from 'react-redux';
+import Loader from '../../components/Loader';
+const { height, width } = Dimensions.get('window');
 
 
 const RelationshipTypes = [
   {
     id: '1',
-    name: 'Event Vendor - POS for booths',
+    name: 'Talent agency/Influencer',
+    onpress: 'QuestionRequestAcessOther'
   },
   {
     id: '2',
-    name: 'Event Coordinator',
+    name: 'Match Coordinator',
   },
 ]
 
 
 
 const MediatorQuestionRequestAcess = ({ navigation, route }) => {
-  const { RelationshipStatus, email, clingy, RelationshipLookingType, Cuddling, InLife, InBed, MovieType, NextLongestRelationship, LongestRelationship, OpenTo, DealBreaker, DealMakers, Firstrefname, FirstRefemail, FirstRefnumber, Secrefname, SecRefemail, SecRefnumber, PartnerBuildType, BuildType, PartnerMaxHeight, PartnerMinHeight, Height, PartnerDisability, Disability, DescribePartner, DescribeYou, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, Music, PoliticalView, PoliticalPartnerView, Nature, PartnerNature, Lookingfor, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
-  // console.log(RelationshipStatus);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const { image1, image2, image3, image4, image5, organization, HaveKids, relationshipStatus, bio, email, DateOfBirth, name } = route.params;
+  // console.log(image1, image2, image3, image4, image5, organization, HaveKids, relationshipStatus, bio, email, DateOfBirth, name);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState();
   const [uploading, setUploading] = useState(0);
   const [transferred, setTransferred] = useState(0);
-  const CurrentUser = auth().currentUser.uid;
+  const CurrentUser = auth().currentUser;
   const dispatch = useDispatch();
   // console.log(Education);
 
   const onReligionScreen = async () => {
-    const selectitem = RelationshipTypes[selectedCategoryIndex].name;
+    const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
     const category = 'Mediator'
-    if (selectitem == 'Event Vendor - POS for booths') {
-      // console.log(selectitem);
-      // return;
-      try {
-        setUploading(true)
-        const imageUrl = await uploadImage();
-        var Data = new Object();
-        Data.Category = category;
-        Data.RequestAccessType = selectitem;
-        Data.PanelAccess = false;
-        Data.Event = 1;
-        Data.POSFood = 1;
-        Data.email = email;
-        Data.RelationshipStatus = RelationshipStatus;
-        Data.Clingy = clingy;
-        Data.Interest = Interest;
-        Data.Cuddling = Cuddling;
-        Data.InLife = InLife;
-        Data.InBed = InBed;
-        Data.MovieType = MovieType;
-        Data.NextLongestRelationship = NextLongestRelationship;
-        Data.LongestRelationship = LongestRelationship;
-        Data.OpenTo = OpenTo;
-        Data.DealBreaker = DealBreaker;
-        Data.DealMakers = DealMakers;
-        Data.Firstrefname = Firstrefname;
-        Data.FirstRefemail = FirstRefemail;
-        Data.FirstRefnumber = FirstRefnumber;
-        Data.Secrefname = Secrefname;
-        Data.SecRefemail = SecRefemail;
-        Data.SecRefnumber = SecRefnumber;
-        Data.PartnerBuildType = PartnerBuildType;
-        Data.BuildType = BuildType;
-        Data.PartnerMaxHeight = PartnerMaxHeight;
-        Data.PartnerMinHeight = PartnerMinHeight;
-        Data.Height = Height;
-        Data.PartnerDisability = PartnerDisability;
-        Data.Disability = Disability;
-        Data.DescribePartner = DescribePartner;
-        Data.DescribeYou = DescribeYou;
-        Data.Education = Education;
-        Data.RelationshipType = RelationshipType;
-        Data.Relagion = Relagion;
-        Data.KosherType = KosherType;
-        Data.foodtype = foodtype;
-        Data.religionType = religionType;
-        Data.relationshipLookingType = RelationshipLookingType;
-        Data.ParentReligion = ParentReligion;
-        Data.Diet = Diet;
-        Data.PartnerDiet = PartnerDiet;
-        Data.FavFood = FavFood;
-        Data.Exercise = Exercise;
-        Data.ExerciseStatus = ExerciseStatus;
-        Data.PartnerExercise = PartnerExercise;
-        Data.Ethnicity = Ethnicity;
-        Data.PartnerEthnicity = PartnerEthnicity;
-        Data.Name = name;
-        Data.InstaUsername = InstaUsername;
-        Data.Drink = Drink;
-        Data.Drugs = Drugs;
-        Data.Marijauna = Marijauna;
-        Data.Vape = Vape;
-        Data.Smoke = Smoke;
-        Data.Lookingfor = Lookingfor;
-        Data.Nature = Nature;
-        Data.PartnerNature = PartnerNature;
-        Data.PoliticalPartnerView = PoliticalPartnerView;
-        Data.PoliticalView = PoliticalView;
-        Data.Music = Music;
-        Data.Experince = Experince;
-        Data.Bio = Bio;
-        Data.Kids = Kids;
-        Data.PartnerGender = PartnerGender;
-        Data.Gender = Gender;
-        Data.Dates = DateOfBirth;
-        Data.image5 = image5;
-        Data.image4 = image4;
-        Data.image3 = image3;
-        Data.image2 = image2;
-        Data.image1 = imageUrl;
-        Data.CompanyType = CompanyType;
-        Data.PositioninCompany = PositioninCompany;
-        Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser;
-        Data.Location = {
-          latitude: 24.9028039,
-          longitude: 67.1145385,
+    if (!selectitem == '') {
+      console.log(selectitem);
+      if (selectitem == 'Match Coordinator') {
+        try {
+          // setUploading(true)
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.Category = 'Mediator',
+            Data.MediatorId = 2;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          // console.log('test data: ', Data);
+          // return;
+          // console.log(CurrentUser);
+          // dispatch(mediatorLogin(Data))
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              // navigation.navigate('QuestionCongratulationScreen')
+              // redux
+              ToastAndroid.show('Welcome to Honey and Dates', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+          // setImage(null)
+        } catch (error) {
+          console.log('error test2', error);
         }
-        // console.log('test data: ', Data);
-        // // dispatch(mediatorLogin(Data))
-        // return;
-        // console.log(CurrentUser);
-        firestore()
-          .collection('Users').doc(CurrentUser).set({
-            userDetails: Data
-          }).then(() => {
-            // redux
-            dispatch(mediatorLogin(Data))
-            ToastAndroid.show('Welcome to Honey and Dates Mediator Panel', ToastAndroid.SHORT)
-            // navigation.navigate('QuestionCongratulationScreen')
-          })
-        // setImage(null)
-        setUploading(false)
-      } catch (error) {
-        console.log('error test1', error);
       }
-    }
-    else if (selectitem == 'Event Coordinator') {
-      try {
-        // setUploading(false)
-        // const imageUrl = await uploadImage();
-        var Data = new Object();
-        Data.RequestAccess = selectitem;
-        Data.PanelAccess = false;
-        Data.Event = 1;
-        Data.POSFood = 0;
-        Data.email = email;
-        Data.RelationshipStatus = RelationshipStatus;
-        Data.Clingy = clingy;
-        Data.Interest = Interest;
-        Data.Cuddling = Cuddling;
-        Data.InLife = InLife;
-        Data.InBed = InBed;
-        Data.MovieType = MovieType;
-        Data.NextLongestRelationship = NextLongestRelationship;
-        Data.LongestRelationship = LongestRelationship;
-        Data.OpenTo = OpenTo;
-        Data.DealBreaker = DealBreaker;
-        Data.DealMakers = DealMakers;
-        Data.Firstrefname = Firstrefname;
-        Data.FirstRefemail = FirstRefemail;
-        Data.FirstRefnumber = FirstRefnumber;
-        Data.Secrefname = Secrefname;
-        Data.SecRefemail = SecRefemail;
-        Data.SecRefnumber = SecRefnumber;
-        Data.PartnerBuildType = PartnerBuildType;
-        Data.BuildType = BuildType;
-        Data.PartnerMaxHeight = PartnerMaxHeight;
-        Data.PartnerMinHeight = PartnerMinHeight;
-        Data.Hieght = Height;
-        Data.PartnerDisability = PartnerDisability;
-        Data.Disability = Disability;
-        Data.DescribePartner = DescribePartner;
-        Data.DescribeYou = DescribeYou;
-        Data.Education = Education;
-        Data.RelationshipType = RelationshipType;
-        Data.Relagion = Relagion;
-        Data.KosherType = KosherType;
-        Data.foodtype = foodtype;
-        Data.religionType = religionType;
-        Data.relationshipLookingType = RelationshipLookingType;
-        Data.ParentReligion = ParentReligion;
-        Data.Diet = Diet;
-        Data.PartnerDiet = PartnerDiet;
-        Data.FavFood = FavFood;
-        Data.Exercise = Exercise;
-        Data.ExerciseStatus = ExerciseStatus;
-        Data.PartnerExercise = PartnerExercise;
-        Data.Ethnicity = Ethnicity;
-        Data.PartnerEthnicity = PartnerEthnicity;
-        Data.Name = name;
-        Data.InstaUsername = InstaUsername;
-        Data.Drink = Drink;
-        Data.Drugs = Drugs;
-        Data.Marijauna = Marijauna;
-        Data.Vape = Vape;
-        Data.Smoke = Smoke;
-        Data.Lookingfor = Lookingfor;
-        Data.Nature = Nature;
-        Data.PartnerNature = PartnerNature;
-        Data.PoliticalPartnerView = PoliticalPartnerView;
-        Data.PoliticalView = PoliticalView;
-        Data.Music = Music;
-        Data.Experince = Experince;
-        Data.Bio = Bio;
-        Data.Kids = Kids;
-        Data.PartnerGender = PartnerGender;
-        Data.Gender = Gender;
-        Data.Dates = Date;
-        Data.image5 = image5;
-        Data.image4 = image4;
-        Data.image3 = image3;
-        Data.image2 = image2;
-        Data.image1 = 'imageUrl';
-        Data.CompanyType = CompanyType;
-        Data.PositioninCompany = PositioninCompany;
-        Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser
-        // dispatch(mediatorLogin(Data))
-        // console.log('test data: ', Data);
-        // return;
-        // console.log(CurrentUser);
-        firestore()
-          .collection('Users').doc(CurrentUser).set({
-            userDetails: Data
-          }).then(() => {
-            // redux
-            ToastAndroid.show('Welcome to Honey and Dates', ToastAndroid.SHORT)
-            navigation.navigate('QuestionCongratulationScreen')
-          })
-        // setImage(null)
-        setUploading(false)
-      } catch (error) {
-        console.log('error test2', error);
+      else if (selectitem == 'Talent agency/Influencer') {
+
       }
+      // return;
+      // navigation.navigate('MediatorQuestionRequestAcess', { RequestAccessType: selectitem, HaveKids: HaveKids, relationshipStatus: relationshipStatus, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })
     }
     else {
-      ToastAndroid.show("Please select your interest!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select your request type!", ToastAndroid.SHORT);
     }
+  }
+  const onOther = () => {
+    // const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
+    // const category = 'Mediator'
+    // if (!selectitem == '') {
+    //   // console.log(selectitem);
+    //   // return;
+    navigation.navigate('MediatoreQuestionRequestAcessOther', { image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, organization: organization, HaveKids: HaveKids, relationshipStatus: relationshipStatus, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name })
+    // }
+    // else {
+    //   ToastAndroid.show("Please select your request type!", ToastAndroid.SHORT);
+    // }
   }
 
   const uploadImage = async () => {
@@ -296,6 +159,199 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
     }
 
   };
+
+  const uploadImage2 = async () => {
+    if (image2 == null) {
+      return null;
+    }
+    const uploadUri = image2;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage3 = async () => {
+    if (image3 == null) {
+      return null;
+    }
+    const uploadUri = image3;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage4 = async () => {
+    if (image4 == null) {
+      return null;
+    }
+    const uploadUri = image4;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage5 = async () => {
+    if (image5 == null) {
+      return null;
+    }
+    const uploadUri = image5;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
   // const AddToRedux = (Data) => {
   //   // console.log('Redux data', Data);
   // }
@@ -313,7 +369,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
               ...styles.NumberInput
             }}>
               <View style={{ width: '90%' }}>
-                <Text style={{ color: COLORS.black }}>
+                <Text style={{ color: COLORS.black, textAlign: 'center' }}>
                   {TypeTestimonial.name}
                 </Text>
               </View>
@@ -342,10 +398,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
     <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
-
-
         <View style={styles.contentContainer}>
-
 
           <View style={{
             paddingTop: 40,
@@ -357,19 +410,41 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
               fontWeight: 'bold',
               color: COLORS.black,
               textAlign: 'center'
-            }}>What type of relationship you are looking for?</Text>
+            }}>Request access</Text>
           </View>
-          <View style={{
-            alignItems: 'center',
-            paddingTop: 10
-          }}>
-            <Text style={{
-              color: COLORS.black
-            }}>Select all that apply</Text>
-          </View>
-          <View>
+          <View style={{ paddingTop: 30 }}>
             <ListRelationShips value={selectedCategoryIndex}
               setValue={setSelectedCategoryIndex} />
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            paddingRight: 8,
+            marginHorizontal: 20,
+            backgroundColor: COLORS.white,
+            elevation: 4,
+            borderRadius: 10,
+            marginTop: 20,
+            width: width / 1.1,
+          }}>
+            <TextInput
+              placeholder='Enter Code from admin'
+              style={{
+                flex: 2
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => onOther()}
+              style={{
+                flex: 1,
+                backgroundColor: COLORS.main,
+                height: 35,
+                borderRadius: 10,
+                justifyContent: 'center'
+              }}>
+              <Text style={{ textAlign: 'center', color: COLORS.black, fontSize: 13 }}>See Others</Text>
+            </TouchableOpacity>
           </View>
 
 
@@ -379,24 +454,32 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         <View style={{
           alignItems: 'center',
           paddingBottom: 5,
-          height: '15%'
+          height: '20%'
         }}>
-          {!uploading == true ? (
-            <CustomeButton onpress={() => onReligionScreen()}
-              title={'Continue'} />
-
-          ) : (
+          <View style={{
+            alignItems: 'center',
+            paddingBottom: 5,
+            paddingTop: 20,
+            // height: '30%',
+            flexDirection: 'row',
+          }}>
             <View style={{
-              backgroundColor: COLORS.main,
-              width: 329,
-              height: 50,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center'
+              marginRight: 2.5
             }}>
-              <ActivityIndicator size="small" color={COLORS.white} animating={uploading} />
+              <CustomeButton width={170} onpress={() => navigation.goBack()} title={'Back'} bcolor={COLORS.light} />
             </View>
-          )}
+            <View style={{
+              marginLeft: 2.5
+            }}>
+              {!uploading == true ? (
+                <CustomeButton width={170} onpress={() => onReligionScreen()}
+                  title={'Continue'} />
+              ) : (
+                <CustomeButton width={170}
+                  title={'Please wait...'} />
+              )}
+            </View>
+          </View>
 
           <View style={{
             paddingTop: 5,
@@ -407,6 +490,9 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
+
+
+        <Loader modal={uploading} uploading={uploading} />
       </View>
 
 
@@ -425,7 +511,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    height: '85%',
+    height: '80%',
   },
   footer: {
     alignItems: 'center'
@@ -437,8 +523,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 20,
     height: 45,
-    width: 340,
-    backgroundColor: COLORS.light,
+    width: width / 1.1,
+    backgroundColor: COLORS.white,
+    elevation: 4,
     borderRadius: 5,
   },
   TextInput: {

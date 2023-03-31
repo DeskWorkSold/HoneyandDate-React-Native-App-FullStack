@@ -11,10 +11,15 @@ import Notifictaions from '../../view/components/Notifictaions';
 import SVGImg from '../../assets/conform.svg';
 import SVGImg1 from '../../assets/diamond.svg';
 import SVGImg2 from '../../assets/dot.svg';
-
 import Geolocation from '@react-native-community/geolocation';
+import Geocoder from 'react-native-geocoding';
 import { getDistance, getPreciseDistance } from 'geolib';
+import GoogleMapKey from '../../consts/GoogleMapKey';
 const { height, width } = Dimensions.get('window');
+
+// console.log(GoogleMapKey.GOOGLE_MAP_KEY);
+
+Geocoder.init(GoogleMapKey.GOOGLE_MAP_KEY); // use a valid API key
 
 
 
@@ -855,7 +860,7 @@ const HomeScreen = ({ navigation }) => {
                                 else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
-                                    console.log('test');
+                                    // console.log('test');
                                 }
                             }
                             else if (user.filterGender == 'Both') {
@@ -1199,11 +1204,28 @@ const HomeScreen = ({ navigation }) => {
     }, [ChatUserId]);
 
     const openSettingsModal = (cardIndex) => {
+        const test = users[cardIndex]
         setModalData(users[cardIndex]);
         setModalVisible(!modalVisible);
         // console.log('here is current card index',cardIndex);
         // cardData = cards[cardIndex]
         // console.log('modal data', users[cardIndex]);
+
+        const Address = Geocoder.from(test?.userDetails?.Location.latitude, test?.userDetails?.Location.longitude)
+            .then(json => {
+                var addressComponent = json.results[0].address_components[0].long_name;
+                // console.log(addressComponent);
+                // console.log(test);
+                const updated = {
+                    ...test,
+                    Address: addressComponent,
+                };
+                console.log(updated);
+                setModalData(updated);
+            })
+            .catch(error =>
+                console.warn(error)
+            );
     }
 
     const OpenForChating = (cardIndex) => {
@@ -1410,7 +1432,8 @@ const HomeScreen = ({ navigation }) => {
                             paddingBottom: 20,
                             marginTop: 10,
                             borderWidth: 5,
-                            borderColor: COLORS.white
+                            borderColor: COLORS.white,
+                            marginBottom: 50
                         }}>
                             <ScrollView vertical showsVerticalScrollIndicator={false}>
                                 <View style={{
@@ -1420,7 +1443,6 @@ const HomeScreen = ({ navigation }) => {
                                         // paddingTop: 10,
                                         // marginTop:10
                                         borderRadius: 20,
-
                                     }}>
                                         <Image source={{ uri: modalData.userDetails.image1 }} resizeMode='cover'
                                             style={{
@@ -1437,7 +1459,7 @@ const HomeScreen = ({ navigation }) => {
                                                 margin: 20
                                             }}>
                                             <Image source={require('../../assets/arrowleft.png')} resizeMode='contain' style={{
-                                                tintColor: COLORS.white,
+                                                tintColor: COLORS.black,
                                                 width: 25,
                                                 height: 25,
                                             }} />
@@ -1511,7 +1533,7 @@ const HomeScreen = ({ navigation }) => {
                                                 elevation: 5
 
                                             }}>
-                                                <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                                                <TouchableOpacity onPress={() => {swiper.swipeLeft() , setModalVisible(!modalVisible)}}>
                                                     <Image source={require('../../assets/cancle.png')} resizeMode='contain'
                                                         style={{
                                                             width: 15,
@@ -1524,7 +1546,7 @@ const HomeScreen = ({ navigation }) => {
                                                 borderRadius: 40,
                                                 backgroundColor: 'red'
                                             }}>
-                                                <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                                                <TouchableOpacity onPress={() => { swiper.swipeRight(), setModalVisible(!modalVisible) }}>
 
                                                     <Image source={require('../../assets/heart.png')} resizeMode='contain'
                                                         style={{
@@ -1580,7 +1602,7 @@ const HomeScreen = ({ navigation }) => {
                                         }}>
                                             <View style={{ width: '85%' }}>
                                                 <Text style={{ paddingVertical: 10, }}>
-                                                    {modalData.userDetails.Bio}
+                                                    {modalData.userDetails.Bio ? modalData.userDetails.Bio : 'Bio not found'}
                                                 </Text>
                                             </View>
                                             {/* <TouchableOpacity style={{ width: '25%' }}>
@@ -1613,7 +1635,7 @@ const HomeScreen = ({ navigation }) => {
                                                     }} />
                                                 </View>
                                                 <Text style={{ paddingHorizontal: 10, fontSize: 18, color: COLORS.black, fontWeight: 'bold' }}>
-                                                    Address here!
+                                                    {modalData.Address ? modalData.Address : 'Address not found'}
                                                 </Text>
                                             </View>
                                             {/* <View>
@@ -1938,6 +1960,52 @@ const HomeScreen = ({ navigation }) => {
                                             </View>
                                         </ScrollView>
                                     </View>
+
+                                    {modalData?.userDetails?.Interest &&
+
+                                        <View>
+                                            <View style={{
+                                                paddingHorizontal: 20,
+                                                paddingVertical: 20,
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between'
+                                            }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    <Text style={{ paddingHorizontal: 10, fontSize: 18, fontWeight: 'bold' }}>
+                                                        I’m Interested in..
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                flexWrap: 'wrap',
+                                                marginHorizontal: 20,
+                                                alignItems: 'center',
+                                            }}>
+                                                {modalData?.userDetails?.Interest.map((item, index) => (
+                                                    <TouchableOpacity key={index} style={{
+                                                        paddingHorizontal: 10,
+                                                        marginRight: 5,
+                                                        paddingVertical: 10,
+                                                        // height: 40,
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        backgroundColor: COLORS.light,
+                                                        borderRadius: 30,
+                                                        marginBottom: 10,
+                                                    }}>
+                                                        <View>
+                                                            <Text style={{ fontSize: 12, color: COLORS.black, fontWeight: 'bold' }}>#{item}</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                ))}
+                                            </View>
+                                        </View>
+                                    }
 
                                     <View style={{
                                         paddingHorizontal: 20,

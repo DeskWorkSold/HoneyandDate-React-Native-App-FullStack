@@ -34,7 +34,7 @@ const PoliticalData = [
 ]
 
 const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
-  const { PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
+  const { email, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   const [politicalpartner, setpoliticalpartner] = useState();
   // console.log(PoliticalView);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -44,14 +44,14 @@ const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
     console.log(PoliticalData[selectedCategoryIndex].name);
     const selectedPolitics = PoliticalData[selectedCategoryIndex].name;
     if (selectedPolitics) {
-      navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: selectedPolitics, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: selectedPolitics, email: email, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select Partner Political view!", ToastAndroid.SHORT);
     }
   }
   const onSkip = () => {
-    navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: null, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionIntroandExtroScreen', { PoliticalPartnerView: null, email: email, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
   }
 
 

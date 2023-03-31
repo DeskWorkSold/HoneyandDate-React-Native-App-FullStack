@@ -43,7 +43,7 @@ const TypeTestimonial = [
 
 
 const QuestionLanguageScreen = ({ navigation, route }) => {
-  const { PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
+  const { email, PartnerEthnicity, Ethnicity, PartnerExercise, ExerciseStatus, Exercise, FavFood, PartnerDiet, Diet, ConvertedReligionDetail, ConvertedReligion, ParentReligion, religionType, foodtype, KosherType, Relagion, RelationshipType, Education, Interest, CompanyName, PositioninCompany, CompanyType, Lookingfor, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear, Smoke, Vape, Marijauna, Drugs, Drink, InstaUsername } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [search, setSearch] = useState(null);
   const [languages, setLanguages] = useState(TypeTestimonial);
@@ -68,7 +68,7 @@ const QuestionLanguageScreen = ({ navigation, route }) => {
     // const FavFood = TypeTestimonial[selectedCategoryIndex].name
     // console.log(FavFood);
     if (!selectedItems.length == 0) {
-      navigation.navigate('QuestionDescribeYouScreen', { languages: selectedItems, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+      navigation.navigate('QuestionDescribeYouScreen', { languages: selectedItems, email: email, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
     }
     else {
       ToastAndroid.show("Please select Languages!", ToastAndroid.SHORT);
@@ -78,7 +78,7 @@ const QuestionLanguageScreen = ({ navigation, route }) => {
   const onSkip = () => {
     // tempArry.push(item.name)
     // console.log(tempArry);
-    navigation.navigate('QuestionDescribeYouScreen', { languages: null, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
+    navigation.navigate('QuestionDescribeYouScreen', { languages: null, email: email, PartnerEthnicity: PartnerEthnicity, Ethnicity: Ethnicity, PartnerExercise: PartnerExercise, ExerciseStatus: ExerciseStatus, Exercise: Exercise, FavFood: FavFood, PartnerDiet: PartnerDiet, Diet: Diet, ConvertedReligionDetail: ConvertedReligionDetail, ConvertedReligion: ConvertedReligion, Relagion: Relagion, ParentReligion: ParentReligion, religionType: religionType, foodtype: foodtype, KosherType: KosherType, RelationshipType: RelationshipType, Education: Education, Interest: Interest, CompanyName: CompanyName, PositioninCompany: PositioninCompany, CompanyType: CompanyType, InstaUsername: InstaUsername, Drink: Drink, Drugs: Drugs, Marijauna: Marijauna, Vape: Vape, Smoke: Smoke, Lookingfor: Lookingfor, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })
 
   }
 
@@ -190,48 +190,48 @@ const QuestionLanguageScreen = ({ navigation, route }) => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{
-          paddingTop: 0,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Image source={require('../../assets/language.png')} resizeMode='contain' style={{
-            width: 220,
-            height: 200,
-          }} />
-        </View>
-
-
-        <View style={{
-          alignItems: 'center',
-          paddingHorizontal: 70,
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: COLORS.black,
-            textAlign: 'center',
-          }}>What language you speak?</Text>
-        </View>
-
-        <View style={styles.NumberInput}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-            <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
-              marginRight: 5
+          <View style={{
+            paddingTop: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Image source={require('../../assets/language.png')} resizeMode='contain' style={{
+              width: 220,
+              height: 200,
             }} />
-            <TextInput
-              value={search}
-              placeholder={'Search'}
-              onChangeText={search => searchFilterFunction(search)
-              }
-              style={styles.TextInput}
-            />
           </View>
-        </View>
 
 
-          <View style={{ paddingTop: 10, marginHorizontal:20 }}>
+          <View style={{
+            alignItems: 'center',
+            paddingHorizontal: 70,
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: COLORS.black,
+              textAlign: 'center',
+            }}>What language you speak?</Text>
+          </View>
+
+          <View style={styles.NumberInput}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+              <Image source={require('../../assets/search.png')} resizeMode='contain' style={{
+                marginRight: 5
+              }} />
+              <TextInput
+                value={search}
+                placeholder={'Search'}
+                onChangeText={search => searchFilterFunction(search)
+                }
+                style={styles.TextInput}
+              />
+            </View>
+          </View>
+
+
+          <View style={{ paddingTop: 10, marginHorizontal: 20 }}>
             <ListTestimonial data={Templanguages} value={selectedCategoryIndex}
               setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
           </View>
@@ -239,7 +239,7 @@ const QuestionLanguageScreen = ({ navigation, route }) => {
           <View style={{
             paddingTop: 50,
             // flexDirection: 'row'a
-            alignItems:'center'
+            alignItems: 'center'
           }}>
             <View style={{ marginBottom: 5 }}>
               <CustomeButton onpress={() => onCilngyScreen()}
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginHorizontal:20,
+    marginHorizontal: 20,
     height: 45,
     // width: 340,
     backgroundColor: COLORS.light,

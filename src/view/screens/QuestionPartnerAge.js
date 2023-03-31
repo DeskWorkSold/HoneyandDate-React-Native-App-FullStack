@@ -7,7 +7,7 @@ import Slider from '@react-native-community/slider';
 
 
 const QuestionPartnerAge = ({ navigation, route }) => {
-  const { Experince, InTenYear, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
+  const { email, Experince, InTenYear, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio } = route.params;
   const [height, setHeight] = useState();
   const [heighType, setHeightType] = useState(false);
   const [selectMinMaxAge, setSelectMinMaxAge] = useState('minage');
@@ -23,7 +23,7 @@ const QuestionPartnerAge = ({ navigation, route }) => {
     if (filterMinAge && filterMaxAge) {
       console.log(filterMinAge, filterMaxAge);
       navigation.navigate('QuestionMusicScreen', {
-        filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+        filterMinAge: filterMinAge, email: email, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
       })
     }
     else {
@@ -34,7 +34,7 @@ const QuestionPartnerAge = ({ navigation, route }) => {
   const onSkip = async () => {
     console.log('test');
     navigation.navigate('QuestionMusicScreen', {
-      filterMinAge: null, filterMaxAge: null, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
+      filterMinAge: null, email: email, filterMaxAge: null, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids
     })
   }
 

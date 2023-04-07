@@ -254,7 +254,11 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
         Data.CompanyType = CompanyType;
         Data.PositioninCompany = PositioninCompany;
         Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser
+        Data.uid = CurrentUser;
+        Data.Location = {
+          latitude: 24.9028039,
+          longitude: 67.1145385,
+        }
         // dispatch(mediatorLogin(Data))
         // console.log('test data: ', Data);
         // return;

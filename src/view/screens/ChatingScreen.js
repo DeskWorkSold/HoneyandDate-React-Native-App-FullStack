@@ -236,7 +236,7 @@ const ChatingScreen = ({ navigation, route }) => {
                         querySnap.data().Proposals?.map(item => {
                             // console.log('===>',item);
                             Proposals.push(item);
-
+                            
                             var date = item.ProposalTempDate;
                             const hour = 1000 * 60 * 60;
                             const Proposaltime = Math?.round(date?.toDate().getTime() / hour);

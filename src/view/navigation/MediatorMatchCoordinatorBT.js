@@ -10,6 +10,9 @@ import HomeScreen from '../../view/screens/MediatorLogin/MatchCoordinator/HomeSc
 import FeedScreen from '../../view/screens/MediatorLogin/MatchCoordinator/FeedScreen';
 import ManageScreen from '../../view/screens/MediatorLogin/MatchCoordinator/ManageScreen';
 import ProfileScreen from '../../view/screens/MediatorLogin/MatchCoordinator/ProfileScreen';
+import ArticalDetailScreen from '../screens/MediatorLogin/MatchCoordinator/ArticalDetailScreen';
+import PaymentType from '../screens/MediatorLogin/MatchCoordinator/PaymentType';
+import PaymentTypeDetail from '../screens/MediatorLogin/MatchCoordinator/PaymentTypeDetail';
 
 
 const Tab = createBottomTabNavigator();
@@ -47,6 +50,7 @@ const FeedStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name="FeedScreen" component={FeedScreen} />
+        <Tab.Screen name="ArticalDetailScreen" component={ArticalDetailScreen} />
     </Tab.Navigator>
 )
 const ManageStack = ({ navigation }) => (
@@ -81,6 +85,8 @@ const ProfileStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Tab.Screen name="PaymentType" component={PaymentType} />
+        <Tab.Screen name="PaymentTypeDetail" component={PaymentTypeDetail} />
     </Tab.Navigator>
 )
 

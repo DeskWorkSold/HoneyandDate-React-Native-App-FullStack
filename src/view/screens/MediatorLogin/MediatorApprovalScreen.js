@@ -9,16 +9,18 @@ import { useDispatch, useSelector } from 'react-redux';
 const MediatorApprovalScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const MediatorUser = useSelector(selectMediatorUser);
+  
 
   const CheckApproval = () => {
-    // console.log(MediatorUser?.PanelAccess)
-    if(MediatorUser?.PanelAccess == true && MediatorUser.MediatorId == 2){
+    // console.log(MediatorUser?.userDetails.PanelAccess)
+    // console.log(MediatorUser.userDetails.MediatorId);
+    if(MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 2){
       setTimeout(() => {
         navigation.navigate('MediatorMatchCoordinatorBT');
         console.log('Approval Accepted');
       }, 1000);
     }
-    else if(MediatorUser?.PanelAccess == true && MediatorUser.MediatorId == 1){
+    else if(MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 1){
       setTimeout(() => {
         navigation.navigate('MediatorDashboardScreen');
         console.log('Approval Accepted');

@@ -10,6 +10,7 @@ const COLORS = {
     black: '#1C1C1C',
     yellow: '#FF8C00',
     blue:'#1878F1',
+    bluedark:'#2A3182',
     green: '#0FCC88',
     dark:'#2C3748'
 };

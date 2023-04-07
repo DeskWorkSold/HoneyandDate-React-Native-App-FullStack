@@ -67,6 +67,10 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
           Data.Name = name;
           Data.uid = CurrentUser.uid;
           Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
           // console.log('test data: ', Data);
           // return;
           // console.log(CurrentUser);

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import COLORS from '../../../../consts/Colors';
 import { useState } from 'react';
@@ -6,6 +6,12 @@ import { useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SVGImg1 from '../../../../assets/diamond.svg';
+import UserDetails from '../../../components/UserDetails';
+import Geolocation from '@react-native-community/geolocation';
+import Loader from '../../../components/Loader';
+import Message from '../../../../assets/message.svg';
+import Group from '../../../../assets/Group.svg';
+
 const { width, height } = Dimensions.get("window");
 
 const CoordinatorBtn = [
@@ -21,15 +27,43 @@ const CoordinatorBtn = [
 
 
 
+const test = [
+  {
+    id: '1',
+    name: 'Fahad Khan',
+  }
+  ,
+  {
+    id: '2',
+    name: 'Ali Khan',
+  },
+  {
+    id: '3',
+    name: 'Raza Khan',
+  }
+]
+
+
 const HomeScreen = () => {
   const [coordinatorBtn, setCoordinatorBtn] = useState('Your Clients');
   const [value, setValueIndex] = useState(0);
-  const [uploading, setUploading] = useState(0);
+  const [uploading, setUploading] = useState(false);
   const [isEnabled, setisEnabled] = useState(false);
   const [isEnabled2, setisEnabled2] = useState(false);
-  
 
-  const [reqUser, setReqUser] = useState(null)
+
+  const [reqUser, setReqUser] = useState(null);
+  const [ClientUser, setClientUser] = useState(null);
+  const [filterMatchUser, setFilterMatchUser] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleTwo, setModalVisibleTwo] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
+  const [suggestedMatch, setSuggestedMatch] = useState(false);
+  const [matchIndex, setMatchIndex] = useState(null);
+  const [matchUsers, setMatchUsers] = useState(null);
+
+  const CurrentUser = auth().currentUser.uid;
+
   // console.log(reqUser);
 
 
@@ -50,7 +84,9 @@ const HomeScreen = () => {
         querySnapshot.forEach((documentSnapshot) => {
           // console.log(documentSnapshot.data());
           const data = documentSnapshot.data().userDetails;
-          users.push(data);
+          if (data.MatchcoordinaterStatus != 'accepted' && data.MatchcoordinaterStatus != 'rejected') {
+            users.push(data);
+          }
           // if (data.Category == 'Mediator') {
           // }
         })
@@ -58,10 +94,248 @@ const HomeScreen = () => {
       })
     setUploading(false)
   }
+  const fetchClients = async () => {
+    if (CurrentUser) {
+      try {
+        const userRef = firestore().collection('Users')
+          .doc(CurrentUser)
+        userRef.onSnapshot((querySnap) => {
+          // console.log('doc exists: ', querySnap.data());
+          if (!querySnap.data()?.Clients) {
+            console.log('private chats not found');
+            // console.log('private chat here');
+          } else {
+            const Clientsdata = []
+            querySnap.data()?.Clients.map(user => {
+              // console.log('total chats here', chats.ChatuserDetails.uid);
+              Clientsdata.push(user.ClientUser)
+            })
+            setClientUser(Clientsdata)
+          }
+        })
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    else {
+      ToastAndroid.show("Network error try again later!", ToastAndroid.SHORT);
+      // dispatch(chatuser(null))
+      // setChatUserDetail(null)
+    }
+  }
+
+  const GetUserDetails = (item) => {
+    if (item) {
+      // console.log(item);
+      setUserDetails(item);
+      setModalVisible(true)
+    }
+    else {
+      ToastAndroid.show("Network error try again later!", ToastAndroid.SHORT);
+    }
+  }
+  const GetUserDetailsTwo = (item) => {
+    // console.log(item);
+    if (item) {
+      console.log(item);
+      setUserDetails(item);
+      setModalVisibleTwo(!modalVisibleTwo)
+    }
+    else {
+      ToastAndroid.show("Network error try again later!", ToastAndroid.SHORT);
+    }
+  }
+
+  const AcceptClientReq = async (userDetails) => {
+    // console.log('accept', userDetails);
+    // return;
+    setUploading(true)
+    await firestore()
+      .collection('Users').doc(CurrentUser).update({
+        Clients: firestore.FieldValue.arrayUnion({
+          ClientUser: userDetails
+        }),
+      })
+      .then(() => {
+        console.log('client req accepted');
+      });
+    await firestore()
+      .collection('Users').doc(userDetails.uid).update({
+        'userDetails.MatchcoordinaterStatus': 'accepted',
+      })
+      .then(() => {
+        console.log('client req accepted');
+        setModalVisible(false)
+        // console.log('You like', Data.userDetails.Name);
+        // navigation.navigate('MessagesScreen')
+        setUploading(false)
+      });
+  }
+  const DeclineClientReq = async (userDetails) => {
+    // console.log('decline', userDetails.uid);
+    // return;
+    setUploading(true)
+    await firestore()
+      .collection('Users').doc(userDetails.uid).update({
+        'userDetails.MatchcoordinaterStatus': 'rejected',
+      })
+      .then(() => {
+        setModalVisible(false)
+        setUploading(false)
+      })
+  }
+
+  const onSelectedClient = (index) => {
+    setMatchIndex(index)
+    setSuggestedMatch(!suggestedMatch)
+    // ser
+
+    const Matchuser = ClientUser[index]
+    // console.log(Matchuser);
+    if (Matchuser) {
+      setFilterMatchUser(Matchuser)
+    }
+  }
+
+
+  const getfilterMatchUsers = async () => {
+    // console.log(filterMatchUser.DescribePartner, filterMatchUser.Gender, filterMatchUser.NextLongestRelationship,
+    //   filterMatchUser.PartnerBuildType, filterMatchUser.PartnerDiet, filterMatchUser.PartnerDisability, filterMatchUser.PartnerEthnicity,
+    //   filterMatchUser.PartnerExercise, filterMatchUser.PartnerGender, filterMatchUser.PartnerMaxHeight, filterMatchUser.PartnerMinHeight,
+    //   filterMatchUser.PartnerNature, filterMatchUser.PoliticalPartnerView, 'useEffect here');
+    console.log(filterMatchUser);
+    setUploading(true)
+    await firestore()
+      .collection('Users')
+      .onSnapshot(querySnapshot => {
+        const users = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          // console.log(documentSnapshot.data());
+          const data = documentSnapshot.data().userDetails;
+
+          if (filterMatchUser?.uid != data?.uid && data?.Category != 'Mediator' && filterMatchUser?.PartnerGender == data?.Gender && filterMatchUser?.PartnerMaxHeight >= data?.Hieght && filterMatchUser?.PartnerMinHeight <= data?.Hieght && filterMatchUser?.Relagion == data?.Relagion && filterMatchUser?.PartnerEthnicity == data?.Ethnicity && filterMatchUser?.PartnerNature == data?.Nature && filterMatchUser?.PartnerDisability == data?.Disability && filterMatchUser?.PartnerBuildType == data?.BuildType && filterMatchUser?.PartnerDiet == data?.Diet && filterMatchUser?.PoliticalPartnerView >= data?.PoliticalView && filterMatchUser?.DescribePartner == data?.DescribeYou && filterMatchUser?.PartnerExercise == data?.Exercise) {
+            const updateData = {
+              ...data,
+              matchpercent: '100%',
+            }
+            users.push(updateData);
+
+            // console.log(updateData, '100%');
+          }
+          else if (filterMatchUser?.uid != data?.uid && data?.Category != 'Mediator' && filterMatchUser?.PartnerGender == data?.Gender && filterMatchUser?.PartnerMaxHeight >= data?.Hieght && filterMatchUser?.PartnerMinHeight <= data?.Hieght && filterMatchUser?.Relagion == data?.Relagion && filterMatchUser?.PartnerEthnicity == data?.Ethnicity && filterMatchUser?.PartnerNature == data?.Nature && filterMatchUser?.PartnerDisability == data?.Disability && filterMatchUser?.PartnerBuildType == data?.BuildType && filterMatchUser?.PartnerDiet == data?.Diet && filterMatchUser?.PoliticalPartnerView >= data?.PoliticalView) {
+            // users.push(data);
+            const updateData = {
+              ...data,
+              matchpercent: '95%',
+            }
+            users.push(updateData);
+
+            // console.log(updateData, '95%');
+          }
+          else if (filterMatchUser?.uid != data?.uid && data?.Category != 'Mediator' && filterMatchUser?.PartnerGender == data?.Gender && filterMatchUser?.PartnerMaxHeight >= data?.Hieght && filterMatchUser?.PartnerMinHeight <= data?.Hieght && filterMatchUser?.Relagion == data?.Relagion && filterMatchUser?.PartnerEthnicity == data?.Ethnicity && filterMatchUser?.PartnerNature == data?.Nature && filterMatchUser?.PartnerDisability == data?.Disability) {
+            // users.push(data);
+            const updateData = {
+              ...data,
+              matchpercent: '85%',
+            }
+            users.push(updateData);
+
+            console.log(updateData, '85%');
+          }
+          else if (filterMatchUser?.uid != data?.uid && data?.Category != 'Mediator' && filterMatchUser?.PartnerGender == data?.Gender && filterMatchUser?.PartnerMaxHeight >= data?.Hieght && filterMatchUser?.PartnerMinHeight <= data?.Hieght && filterMatchUser?.Relagion == data?.Relagion && filterMatchUser?.PartnerEthnicity == data?.Ethnicity) {
+            const updateData = {
+              ...data,
+              matchpercent: '75%',
+            }
+            users.push(updateData);
+            // console.log(updateData, '75%');
+          }
+          else if (filterMatchUser?.uid != data?.uid && data?.Category != 'Mediator' && filterMatchUser?.PartnerGender == data?.Gender && filterMatchUser?.PartnerMaxHeight >= data?.Hieght && filterMatchUser?.PartnerMinHeight <= data?.Hieght) {
+            const updateData = {
+              ...data,
+              matchpercent: '65%',
+            }
+            users.push(updateData);
+            // console.log(updateData, '65%');
+          }
+          // if (data.Category == 'Mediator') {
+          // }
+        })
+        setMatchUsers(users)
+        // setReqUser(users.slice(0, 10))
+      })
+    // .then(() => {
+    //   // setModalVisible(false)
+    setUploading(false)
+    // })
+  }
 
   useEffect(() => {
-    fetchUser()
+    locationPermission();
+    getCurrentLocation();
+
+
+    fetchUser();
+    fetchClients();
+
   }, [])
+
+  useEffect(() => {
+    getfilterMatchUsers();
+  }, [filterMatchUser])
+
+  const locationPermission = () => {
+    new Promise(async (resolve, reject) => {
+      if (Platform.OS === 'ios') {
+        try {
+          const permissionStatus = await Geolocation.requestAuthorization(
+            'whenInUse',
+          );
+          if (permissionStatus === 'granted') {
+            return resolve('granted');
+          }
+          reject('Permission not granted');
+        } catch (error) {
+          return reject(error);
+        }
+      }
+      return PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+        .then(granted => {
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            resolve('granted');
+          }
+          return reject('Location Permission denied');
+        })
+        .catch(error => {
+          console.log('Ask Location permission error: ', error);
+          return reject(error);
+        });
+    });
+  }
+
+  const getCurrentLocation = () => {
+    setTimeout(() => {
+      Geolocation.getCurrentPosition(
+        position => {
+          const cords = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            // heading: position.coords.heading,
+          };
+          firestore()
+            .collection('Users').doc(CurrentUser).update({
+              'userDetails.Location': cords,
+            })
+          // console.log('===>', cords);
+          // resolve(cords);
+        },
+        error => { console.log(error) }
+      );
+    }, 5000);
+  }
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -104,9 +378,313 @@ const HomeScreen = () => {
 
 
         {coordinatorBtn == 'Your Clients' ?
-          <View>
-            <Text>test</Text>
+          <View style={{ paddingHorizontal: 10, marginBottom: 100 }}>
+            {!ClientUser == '' ?
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {ClientUser.map((item, index) => (
+                  // <Text key={index}>test</Text>
+                  <View key={index}>
+                    <View
+                      style={{
+                        backgroundColor: COLORS.white,
+                        borderWidth: 5,
+                        borderRadius: 20,
+                        borderColor: COLORS.white,
+                        // alignItems: 'center',
+                        elevation: 5,
+                        marginHorizontal: 15,
+                        marginBottom: 20,
+                        marginTop: 5,
+                        paddingBottom: 20
+                      }}>
+                      <Image source={{ uri: item?.image1 }} resizeMode='cover'
+                        style={{
+                          height: 350,
+                          width: '100%',
+                          borderRadius: 20,
+                          // paddingHorizontal: 10
+                        }} />
+                      <View>
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 5,
+                          paddingTop: 10
+                        }}>
+                          <Image source={require('../../../../assets/dot.png')} resizeMode='contain'
+                            style={{
+                              width: 5,
+                              height: 5,
+                              marginRight: 5
+                            }} />
+                          <Text style={{
+                            fontSize: 20, fontWeight: 'bold',
+                            color: COLORS.black,
+                            marginRight: 5,
+                          }}>{item?.Name &&
+                            item?.Name?.charAt(0).toUpperCase() + item?.Name.slice(1)
+                            }</Text>
+                          <Text style={{
+                            fontSize: 20,
+                            color: COLORS.black,
+                            marginRight: 5
+                          }}>, 25</Text>
+                          <Image source={require('../../../../assets/conform.png')} resizeMode='contain'
+                            style={{
+                              width: 20,
+                              height: 20,
+                            }} />
+                        </View>
+                      </View>
+                      <View>
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 5,
+                          justifyContent: 'space-between'
+                        }}>
+                          <Text style={{
+                            color: COLORS.black,
+                            marginRight: 5
+                          }}>Model at Instagaram</Text>
+                          {matchIndex == index ?
+                            <TouchableOpacity
+                              onPress={() => GetUserDetailsTwo(item)}
+                              style={{
+                                color: COLORS.black,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginRight: 5,
+                                backgroundColor: COLORS.main,
+                                padding: 3,
+                                paddingHorizontal: 8,
+                                borderRadius: 5,
+                                fontSize: 12,
+                              }}>
+                              <Text style={{
+                                fontSize: 13,
+                                color: COLORS.black,
+                                // fontSize:12,
+                              }}>Match Details</Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity style={{
+                              color: COLORS.black,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              marginRight: 5,
+                              backgroundColor: COLORS.main,
+                              padding: 3,
+                              fontWeightL: 800,
+                              paddingHorizontal: 8,
+                              borderRadius: 5,
+                              fontSize: 12,
+                            }}>
+                              <View style={{
+                                paddingRight: 3,
+                              }}>
+                                <Message width={14} height={14} />
+                              </View>
+                              <Text style={{
+                                fontSize: 13,
+                                color: COLORS.black
+                              }}>Chat</Text>
+                            </TouchableOpacity>
+                          }
+                        </View>
+                      </View>
+                    </View>
+                    <View style={{
+                      alignItems: 'center',
+                      marginTop: -30,
+                      marginBottom: 0,
+                    }}>
+                      <TouchableOpacity
+                        onPress={() => onSelectedClient(index)}
+                        activeOpacity={0.8}
+                        style={{
+                          alignItems: 'center',
+                          backgroundColor: COLORS.main,
+                          padding: 4,
+                          borderRadius: 50,
+                          justifyContent: 'center',
+                          width: 20,
+                          height: 20,
+                        }}>
+                        {matchIndex == index ?
+                          <Image source={require('../../../../assets/dropdown.png')} resizeMode='contain'
+                            style={{ tintColor: COLORS.black, transform: [{ rotateZ: '-180deg' }] }} />
+                          :
+                          <Image source={require('../../../../assets/dropdown.png')} resizeMode='contain'
+                            style={{
+                              tintColor: COLORS.black
+                            }} />
+                        }
+                      </TouchableOpacity>
+                    </View>
+
+                    {matchIndex == index &&
+                      <View>
+                        <View style={{
+                          alignItems: 'center',
+                          height: 40,
+                          // backgroundColor:COLORS.main,
+                          justifyContent: 'center'
+                        }}>
+                          <Text style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: COLORS.black,
+                          }}>Suggest Matches</Text>
+                        </View>
+                        {matchUsers ?
+                          <>
+                            {!matchUsers.length == 0 ?
+                              <>
+                                {
+                                  matchUsers.map((itemtwo, index) => (
+                                    <View
+                                      key={index}
+                                      style={{
+                                        // width:'100%',
+                                        marginBottom: 20,
+                                        marginHorizontal: 20,
+                                        paddingVertical: 20,
+                                        backgroundColor: COLORS.white,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: 20,
+                                        elevation: 5,
+                                      }}>
+                                      <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                      }}>
+                                        <View style={{
+                                          alignItems: 'center',
+                                          // width:'50%'
+                                        }}>
+                                          <Image source={{ uri: item?.image1 }} resizeMode='cover'
+                                            style={{
+                                              width: 60,
+                                              height: 60,
+                                              borderRadius: 50,
+                                              borderWidth: 2,
+                                              borderColor: COLORS.main
+                                            }}
+                                          />
+                                          <View>
+                                            <Text style={{
+                                              color: COLORS.black
+                                            }}>{item?.Name}</Text>
+                                          </View>
+                                        </View>
+                                        <Text style={{
+                                          color: COLORS.black,
+                                          fontSize: 15,
+                                          paddingHorizontal: 20,
+                                        }}>&</Text>
+                                        <View style={{
+                                          alignItems: 'center',
+                                          // width:'50%'
+                                        }}>
+                                          <Image source={{ uri: itemtwo?.image1 }} resizeMode='cover'
+                                            style={{
+                                              width: 60,
+                                              height: 60,
+                                              borderRadius: 50,
+                                              borderWidth: 2,
+                                              borderColor: COLORS.main,
+                                            }}
+                                          />
+                                          <View>
+                                            <Text style={{
+                                              color: COLORS.black
+                                            }}>{itemtwo?.Name}</Text>
+                                          </View>
+                                        </View>
+                                      </View>
+
+                                      <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingHorizontal: 20,
+                                        justifyContent: 'center',
+                                        paddingVertical: 10,
+                                      }}>
+                                        <View style={{
+                                          flexDirection: 'row',
+                                          alignItems: 'center',
+                                        }}>
+                                          <Group width={14} height={14} />
+                                          <Text style={{
+                                            color: COLORS.black,
+                                            marginRight: 5,
+                                            fontSize: 12,
+                                          }}>{itemtwo?.matchpercent} match chances</Text>
+                                        </View>
+                                        <TouchableOpacity style={{
+                                          color: COLORS.black,
+                                          flexDirection: 'row',
+                                          alignItems: 'center',
+                                          marginRight: 5,
+                                          backgroundColor: COLORS.main,
+                                          padding: 3,
+                                          paddingHorizontal: 8,
+                                          borderRadius: 5,
+                                          fontSize: 12,
+                                        }}>
+                                          <Text style={{
+                                            fontSize: 13,
+                                            color: COLORS.black,
+                                            // fontSize:12,
+                                          }}>Match Details</Text>
+                                        </TouchableOpacity>
+                                      </View>
+                                    </View>
+                                  ))
+                                }
+                              </>
+                              :
+                              <View style={{
+                                alignItems: 'center',
+                                paddingVertical: 20,
+                              }}>
+                                <Text style={{
+                                  fontSize: 12,
+                                  color: COLORS.black,
+                                }}>No Match Users Found</Text>
+                              </View>
+                            }
+                          </>
+                          :
+                          <View style={{
+                            alignItems: 'center',
+                            paddingVertical: 20,
+                          }}>
+                            <ActivityIndicator size="large" color={COLORS.black} animating={uploading} />
+                          </View>
+
+                        }
+                      </View>
+                    }
+
+
+
+                  </View>
+                ))}
+              </ScrollView>
+              :
+              <View style={{ paddingHorizontal: 20 }}>
+                <Text>No user found</Text>
+              </View>
+            }
+
+
+            <UserDetails type={'Client Details'} data={userDetails} setData={setUserDetails} modal={modalVisibleTwo} setModal={setModalVisibleTwo} />
           </View>
+
           :
           <View style={{ paddingHorizontal: 20 }}>
             <View style={{ paddingBottom: 10, }}>
@@ -142,7 +720,7 @@ const HomeScreen = () => {
                   <Text style={{ color: COLORS.black }}>Decline with template</Text>
                 </View>
                 <View>
-                <Switch
+                  <Switch
                     trackColor={{ false: COLORS.gray, true: COLORS.mainlight }}
                     thumbColor={isEnabled2 ? COLORS.main : '#f4f3f4'}
                     ios_backgroundColor={COLORS.main}
@@ -185,17 +763,19 @@ const HomeScreen = () => {
                         alignItems: 'center',
                         justifyContent: 'center'
                       }}>
-                        <View style={{
-                          borderRadius: 50,
-                          borderWidth: 4,
-                          borderColor: COLORS.main
-                        }}>
+                        <TouchableOpacity
+                          onPress={() => GetUserDetails(item)}
+                          style={{
+                            borderRadius: 50,
+                            borderWidth: 4,
+                            borderColor: COLORS.main
+                          }}>
                           <Image source={{ uri: item.image1 }} resizeMode='cover' style={{
                             width: 70,
                             height: 70,
                             borderRadius: 50,
                           }} />
-                        </View>
+                        </TouchableOpacity>
                       </View>
                       <View style={{
                         width: '75%',
@@ -255,12 +835,14 @@ const HomeScreen = () => {
                           justifyContent: 'space-between'
                         }}>
                           <View>
-                            <TouchableOpacity style={{
-                              paddingHorizontal: 40,
-                              paddingVertical: 8,
-                              borderRadius: 5,
-                              backgroundColor: COLORS.black,
-                            }}>
+                            <TouchableOpacity
+                              onPress={() => DeclineClientReq(item)}
+                              style={{
+                                paddingHorizontal: 40,
+                                paddingVertical: 8,
+                                borderRadius: 5,
+                                backgroundColor: COLORS.black,
+                              }}>
                               <Text style={{
                                 color: COLORS.white,
                                 fontSize: 12,
@@ -270,12 +852,14 @@ const HomeScreen = () => {
                             </TouchableOpacity>
                           </View>
                           <View>
-                            <TouchableOpacity style={{
-                              paddingHorizontal: 40,
-                              paddingVertical: 8,
-                              borderRadius: 5,
-                              backgroundColor: COLORS.main,
-                            }}>
+                            <TouchableOpacity
+                              onPress={() => AcceptClientReq(item)}
+                              style={{
+                                paddingHorizontal: 40,
+                                paddingVertical: 8,
+                                borderRadius: 5,
+                                backgroundColor: COLORS.main,
+                              }}>
                               <Text style={{
                                 color: COLORS.black,
                                 fontSize: 12,
@@ -302,6 +886,10 @@ const HomeScreen = () => {
 
             </ScrollView>
 
+
+            <UserDetails onpress={() => AcceptClientReq(userDetails)} type={'Request Details'} data={userDetails} setData={setUserDetails} modal={modalVisible} setModal={setModalVisible} />
+
+            <Loader modal={uploading} uploading={uploading} />
 
           </View>
         }

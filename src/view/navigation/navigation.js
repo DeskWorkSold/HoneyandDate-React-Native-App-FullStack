@@ -190,10 +190,10 @@ const MyStack = () => {
     const MediatorDashboardStack = ({ navigation }) => (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="MediatorApprovalScreen" component={MediatorApprovalScreen} />
-            {MediatorUser.MediatorId == 1 && MediatorUser?.PanelAccess == true &&
+            {MediatorUser?.userDetails?.MediatorId == 1 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
             }
-            {MediatorUser.MediatorId == 2 && MediatorUser?.PanelAccess == true &&
+            {MediatorUser?.userDetails?.MediatorId == 2 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
             }
         </Stack.Navigator>
@@ -230,7 +230,7 @@ const MyStack = () => {
                         const data = documentSnapshot.data().userDetails
                         if (data.Category == 'Mediator') {
                             // console.log(user.uid);
-                            dispatch(mediatorLogin(data))
+                            dispatch(mediatorLogin(documentSnapshot.data()))
                             // MediatorUserLogin(user.uid);
                         }
                         else {

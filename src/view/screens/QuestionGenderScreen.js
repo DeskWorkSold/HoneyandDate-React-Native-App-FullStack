@@ -94,7 +94,7 @@ const QuestionGenderScreen = ({ navigation, route }) => {
 
         <View style={{
           alignItems: 'center',
-          justifyContent:'center',
+          // justifyContent:'center',
           paddingTop: 20,
           flexDirection: 'row',
           height:40,
@@ -156,7 +156,9 @@ const QuestionGenderScreen = ({ navigation, route }) => {
             }}>Enter the full name</Text>
           </View> */}
 
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListGender data={GenderData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: '100%',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   footer: {
     // height: '20%',

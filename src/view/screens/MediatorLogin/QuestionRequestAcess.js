@@ -39,10 +39,10 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
     const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
     const category = 'Mediator'
     if (!selectitem == '') {
-      console.log(selectitem);
+      // console.log(selectitem);
       if (selectitem == 'Match Coordinator') {
         try {
-          // setUploading(true)
+          setUploading(true)
           const imageUrl = await uploadImage();
           const imageUrl2 = await uploadImage2();
           const imageUrl3 = await uploadImage3();
@@ -82,7 +82,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
               dispatch(mediatorLogin(Data))
               // navigation.navigate('QuestionCongratulationScreen')
               // redux
-              ToastAndroid.show('Welcome to Honey and Dates', ToastAndroid.SHORT)
+              ToastAndroid.show('Welcome to Honey and Dates Match Coordinatior Panel', ToastAndroid.SHORT)
               setUploading(false)
             })
           // setImage(null)
@@ -91,7 +91,56 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
         }
       }
       else if (selectitem == 'Talent agency/Influencer') {
-
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.Category = 'Mediator';
+          Data.MediatorId = 1;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          // console.log('test data: ', Data);
+          // return;
+          // console.log(CurrentUser);
+          // dispatch(mediatorLogin(Data))
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              // navigation.navigate('QuestionCongratulationScreen')
+              // redux
+              ToastAndroid.show('Welcome to Honey and Dates Influencer Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+          // setImage(null)
+        } catch (error) {
+          console.log('error test2', error);
+        }
       }
       // return;
       // navigation.navigate('MediatorQuestionRequestAcess', { RequestAccessType: selectitem, HaveKids: HaveKids, relationshipStatus: relationshipStatus, bio: bio, email: email, DateOfBirth: DateOfBirth, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, })

@@ -18,9 +18,14 @@ const ProfileScreen = ({ navigation }) => {
     const [progress, setProgress] = useState(0.5);
     const mediator = useSelector(selectMediatorUser);
     const [name, setName] = useState(mediator?.userDetails?.Name);
+    const [nameEdit, setNameEdit] = useState(false);
     const [email, setEmail] = useState(mediator?.userDetails?.email);
-    const [location, setLocation] = useState();
+    const [emailEdit, setEmailEdit] = useState(false);
+    const [number, setNumber] = useState(mediator.Number ? mediator.Number : null);
+    const [numberEdit, setNumberEdit] = useState(false);
     const [about, setabout] = useState(mediator?.userDetails?.Bio);
+    const [location, setLocation] = useState();
+    const [locationEdit, setLocationEdit] = useState();
     const dispatch = useDispatch();
 
     const OnLogOut = () => {
@@ -73,18 +78,6 @@ const ProfileScreen = ({ navigation }) => {
                                         height: 100
                                     }} />
                                 </View>
-                                <View style={{
-                                    alignItems: 'center',
-                                    alignSelf: 'center',
-                                    marginTop: -10,
-                                    backgroundColor: COLORS.main,
-                                    width: width / 8,
-                                    borderRadius: 10,
-                                }}>
-                                    <Text style={{ color: COLORS.black, fontSize: 13, }}>
-                                        100%
-                                    </Text>
-                                </View>
                             </View>
                             <View style={{
                                 justifyContent: 'center',
@@ -108,140 +101,115 @@ const ProfileScreen = ({ navigation }) => {
                                     alignItems: 'center',
                                     backgroundColor: COLORS.light,
                                     borderRadius: 5,
-                                    width: '100%',
+                                    // width: '100%',
                                     padding: 5,
                                     paddingHorizontal: 10,
                                     marginTop: 5,
                                 }}>
-                                    <Text style={{ color: COLORS.black, fontSize: 13 }}>Match Cordenator</Text>
+                                    <Text style={{ color: COLORS.black, fontSize: 13 }}>Agency</Text>
                                 </View>
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
-                            <View style={{
-                                justifyContent: 'center',
-                                marginTop: 10,
-                                paddingTop: 20,
-                                paddingBottom: 30,
-                                // height: 45,
-                                width: width / 1.2,
-                                backgroundColor: COLORS.white,
-                                borderRadius: 10,
-                                elevation: 5
-                            }}>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    paddingHorizontal: 20,
-                                }}>
-                                    <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: 'bold', paddingRight: 10, }}>Sign Up Progress</Text>
-                                    <Text style={{ color: 'red', fontSize: 16, fontWeight: 'bold' }}>66%</Text>
+                            <View style={{ marginTop: 0 }}>
+                                <Text style={{ color: COLORS.black, paddingBottom: 5 }}> Name </Text>
+                                <View style={styles.NumberInput}>
+                                    <TextInput
+                                        // aria-disabled={true}
+                                        editable={nameEdit}
+                                        value={name}
+                                        placeholder={'Enter your name'}
+                                        keyboardType='email-address'
+                                        onChangeText={name => setName(name)
+                                        }
+                                        style={styles.TextInput}
+                                    />
+                                    <TouchableOpacity onPress={() => setNameEdit(!nameEdit)}>
+                                        <Image source={require('../../../../assets/edit.png')} resizeMode='contain'
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                tintColor: COLORS.black
+                                            }}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
-                                <View style={{
-                                    marginTop: 20,
-                                    paddingHorizontal: 20,
-                                    // alignItems: 'center',
-                                    // backgroundColor: COLORS.gray,
-                                    // height:50
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                    }}>
-                                        <View style={{
-                                            paddingRight: 10,
-                                        }}>
-                                            <Image
-                                                source={require('../../../../assets/tik.png')}
-                                                style={{ width: 20, height: 20, tintColor: COLORS.main }}
-                                            />
-                                            <View style={{
-                                                width: 1, height: 30, backgroundColor: COLORS.main, alignSelf: 'center'
-                                            }}>
-                                            </View>
-                                        </View>
-                                        <View>
-                                            <Text style={{
-                                                fontSize: 12,
-                                                color: COLORS.black
-                                            }}>Input Information</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                    }}>
-                                        <View style={{
-                                            paddingRight: 10,
-                                        }}>
-                                            <Image
-                                                source={require('../../../../assets/tik.png')}
-                                                style={{ width: 20, height: 20, tintColor: COLORS.main }}
-                                            />
-                                            <View style={{
-                                                width: 1, height: 30, backgroundColor: COLORS.main, alignSelf: 'center'
-                                            }}>
-                                            </View>
-                                        </View>
-                                        <View >
-                                            <Text style={{
-                                                fontSize: 12,
-                                                color: COLORS.black
-                                            }}>Sign Up</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                    }}>
-                                        <View style={{
-                                            paddingRight: 10,
-                                        }}>
-                                            <Image
-                                                source={require('../../../../assets/tik.png')}
-                                                style={{ width: 20, height: 20, tintColor: COLORS.gray2 }}
-                                            />
-                                        </View>
-                                        <View>
-                                            <Text style={{
-                                                fontSize: 12,
-                                                color: COLORS.black
-                                            }}>Get approved by Admin</Text>
-                                        </View>
-                                    </View>
-                                </View>
-
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
                             <View style={{ marginTop: 10 }}>
+                                <Text style={{ color: COLORS.black, paddingBottom: 5 }}> Email </Text>
                                 <View style={styles.NumberInput}>
-                                    <View>
-                                        <Text style={{ color: COLORS.black }}>Payment Type</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => navigation.navigate('PaymentType', { title: 'Payment Type' })}>
-                                        <Path width={15} height={15} />
+                                    <TextInput
+                                        // aria-disabled={true}
+                                        editable={emailEdit}
+                                        value={email}
+                                        placeholder={'Enter your name'}
+                                        keyboardType='email-address'
+                                        onChangeText={name => setEmail(name)
+                                        }
+                                        style={styles.TextInput}
+                                    />
+                                    <TouchableOpacity onPress={() => setEmailEdit(!emailEdit)}>
+                                        <Image source={require('../../../../assets/edit.png')} resizeMode='contain'
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                tintColor: COLORS.black
+                                            }}
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
-                            <View style={{ marginTop: 20 }}>
+                            <View style={{ marginTop: 10 }}>
+                                <Text style={{ color: COLORS.black, paddingBottom: 5 }}> Location </Text>
                                 <View style={styles.NumberInput}>
-                                    <View>
-                                        <Text style={{ color: COLORS.black }}>Religions</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => navigation.navigate('ReligionsWorkWith', { titel: 'Payment Type' })}>
-                                        <Path width={15} height={15} />
+                                    <TextInput
+                                        // aria-disabled={true}
+                                        editable={locationEdit}
+                                        value={location}
+                                        placeholder={'Enter your name'}
+                                        keyboardType='email-address'
+                                        onChangeText={name => setLocation(name)
+                                        }
+                                        style={styles.TextInput}
+                                    />
+                                    <TouchableOpacity onPress={() => setLocationEdit(!locationEdit)}>
+                                        <Image source={require('../../../../assets/edit.png')} resizeMode='contain'
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                tintColor: COLORS.black
+                                            }}
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
-                            <View style={{ marginTop: 20 }}>
+                        <View style={{ marginTop: 10 }}>
+                                <Text style={{ color: COLORS.black, paddingBottom: 5 }}> Phone No </Text>
                                 <View style={styles.NumberInput}>
-                                    <View>
-                                        <Text style={{ color: COLORS.black }}>Terms and Conditions</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => navigation.navigate('TermsAndCondition', { titel: 'Payment Type' })}>
-                                        <Path width={15} height={15} />
+                                    <TextInput
+                                        // aria-disabled={true}
+                                        editable={numberEdit}
+                                        value={number}
+                                        placeholder={'Enter your name'}
+                                        keyboardType='email-address'
+                                        onChangeText={name => setNumber(name)
+                                        }
+                                        style={styles.TextInput}
+                                    />
+                                    <TouchableOpacity onPress={() => setNumberEdit(!numberEdit)}>
+                                        <Image source={require('../../../../assets/edit.png')} resizeMode='contain'
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                tintColor: COLORS.black
+                                            }}
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -262,7 +230,7 @@ const ProfileScreen = ({ navigation }) => {
 
                     </View>
                 </ScrollView>
-            </View>
+            </View >
         </SafeAreaView >
     )
 }

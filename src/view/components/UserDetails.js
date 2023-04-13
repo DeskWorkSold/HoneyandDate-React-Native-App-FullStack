@@ -41,7 +41,7 @@ import Info from '../../assets/info.svg';
 const { width, height } = Dimensions.get("window");
 
 const UserDetails = ({ onpress, type, data, setData, modal, setModal }) => {
-    const user2 = useSelector(selectMediatorUser);
+    const mediatoruser = useSelector(selectMediatorUser);
     const [address, setAddress] = useState(null);
     const [userData, setUserData] = useState(data);
     const Address = Geocoder.from(data?.Location.latitude, data?.Location.longitude)
@@ -246,7 +246,7 @@ const UserDetails = ({ onpress, type, data, setData, modal, setModal }) => {
                                             borderRadius: 5,
                                             fontSize: 12,
                                         }}>{data?.Location ? (getPreciseDistance(
-                                            { latitude: user2?.Location?.latitude, longitude: user2?.Location?.longitude, },
+                                            { latitude: mediatoruser?.userDetails?.Location?.latitude, longitude: mediatoruser?.userDetails?.Location?.longitude, },
                                             { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
                                         ) * 0.000621).toFixed(2) : 'no'} Miles Away</Text>
                                     </View>
@@ -708,15 +708,17 @@ const UserDetails = ({ onpress, type, data, setData, modal, setModal }) => {
                                             justifyContent: 'space-between',
                                             paddingHorizontal: 20,
                                         }}>
-                                            <TouchableOpacity style={{
-                                                width: '48%',
-                                                // height:'45%',
-                                                paddingVertical: 10,
-                                                alignItems: 'center',
-                                                borderRadius: 10,
-                                                borderWidth: 1,
-                                                borderColor: COLORS.gray,
-                                            }}>
+                                            <TouchableOpacity
+                                                onPress={() => requestDetail()}
+                                                style={{
+                                                    width: '48%',
+                                                    // height:'45%',
+                                                    paddingVertical: 10,
+                                                    alignItems: 'center',
+                                                    borderRadius: 10,
+                                                    borderWidth: 1,
+                                                    borderColor: COLORS.gray,
+                                                }}>
                                                 <Text style={{ color: COLORS.gray }}>Decline</Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity

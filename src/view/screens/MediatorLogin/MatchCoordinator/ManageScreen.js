@@ -37,7 +37,7 @@ const monday = [
 ]
 
 
-const ManageScreen = () => {
+const ManageScreen = ({ navigation }) => {
   const mediatoruser = useSelector(selectMediatorUser)
   const [coordinatorBtn, setCoordinatorBtn] = useState('Available time');
   const [value, setValueIndex] = useState(0);
@@ -45,6 +45,17 @@ const ManageScreen = () => {
   const [inputNotes, setInputNotes] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [onChange, setOnChange] = useState(false);
+  const [checkedCopy, setCheckedCopy] = useState(
+    {
+      mondayNameCopy: null,
+      tuesdayNameCopy: null,
+      wednesdayNameCopy: null,
+      thursdayNameCopy: null,
+      fridayNameCopy: null,
+      saturdayNameCopy: null,
+      sundayNameCopy: null,
+    }
+  );
   const [checkedindex, setCheckedindex] = useState(
     {
       mondayindex: null,
@@ -147,43 +158,52 @@ const ManageScreen = () => {
     setCheckedindex({ ...checkedindex, mondayindex: index });
     const test = monday[index].name
     // console.log(test);
+    // setStartTime({...startTime, monday:test})
     setChecked({ ...checked, mondayName: test })
+    setCheckedCopy({ ...checkedCopy, mondayNameCopy: test })
   }
   const onCheckTuesday = (index) => {
     setCheckedindex({ ...checkedindex, tuesdayindex: index });
     const test = monday[index].name
     // console.log(test);
+    // setStartTime({...startTime, tuesday:test})
     setChecked({ ...checked, tuesdayName: test })
+    setCheckedCopy({ ...checkedCopy, tuesdayNameCopy: test })
   }
   const onCheckWednesday = (index) => {
     setCheckedindex({ ...checkedindex, wednesdayindex: index });
     const test = monday[index].name
     // console.log(test);
     setChecked({ ...checked, wednesdayName: test })
+    setCheckedCopy({ ...checkedCopy, wednesdayNameCopy: test })
   }
   const onCheckThursday = (index) => {
     setCheckedindex({ ...checkedindex, thursdayindex: index });
     const test = monday[index].name
     // console.log(test);
     setChecked({ ...checked, thursdayName: test })
+    setCheckedCopy({ ...checkedCopy, thursdayNameCopy: test })
   }
   const onCheckFriday = (index) => {
     setCheckedindex({ ...checkedindex, fridayindex: index });
     const test = monday[index].name
     // console.log(test);
     setChecked({ ...checked, fridayName: test })
+    setCheckedCopy({ ...checkedCopy, fridayNameCopy: test })
   }
   const onCheckSaturday = (index) => {
     setCheckedindex({ ...checkedindex, saturdayindex: index });
     const test = monday[index].name
     // console.log(test);
     setChecked({ ...checked, saturdayName: test })
+    setCheckedCopy({ ...checkedCopy, saturdayNameCopy: test })
   }
   const onCheckSunday = (index) => {
     setCheckedindex({ ...checkedindex, sundayindex: index });
     const test = monday[index].name
     // console.log(test);
     setChecked({ ...checked, sundayName: test })
+    setCheckedCopy({ ...checkedCopy, sundayNameCopy: test })
   }
 
   const handleMondaystartTime = date => {
@@ -195,6 +215,7 @@ const ManageScreen = () => {
     })
     // console.log(final);
     setStartTime({ ...startTime, monday: final });
+    setCheckedCopy({ ...checkedCopy, mondayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, mondayVisibility: false });
     // hideEndTimePicker();
     setOnChange(true)
@@ -220,6 +241,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, tuesday: final });
+    setCheckedCopy({ ...checkedCopy, tuesdayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, tuesdayVisibility: false });
     setOnChange(true)
   }
@@ -242,6 +264,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, wednesday: final });
+    setCheckedCopy({ ...checkedCopy, wednesdayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, wednesdayVisibility: false });
     setOnChange(true)
   }
@@ -262,6 +285,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, thursday: final });
+    setCheckedCopy({ ...checkedCopy, thursdayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, thursdayVisibility: false });
     setOnChange(true)
   }
@@ -282,6 +306,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, friday: final });
+    setCheckedCopy({ ...checkedCopy, fridayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, fridayVisibility: false });
     setOnChange(true)
   }
@@ -302,6 +327,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, saturday: final });
+    setCheckedCopy({ ...checkedCopy, saturdayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, saturdayVisibility: false });
     setOnChange(true)
   }
@@ -322,6 +348,7 @@ const ManageScreen = () => {
       second: 'numeric',
     })
     setStartTime({ ...startTime, sunday: final });
+    setCheckedCopy({ ...checkedCopy, sundayNameCopy: final })
     setStartTimeVisibility({ ...startTimeVisibility, sundayVisibility: false });
     setOnChange(true)
   }
@@ -345,148 +372,138 @@ const ManageScreen = () => {
   }
 
   const OnSendTimings = async () => {
-    if (!checked.mondayName && !checked.tuesdayName && !checked.wednesdayName && !checked.thursdayName && !checked.fridayName && !checked.saturdayName && !checked.sundayName) {
-      ToastAndroid.show("Please select your timings!", ToastAndroid.SHORT)
-    }
-    else {
-      if (checked.mondayName == 'Select Time' && checked.tuesdayName == 'Select Time' && checked.wednesdayName == 'Select Time' && checked.thursdayName == 'Select Time' && checked.fridayName == 'Select Time' && checked.saturdayName == 'Select Time' && checked.sundayName == 'Select Time') {
-        if (!onChange == true || startTime.monday == null && startTime.tuesday == null && startTime.wednesday == null && startTime.thursday == null && startTime.friday == null && startTime.saturday == null && startTime.sunday == null && endTime.monday == null && endTime.tuesday == null && endTime.wednesday == null && endTime.thursday == null && endTime.friday == null && endTime.saturday == null && endTime.sunday == null) {
-          if (startTime.monday == null && startTime.tuesday == null && startTime.wednesday == null && startTime.thursday == null && startTime.friday == null && startTime.saturday == null && startTime.sunday == null && endTime.monday == null && endTime.tuesday == null && endTime.wednesday == null && endTime.thursday == null && endTime.friday == null && endTime.saturday == null && endTime.sunday == null) {
-            ToastAndroid.show("Please enter your timings!", ToastAndroid.SHORT);
-            // console.log('sds', startTime.monday, endTime.monday);
-          }
-          else {
-            ToastAndroid.show("Please Change your timings then save changes!", ToastAndroid.SHORT);
-          }
-        }
-        else {
-          setUploading(true)
-          await firestore()
-            .collection('Users').doc(mediatoruser.uid).update({
-              'userDetails.Timing': 'Select Time',
-              'userDetails.MondayOpen': startTime.monday ? startTime.monday : null,
-              'userDetails.MondayClose': endTime.monday ? endTime.monday : null,
-              'userDetails.TuesdayOpen': startTime.tuesday ? startTime.tuesday : null,
-              'userDetails.TuesdayClose': endTime.tuesday ? endTime.tuesday : null,
-              'userDetails.WednesdayOpen': startTime.wednesday ? startTime.wednesday : null,
-              'userDetails.WednesdayClose': endTime.wednesday ? endTime.wednesday : null,
-              'userDetails.ThursdayOpen': startTime.thursday ? startTime.thursday : null,
-              'userDetails.ThursdayClose': endTime.thursday ? endTime.thursday : null,
-              'userDetails.FridayOpen': startTime.friday ? startTime.friday : null,
-              'userDetails.FridayClose': endTime.friday ? endTime.friday : null,
-              'userDetails.SaturdayOpen': startTime.saturday ? startTime.saturday : null,
-              'userDetails.SaturdayClose': endTime.saturday ? endTime.saturday : null,
-              'userDetails.SundayClose': startTime.sunday ? startTime.sunday : null,
-              'userDetails.SundayClose': endTime.sunday ? endTime.sunday : null,
-            })
-            .then(() => {
-              ToastAndroid.show("Save changes!", ToastAndroid.SHORT);
-              console.log('timing submitted - Select Time');
-              setUploading(false)
-              setCheckedindex({ ...checkedindex, mondayindex: null, tuesdayindex: null, wednesdayindex: null, thursdayindex: null, fridayindex: null, saturdayindex: null, sundayindex: null })
-              setChecked({ ...checked, mondayName: null, tuesdayName: null, wednesdayName: null, thursdayName: null, fridayName: null, saturdayName: null, sundayName: null })
-              setStartTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
-              setendTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
-            });
-          // console.log('test',
-          //   'Start Time',
-          //   startTime.monday,
-          //   startTime.tuesday,
-          //   startTime.wednesday,
-          //   startTime.thursday,
-          //   startTime.friday,
-          //   startTime.saturday,
-          //   startTime.sunday,
-          //   'End Time',
-          //   endTime.monday,
-          //   endTime.tuesday,
-          //   endTime.wednesday,
-          //   endTime.thursday,
-          //   endTime.friday,
-          //   endTime.saturday,
-          //   endTime.sunday,
-          //   onChange,
-          //   mediatoruser.uid
-          // );
-        }
-      }
-      else if (checked.mondayName == 'Will respond within 12 hours' && checked.tuesdayName == 'Will respond within 12 hours' && checked.wednesdayName == 'Will respond within 12 hours' && checked.thursdayName == 'Will respond within 12 hours' && checked.fridayName == 'Will respond within 12 hours' && checked.saturdayName == 'Will respond within 12 hours' && checked.sundayName == 'Will respond within 12 hours') {
-        setUploading(true)
+    if (checkedCopy.mondayNameCopy && checkedCopy.tuesdayNameCopy
+      && checkedCopy.wednesdayNameCopy && checkedCopy.thursdayNameCopy && checkedCopy.fridayNameCopy && checkedCopy.saturdayNameCopy && checkedCopy.sundayNameCopy
+    ) {
+      if (checkedCopy.mondayNameCopy == 'Will respond within 12 hours' && checkedCopy.tuesdayNameCopy == 'Will respond within 12 hours' && checkedCopy.wednesdayNameCopy == 'Will respond within 12 hours'
+        && checkedCopy.thursdayNameCopy == 'Will respond within 12 hours' && checkedCopy.fridayNameCopy == 'Will respond within 12 hours' && checkedCopy.saturdayNameCopy == 'Will respond within 12 hours' && checkedCopy.sundayNameCopy == 'Will respond within 12 hours'
+      ) {
+        // setUploading(true)
         await firestore()
-          .collection('Users').doc(mediatoruser.uid).update({
+          .collection('Users').doc(mediatoruser?.userDetails?.uid).update({
             'userDetails.Timing': 'Will respond within 12 hours',
-            'userDetails.MondayOpen': checked.mondayName ? checked.mondayName : null,
-            'userDetails.MondayClose': null,
-            'userDetails.TuesdayOpen': checked.tuesdayName ? checked.tuesdayName : null,
-            'userDetails.TuesdayClose': null,
-            'userDetails.WednesdayOpen': checked.wednesdayName ? checked.wednesdayName : null,
-            'userDetails.WednesdayClose': null,
-            'userDetails.ThursdayOpen': checked.thursdayName ? checked.thursdayName : null,
-            'userDetails.ThursdayClose': null,
-            'userDetails.FridayOpen': checked.fridayName ? checked.fridayName : null,
-            'userDetails.FridayClose': null,
-            'userDetails.SaturdayOpen': checked.saturdayName ? checked.saturdayName : null,
-            'userDetails.SaturdayClose': null,
-            'userDetails.SundayClose': checked.sundayName ? checked.sundayName : null,
-            'userDetails.SundayClose': null,
+            'userDetails.MondayOpen': checkedCopy.mondayNameCopy ? checkedCopy.mondayNameCopy : null,
+            'userDetails.MondayClose': endTime.monday ? endTime.monday : null,
+            'userDetails.TuesdayOpen': checkedCopy.tuesdayNameCopy ? checkedCopy.tuesdayNameCopy : null,
+            'userDetails.TuesdayClose': endTime.tuesday ? endTime.tuesday : null,
+            'userDetails.WednesdayOpen': checkedCopy.wednesdayNameCopy ? checkedCopy.wednesdayNameCopy : null,
+            'userDetails.WednesdayClose': endTime.wednesday ? endTime.wednesday : null,
+            'userDetails.ThursdayOpen': checkedCopy.thursdayNameCopy ? checkedCopy.thursdayNameCopy : null,
+            'userDetails.ThursdayClose': endTime.thursday ? endTime.thursday : null,
+            'userDetails.FridayOpen': checkedCopy.fridayNameCopy ? checked.fridayNameCopy : null,
+            'userDetails.FridayClose': endTime.friday ? endTime.friday : null,
+            'userDetails.SaturdayOpen': checkedCopy.saturdayNameCopy ? checkedCopy.saturdayNameCopy : null,
+            'userDetails.SaturdayClose': endTime.saturday ? endTime.saturday : null,
+            'userDetails.SundayOpen': checkedCopy.sundayNameCopy ? checkedCopy.sundayNameCopy : null,
+            'userDetails.SundayClose': endTime.sunday ? endTime.sunday : null,
           })
           .then(() => {
             ToastAndroid.show("Save changes!", ToastAndroid.SHORT);
-            console.log('timing submitted - repond within 12 hours');
-            setUploading(false);
+            console.log('timing submitted - Will respond within 12 hours');
+            setUploading(false)
             setCheckedindex({ ...checkedindex, mondayindex: null, tuesdayindex: null, wednesdayindex: null, thursdayindex: null, fridayindex: null, saturdayindex: null, sundayindex: null })
             setChecked({ ...checked, mondayName: null, tuesdayName: null, wednesdayName: null, thursdayName: null, fridayName: null, saturdayName: null, sundayName: null })
+            setCheckedCopy({ ...checkedCopy, mondayNameCopy: null, tuesdayNameCopy: null, wednesdayNameCopy: null, thursdayNameCopy: null, fridayNameCopy: null, saturdayNameCopy: null, sundayNameCopy: null })
             setStartTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
             setendTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
           });
-        // console.log(
-        //   'Start Time',
-        //   startTime.monday,
-        //   startTime.tuesday,
-        //   startTime.wednesday,
-        //   startTime.thursday,
-        //   startTime.friday,
-        //   startTime.saturday,
-        //   startTime.sunday,
-        //   'End Time',
-        //   endTime.monday,
-        //   endTime.tuesday,
-        //   endTime.wednesday,
-        //   endTime.thursday,
-        //   endTime.friday,
-        //   endTime.saturday,
-        //   endTime.sunday,
-        //   onChange,
-        //   mediatoruser.uid
-        // );
       }
       else {
-        if (!checked.mondayName) {
-          ToastAndroid.show("Please select your timings for monday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.tuesdayName) {
-          ToastAndroid.show("Please select your timings for tuesday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.wednesdayName) {
-          ToastAndroid.show("Please select your timings for wednesday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.thursdayName) {
-          ToastAndroid.show("Please select your timings for thursday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.fridayName) {
-          ToastAndroid.show("Please select your timings for friday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.saturdayName) {
-          ToastAndroid.show("Please select your timings for saturday!", ToastAndroid.SHORT);
-        }
-        else if (!checked.sundayName) {
-          ToastAndroid.show("Please select your timings for sunday!", ToastAndroid.SHORT);
-        }
+        // setUploading(true)
+        await firestore()
+          .collection('Users').doc(mediatoruser?.userDetails?.uid).update({
+            'userDetails.Timing': 'Select Time',
+            'userDetails.MondayOpen': checkedCopy.mondayNameCopy ? checkedCopy.mondayNameCopy : null,
+            'userDetails.MondayClose': endTime.monday ? endTime.monday : null,
+            'userDetails.TuesdayOpen': checkedCopy.tuesdayNameCopy ? checkedCopy.tuesdayNameCopy : null,
+            'userDetails.TuesdayClose': endTime.tuesday ? endTime.tuesday : null,
+            'userDetails.WednesdayOpen': checkedCopy.wednesdayNameCopy ? checkedCopy.wednesdayNameCopy : null,
+            'userDetails.WednesdayClose': endTime.wednesday ? endTime.wednesday : null,
+            'userDetails.ThursdayOpen': checkedCopy.thursdayNameCopy ? checkedCopy.thursdayNameCopy : null,
+            'userDetails.ThursdayClose': endTime.thursday ? endTime.thursday : null,
+            'userDetails.FridayOpen': checkedCopy.fridayNameCopy ? checkedCopy.fridayNameCopy : null,
+            'userDetails.FridayClose': endTime.friday ? endTime.friday : null,
+            'userDetails.SaturdayOpen': checkedCopy.saturdayNameCopy ? checkedCopy.saturdayNameCopy : null,
+            'userDetails.SaturdayClose': endTime.saturday ? endTime.saturday : null,
+            'userDetails.SundayOpen': checkedCopy.sundayNameCopy ? checkedCopy.sundayNameCopy : null,
+            'userDetails.SundayClose': endTime.sunday ? endTime.sunday : null,
+          })
+          .then(() => {
+            ToastAndroid.show("Save changes!", ToastAndroid.SHORT);
+            console.log('timing submitted - Select Time');
+            setUploading(false)
+            setCheckedindex({ ...checkedindex, mondayindex: null, tuesdayindex: null, wednesdayindex: null, thursdayindex: null, fridayindex: null, saturdayindex: null, sundayindex: null })
+            setChecked({ ...checked, mondayName: null, tuesdayName: null, wednesdayName: null, thursdayName: null, fridayName: null, saturdayName: null, sundayName: null })
+            setCheckedCopy({ ...checkedCopy, mondayNameCopy: null, tuesdayNameCopy: null, wednesdayNameCopy: null, thursdayNameCopy: null, fridayNameCopy: null, saturdayNameCopy: null, sundayNameCopy: null })
+            setStartTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
+            setendTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
+          });
       }
     }
+    else {
+      ToastAndroid.show("Please select your weekly timings!", ToastAndroid.SHORT);
+      // return
+      // if (checked.mondayName == 'Select Time' || checked.tuesdayName == 'Select Time' || checked.wednesdayName == 'Select Time' || checked.thursdayName == 'Select Time' || checked.fridayName == 'Select Time' || checked.saturdayName == 'Select Time' || checked.sundayName == 'Select Time') {
+      //   if (!onChange == true || startTime.monday == null && startTime.tuesday == null && startTime.wednesday == null && startTime.thursday == null && startTime.friday == null && startTime.saturday == null && startTime.sunday == null && endTime.monday == null && endTime.tuesday == null && endTime.wednesday == null && endTime.thursday == null && endTime.friday == null && endTime.saturday == null && endTime.sunday == null) {
+      //     if (startTime.monday == null && startTime.tuesday == null && startTime.wednesday == null && startTime.thursday == null && startTime.friday == null && startTime.saturday == null && startTime.sunday == null && endTime.monday == null && endTime.tuesday == null && endTime.wednesday == null && endTime.thursday == null && endTime.friday == null && endTime.saturday == null && endTime.sunday == null) {
+      //       ToastAndroid.show("Please enter your timings!", ToastAndroid.SHORT);
+      //       // console.log('sds', startTime.monday, endTime.monday);
+      //     }
+      //     else {
+      //       ToastAndroid.show("Please Change your timings then save changes!", ToastAndroid.SHORT);
+      //     }
+      //   }
+      //   else {
+      //     setUploading(true)
+      //     await firestore()
+      //       .collection('Users').doc(mediatoruser?.userDetails?.uid).update({
+      //         'userDetails.Timing': 'Select Time',
+      //         'userDetails.MondayOpen': startTime.monday ? startTime.monday : null,
+      //         'userDetails.MondayClose': endTime.monday ? endTime.monday : null,
+      //         'userDetails.TuesdayOpen': startTime.tuesday ? startTime.tuesday : null,
+      //         'userDetails.TuesdayClose': endTime.tuesday ? endTime.tuesday : null,
+      //         'userDetails.WednesdayOpen': startTime.wednesday ? startTime.wednesday : null,
+      //         'userDetails.WednesdayClose': endTime.wednesday ? endTime.wednesday : null,
+      //         'userDetails.ThursdayOpen': startTime.thursday ? startTime.thursday : null,
+      //         'userDetails.ThursdayClose': endTime.thursday ? endTime.thursday : null,
+      //         'userDetails.FridayOpen': startTime.friday ? startTime.friday : null,
+      //         'userDetails.FridayClose': endTime.friday ? endTime.friday : null,
+      //         'userDetails.SaturdayOpen': startTime.saturday ? startTime.saturday : null,
+      //         'userDetails.SaturdayClose': endTime.saturday ? endTime.saturday : null,
+      //         'userDetails.SundayClose': startTime.sunday ? startTime.sunday : null,
+      //         'userDetails.SundayClose': endTime.sunday ? endTime.sunday : null,
+      //       })
+      //       .then(() => {
+      //         ToastAndroid.show("Save changes!", ToastAndroid.SHORT);
+      //         console.log('timing submitted - Select Time');
+      //         setUploading(false)
+      //         setCheckedindex({ ...checkedindex, mondayindex: null, tuesdayindex: null, wednesdayindex: null, thursdayindex: null, fridayindex: null, saturdayindex: null, sundayindex: null })
+      //         setChecked({ ...checked, mondayName: null, tuesdayName: null, wednesdayName: null, thursdayName: null, fridayName: null, saturdayName: null, sundayName: null })
+      //         setStartTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
+      //         setendTime({ ...startTime, monday: null, tuesday: null, wednesday: null, thursday: null, friday: null, saturday: null, sunday: null })
+      //       });
+      // console.log('test',
+      //   'Start Time',
+      //   startTime.monday,
+      //   startTime.tuesday,
+      //   startTime.wednesday,
+      //   startTime.thursday,
+      //   startTime.friday,
+      //   startTime.saturday,
+      //   startTime.sunday,
+      //   'End Time',
+      //   endTime.monday,
+      //   endTime.tuesday,
+      //   endTime.wednesday,
+      //   endTime.thursday,
+      //   endTime.friday,
+      //   endTime.saturday,
+      //   endTime.sunday,
+      //   onChange,
+      //   mediatoruser.uid
+      // );
+    }
   }
-
-  // console.log(startTime.monday);
 
 
   return (
@@ -655,7 +672,7 @@ const ManageScreen = () => {
                             </View>
                             <View>
                               <TouchableOpacity
-                                onPress={() => { setCheckedindex(null), setChecked('Will respond within 12 hours') }}>
+                                onPress={() => { setCheckedindex({ ...checkedindex, mondayindex: null }), setChecked('Will respond within 12 hours') }}>
                                 <Cancle height={25} width={25} />
                               </TouchableOpacity>
                             </View>
@@ -1593,12 +1610,23 @@ const ManageScreen = () => {
                 <View style={{
                   marginRight: 10
                 }}>
-                  <CustomeButton width={170} title={'Cancel'} bcolor={COLORS.white} border={COLORS.gray2} />
+                  <CustomeButton onpress={() => OnCancle()} width={170} title={'Cancel'} bcolor={COLORS.white} border={COLORS.gray2} />
                 </View>
                 {!uploading == true ?
                   <CustomeButton width={170} title={'Save Changes'} onpress={() => OnSendTimings()} />
                   :
-                  <CustomeButton width={170} title={'Please wait...'} onpress={() => OnCancle()} />
+                  <View style={{
+                    backgroundColor: COLORS.main,
+                    width: 170,
+                    height: 50,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    borderColor: COLORS.transparent
+                }}>
+                    <Text>Please wait2...</Text>
+                </View>
                 }
               </View>
             </ScrollView>

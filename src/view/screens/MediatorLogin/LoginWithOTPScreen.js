@@ -82,7 +82,7 @@ const MediatorLoginWithOTPScreen = ({ navigation , route }) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1, backgroundColor:COLORS.white}}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 

@@ -1,10 +1,11 @@
-import { Image, ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React, { useEffect } from 'react';
 import COLORS from '../../consts/Colors';
 import CustomeButton from '../components/CustomeButton';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import SVGImg from '../../assets/logo.svg';
+const { width, height } = Dimensions.get("window");
 
 
 
@@ -89,7 +90,8 @@ const LoginScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{ paddingTop: 20, }}>
-                    <CustomeButton onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
+
+                    <CustomeButton width={width / 1.2}  onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
                 </View>
 
                 <View style={{
@@ -114,19 +116,19 @@ const LoginScreen = ({ navigation }) => {
                 <View style={{
                     paddingTop: 35,
                 }}>
-                    <CustomeButton color={COLORS.white} bcolor={COLORS.black} image={require('../../assets/apple.png')} title={'Continue with Apple'} />
+                    <CustomeButton width={width / 1.2} color={COLORS.white} bcolor={COLORS.black} image={require('../../assets/apple.png')} title={'Continue with Apple'} />
                 </View>
 
                 <View style={{
                     paddingTop: 15,
                 }}>
-                    <CustomeButton color={COLORS.white} bcolor={COLORS.blue} image={require('../../assets/facebook.png')} title={'Continue with Facebook'} />
+                    <CustomeButton width={width / 1.2} color={COLORS.white} bcolor={COLORS.blue} image={require('../../assets/facebook.png')} title={'Continue with Facebook'} />
                 </View>
 
                 <View style={{
                     paddingTop: 15,
                 }}>
-                    <CustomeButton color={COLORS.black} bcolor={COLORS.white} image={require('../../assets/google.png')} title={'Continue with Google'}
+                    <CustomeButton width={width / 1.2} color={COLORS.black} bcolor={COLORS.white} image={require('../../assets/google.png')} title={'Continue with Google'}
                         onpress={() => onGoogleSigninPress()} />
                 </View>
 

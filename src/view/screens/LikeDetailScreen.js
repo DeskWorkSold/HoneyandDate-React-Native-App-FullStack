@@ -569,7 +569,7 @@ const LikeDetailScreen = ({ navigation }) => {
                   flexWrap: 'wrap',
                   justifyContent: "space-between",
                   width: '100%',
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
                 }}>
                   {likedusers.map((item, index) => (
                     <View key={index}
@@ -671,7 +671,7 @@ const LikeDetailScreen = ({ navigation }) => {
                   flexWrap: 'wrap',
                   justifyContent: "space-between",
                   width: '100%',
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
                 }}>
                   {premiumUsers.map((item, index) => (
                     <View key={index}
@@ -1250,7 +1250,7 @@ const LikeDetailScreen = ({ navigation }) => {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           paddingHorizontal: 20,
-                          marginBottom: 20
+                          marginBottom: 20,
                         }}>
                         <View style={{
                           flex: 1

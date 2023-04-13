@@ -205,7 +205,7 @@ export default QuestionEyeColorScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {

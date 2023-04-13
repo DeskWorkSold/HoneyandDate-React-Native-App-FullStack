@@ -22,7 +22,7 @@ const MediatorApprovalScreen = ({navigation}) => {
     }
     else if(MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 1){
       setTimeout(() => {
-        navigation.navigate('MediatorDashboardScreen');
+        navigation.navigate('MediatorTalentAgencyBT');
         console.log('Approval Accepted');
       }, 1000);
     }

@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableNativeFeedback, ScrollView, TouchableOpacity } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableNativeFeedback, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../../consts/Colors'
 import CustomeButton from '../../components/CustomeButton';
@@ -7,6 +7,7 @@ import { Calendar } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
+const { width, height } = Dimensions.get("window");
 
 // import dayjs
 
@@ -64,49 +65,55 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex:1, backgroundColor:COLORS.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
         <View style={styles.contentContainer}>
           <View style={{
-            paddingTop: 20
+            height:'42%',
+            alignSelf:'center'
           }}>
-            <Image source={require('../../../assets/dateofbirth.png')} resizeMode='contain' />
-          </View>
-
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black
-            }}>When were you born?</Text>
-          </View>
-
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              color: COLORS.black
-            }}>Enter the full name</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              color: COLORS.black
+            <View style={{
+              paddingTop: 20
             }}>
-              Birthday
-            </Text>
+              <Image source={require('../../../assets/dateofbirth.png')} resizeMode='contain' />
+            </View>
+
+
+            <View style={{
+              paddingTop: 10,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>When were you born?</Text>
+            </View>
+
+
+            <View style={{
+              paddingTop: 10,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                color: COLORS.black
+              }}>Enter the full name</Text>
+            </View>
+
+            <View style={{
+              paddingTop: 10,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                color: COLORS.black
+              }}>
+                Birthday
+              </Text>
+            </View>
           </View>
+
 
 
           <View style={styles.NumberInput}>
@@ -163,7 +170,7 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
                       alignItems: 'center'
                     }}
                   >
-                    <Text style={{ fontSize: 20 }}>Select Year</Text>
+                    <Text style={{ fontSize: 20, color:COLORS.black }}>Select Year</Text>
                   </TouchableNativeFeedback>
                   {/* <TouchableNativeFeedback onPress={() => setIsModalVisible(false)}>
                     <View
@@ -200,7 +207,7 @@ const MediatorDateOfBirthScreen = ({ navigation, route }) => {
                         }}
                       >
                         <View style={{ padding: 20, width: '100%' }}>
-                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{year}</Text>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold', color:COLORS.black }}>{year}</Text>
                         </View>
                       </TouchableOpacity>
                     ))}
@@ -268,6 +275,8 @@ const styles = StyleSheet.create({
   NumberInput: {
     alignItems: 'center',
     width: 300,
+    height: '58%',
+    // backgroundColor: COLORS.gray
   },
   TextInput: {
     padding: 0,

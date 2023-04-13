@@ -42,28 +42,39 @@ const FeedScreen = ({ navigation }) => {
         const artical = [];
         querySnapshot.forEach((documentSnapshot) => {
           const data = documentSnapshot.data();
-          MediatorUser.Articals.map(docsnap => {
-            if (data.uid == docsnap.ReadArticals.uid) {
-              let pdate = data?.timeStamp.toDate().toDateString();
-              let readStatus = true;
-              const test = {
-                ...data,
-                timeStamp: pdate,
-                readStatus: readStatus,
+          if (MediatorUser.Articals) {
+            MediatorUser?.Articals?.map(docsnap => {
+              if (data.uid == docsnap.ReadArticals.uid) {
+                let pdate = data?.timeStamp.toDate().toDateString();
+                let readStatus = true;
+                const test = {
+                  ...data,
+                  timeStamp: pdate,
+                  readStatus: readStatus,
+                }
+                artical.push(test);
+                // console.log(test);
               }
-              artical.push(test);
-              // console.log(test);
-            }
-            else if (data.uid != docsnap.ReadArticals.uid) {
-              console.log('test');
-              let pdate = data?.timeStamp.toDate().toDateString();
-              const test = {
-                ...data,
-                timeStamp: pdate,
+              else if (data.uid != docsnap.ReadArticals.uid) {
+                console.log('test');
+                let pdate = data?.timeStamp.toDate().toDateString();
+                const test = {
+                  ...data,
+                  timeStamp: pdate,
+                }
+                artical.push(test);
               }
-              artical.push(test);
+            })
+          }
+          else {
+            let pdate = documentSnapshot.data()?.timeStamp.toDate().toDateString();
+
+            const data2 = {
+              ...data,
+              timeStamp: pdate,
             }
-          })
+            artical.push(data2);
+          }
         })
         let uniqueArr = artical.filter((obj, index, self) =>
           index === self.findIndex((t) => (
@@ -71,6 +82,7 @@ const FeedScreen = ({ navigation }) => {
           ))
         );
         setNewArticals(uniqueArr)
+        console.log(uniqueArr)
       })
     setUploading(false)
   }

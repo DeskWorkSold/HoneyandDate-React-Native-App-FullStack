@@ -148,7 +148,8 @@ import QuestionConvertedReligion from '../screens/QuestionConvertedReligion';
 import QuestionHairColorScreen from '../screens/QuestionHairColorScreen';
 import QuestionEyeColorScreen from '../screens/QuestionEyeColorScreen';
 import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
-import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
+import MediatorMatchCoordinatorBT from './MediatorTalentAgencyBT';
+import MediatorTalentAgencyBT from './MediatorTalentAgencyBT';
 
 
 
@@ -191,7 +192,8 @@ const MyStack = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="MediatorApprovalScreen" component={MediatorApprovalScreen} />
             {MediatorUser?.userDetails?.MediatorId == 1 && MediatorUser?.userDetails?.PanelAccess == true &&
-                <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
+                <Stack.Screen name="MediatorTalentAgencyBT" component={MediatorTalentAgencyBT} />
+                // <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
             }
             {MediatorUser?.userDetails?.MediatorId == 2 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />

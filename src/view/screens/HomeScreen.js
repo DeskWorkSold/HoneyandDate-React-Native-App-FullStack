@@ -16,6 +16,7 @@ import Geocoder from 'react-native-geocoding';
 import { getDistance, getPreciseDistance } from 'geolib';
 import GoogleMapKey from '../../consts/GoogleMapKey';
 const { height, width } = Dimensions.get('window');
+import messaging from '@react-native-firebase/messaging';
 
 // console.log(GoogleMapKey.GOOGLE_MAP_KEY);
 
@@ -1190,10 +1191,11 @@ const HomeScreen = ({ navigation }) => {
         //     // setActionTrigger('ACTION_1')
         //     // setModalVisible(true)
         // }
-        // getCurrentPosition()
-        locationPermission()
+        // getCurrentPosition();
+        locationPermission();
 
-        getCurrentLocation()
+        getCurrentLocation();
+        GetFcmToken();
 
         // console.log(userPackage);
     }, [userPackage])
@@ -1341,6 +1343,41 @@ const HomeScreen = ({ navigation }) => {
 
 
     };
+
+    const GetFcmToken = () => {
+        //get device token
+        messaging()
+            .hasPermission()
+            .then(enabled => {
+                if (enabled) {
+                    messaging()
+                        .getToken()
+                        .then(fcmToken => {
+                            if (fcmToken) {
+                                // console.log(fcmToken);
+                                firestore()
+                                    .collection('token')
+                                    .doc(CurrentUser)
+                                    .set({
+                                        token: fcmToken,
+                                        create_date: new Date(),
+                                    })
+                                    .then(() => {
+                                        console.log('token succssfully saved');
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                    });
+                            } else {
+                                console.log("user doesn't have a device token yet");
+                            }
+                        });
+                } else {
+                    console.log('Permission Denied');
+                }
+            });
+    }
+
 
 
     const getCurrentLocation = () => {
@@ -1533,7 +1570,7 @@ const HomeScreen = ({ navigation }) => {
                                                 elevation: 5
 
                                             }}>
-                                                <TouchableOpacity onPress={() => {swiper.swipeLeft() , setModalVisible(!modalVisible)}}>
+                                                <TouchableOpacity onPress={() => { swiper.swipeLeft(), setModalVisible(!modalVisible) }}>
                                                     <Image source={require('../../assets/cancle.png')} resizeMode='contain'
                                                         style={{
                                                             width: 15,

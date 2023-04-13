@@ -104,17 +104,14 @@ const QuestionHairColorScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: COLORS.white
-    }}>
+    <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
           <View style={styles.contentContainer}>
             <View style={{
               alignItems: 'center',
-              justifyContent: 'center',
+              // justifyContent: 'center',
               paddingTop: 20,
               flexDirection: 'row',
               height: 40,
@@ -132,6 +129,7 @@ const QuestionHairColorScreen = ({ navigation, route }) => {
 
             <View style={{
               paddingTop: 0,
+              alignItems:'center',
               paddingHorizontal: 20
             }}>
               <Image source={require('../../assets/haircolor.png')} resizeMode='contain' style={{
@@ -151,13 +149,18 @@ const QuestionHairColorScreen = ({ navigation, route }) => {
               }}>Which hair color do you have?</Text>
             </View>
             <View>
-              <Text>
+              <Text style={{
+                color: COLORS.black,
+                textAlign: 'center'
+              }}>
                 You can select Multiple
               </Text>
             </View>
 
 
-            <View>
+            <View style={{
+              alignItems:'center'
+            }}>
               <ListGender data={GenderData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
             </View>
@@ -168,7 +171,7 @@ const QuestionHairColorScreen = ({ navigation, route }) => {
           <View style={styles.footer}>
 
             <View style={{
-              paddingTop: 100,
+              paddingTop: 20,
               // flexDirection: 'row',
             }}>
               <View style={{ marginBottom: 5 }}>
@@ -207,13 +210,13 @@ export default QuestionHairColorScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    // height: '75%',
+    // height: '100%',
     // backgroundColor: COLORS.black,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   footer: {
     height: '25%',

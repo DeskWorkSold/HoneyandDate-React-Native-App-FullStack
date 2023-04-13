@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -13,9 +14,9 @@ import MyStack from './src/view/navigation/navigation';
 import store from './redux/store';
 
 
+
 const App = () => {
-  
-  return (
+    return (
     <Provider store={store}>
       <MyStack />
     </Provider>
@@ -23,7 +24,7 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
- 
+
 });
 
 export default App;

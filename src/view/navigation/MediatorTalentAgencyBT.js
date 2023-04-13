@@ -6,13 +6,10 @@ import SVGimage1 from '../../assets/influencermain.svg';
 import SVGimage2 from '../../assets/influencerfeed.svg';
 import SVGimage3 from '../../assets/manage.svg';
 import SVGimage4 from '../../assets/profile.svg';
-import HomeScreen from '../../view/screens/MediatorLogin/MatchCoordinator/HomeScreen';
-import FeedScreen from '../../view/screens/MediatorLogin/MatchCoordinator/FeedScreen';
-import ManageScreen from '../../view/screens/MediatorLogin/MatchCoordinator/ManageScreen';
-import ProfileScreen from '../../view/screens/MediatorLogin/MatchCoordinator/ProfileScreen';
-import ArticalDetailScreen from '../screens/MediatorLogin/MatchCoordinator/ArticalDetailScreen';
-import PaymentType from '../screens/MediatorLogin/MatchCoordinator/PaymentType';
-import PaymentTypeDetail from '../screens/MediatorLogin/MatchCoordinator/PaymentTypeDetail';
+import HomeScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/HomeScreen';
+import ProfileScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/ProfileScreen';
+import EventScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/EventScreen';
+import AccountScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/AccountScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -33,9 +30,10 @@ const HomeStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name='HomeScreen' component={HomeScreen} />
+        {/* <Tab.Screen name='ChatingScreen' component={ChatingScreen} /> */}
     </Tab.Navigator>
 )
-const FeedStack = ({ navigation }) => (
+const EventStack = ({ navigation }) => (
     <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBar: false,
@@ -49,11 +47,11 @@ const FeedStack = ({ navigation }) => (
             borderTopLeftRadius: 20,
         },
     }}>
-        <Tab.Screen name="FeedScreen" component={FeedScreen} />
-        <Tab.Screen name="ArticalDetailScreen" component={ArticalDetailScreen} />
+        <Tab.Screen name="EventScreen" component={EventScreen} />
+        {/* <Tab.Screen name="ArticalDetailScreen" component={ArticalDetailScreen} /> */}
     </Tab.Navigator>
 )
-const ManageStack = ({ navigation }) => (
+const AccountStack = ({ navigation }) => (
     <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBar: false,
@@ -67,7 +65,7 @@ const ManageStack = ({ navigation }) => (
             borderTopLeftRadius: 20,
         },
     }}>
-        <Tab.Screen name="ManageScreen" component={ManageScreen} />
+        <Tab.Screen name="AccountScreen" component={AccountScreen} />
     </Tab.Navigator>
 )
 const ProfileStack = ({ navigation }) => (
@@ -85,12 +83,14 @@ const ProfileStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
-        <Tab.Screen name="PaymentType" component={PaymentType} />
+        {/* <Tab.Screen name="PaymentType" component={PaymentType} />
         <Tab.Screen name="PaymentTypeDetail" component={PaymentTypeDetail} />
+        <Tab.Screen name="TermsAndCondition" component={TermsAndCondition} />
+        <Tab.Screen name="ReligionsWorkWith" component={ReligionsWorkWith} /> */}
     </Tab.Navigator>
 )
 
-const MediatorMatchCoordinatorBT = () => {
+const MediatorTalentAgencyBT = () => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -126,7 +126,7 @@ const MediatorMatchCoordinatorBT = () => {
                                         tintColor: focused ? COLORS.black : COLORS.gray2,
                                     }} /> */}
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -134,7 +134,7 @@ const MediatorMatchCoordinatorBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Clients</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Home</Text>
                                 </View>
                             ) : (
                                 <View style={{
@@ -143,7 +143,7 @@ const MediatorMatchCoordinatorBT = () => {
                                     flexDirection: 'row',
                                 }}>
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -159,7 +159,7 @@ const MediatorMatchCoordinatorBT = () => {
                     )
                 }} />
 
-            <Tab.Screen name="FeedStack" component={FeedStack}
+            <Tab.Screen name="EventStack" component={EventStack}
                 options={{
                     tabBarIcon: ({ focused, color }) => (
                         <View>
@@ -171,11 +171,11 @@ const MediatorMatchCoordinatorBT = () => {
                                     padding: 5,
                                     borderRadius: 5
                                 }}>
-                                     {/* <SVGimage2 width={20} height={20} style={{
+                                    {/* <SVGimage2 width={20} height={20} style={{
                                         tintColor: focused ? COLORS.black : COLORS.gray2,
                                     }} /> */}
                                     <Image
-                                        source={require('../../assets/feed.png')}
+                                        source={require('../../assets/events.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -183,17 +183,17 @@ const MediatorMatchCoordinatorBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Feeds</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Events</Text>
                                 </View>
                             ) : (
                                 <View style={{
                                     alignItems: 'center', justifyContent: 'center',
                                 }}>
-                                     {/* <SVGimage2 width={20} height={20} style={{
+                                    {/* <SVGimage2 width={20} height={20} style={{
                                         tintColor: focused ? COLORS.black : COLORS.gray2,
                                     }} /> */}
                                     <Image
-                                        source={require('../../assets/feed.png')}
+                                        source={require('../../assets/events.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -210,7 +210,7 @@ const MediatorMatchCoordinatorBT = () => {
                 }} />
 
 
-            <Tab.Screen name="ManageStack" component={ManageStack}
+            <Tab.Screen name="AccountStack" component={AccountStack}
                 options={{
                     // tabBarBadge: 3,
                     tabBarIcon: ({ focused, color }) => (
@@ -227,7 +227,7 @@ const MediatorMatchCoordinatorBT = () => {
                                         tintColor: focused ? COLORS.black : COLORS.gray2,
                                     }} /> */}
                                     <Image
-                                        source={require('../../assets/events.png')}
+                                        source={require('../../assets/feed.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -235,7 +235,7 @@ const MediatorMatchCoordinatorBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Manage</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Account</Text>
                                 </View>
 
                             ) : (
@@ -246,7 +246,7 @@ const MediatorMatchCoordinatorBT = () => {
                                         tintColor: focused ? COLORS.black : COLORS.gray2,
                                     }} /> */}
                                     <Image
-                                        source={require('../../assets/events.png')}
+                                        source={require('../../assets/feed.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -314,6 +314,6 @@ const MediatorMatchCoordinatorBT = () => {
     )
 }
 
-export default MediatorMatchCoordinatorBT
+export default MediatorTalentAgencyBT
 
 const styles = StyleSheet.create({})

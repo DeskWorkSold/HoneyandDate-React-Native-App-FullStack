@@ -5,19 +5,26 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import SVGImg1 from '../../../../assets/diamond.svg';
-import UserDetails from '../../../components/UserDetails';
 import Geolocation from '@react-native-community/geolocation';
 import Loader from '../../../components/Loader';
-import Message from '../../../../assets/message.svg';
-import Group from '../../../../assets/Group.svg';
+import Twitter from '../../../../assets/Twitter.svg';
+import Facebook from '../../../../assets/Facebook.svg';
+import WhatsApp from '../../../../assets/WhatsApp.svg';
+import Reddit from '../../../../assets/Reddit.svg';
+import Linkedin from '../../../../assets/Linkedin.svg';
+import TikTok from '../../../../assets/TikTok.svg';
+import CopyLink from '../../../../assets/copy.svg';
+// import Facebook from '../../../../assets/Facebook.svg';
+// import Facebook from '../../../../assets/Facebook.svg';
 import SuggestMatche from '../../../components/SuggestMatche';
 import messaging from '@react-native-firebase/messaging';
 import Dollar from '../../../../assets/dollar.svg'
 import Edite from '../../../../assets/edit.svg'
+import Send from '../../../../assets/send.svg'
 import { BarChart, ProgressChart } from 'react-native-chart-kit';
-import { CircularProgressbar } from 'react-circular-progressbar';
 import Speedometer from '../../../components/Speedometer';
+import { TextInput } from 'react-native-paper';
+import CustomeButton from '../../../components/CustomeButton';
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
   const [code, setCode] = useState(afcode);
   const [progressmeter, setProgressMeter] = useState(60);
   const [uploading, setUploading] = useState(false);
-  const [isEnabled, setisEnabled] = useState(false);
+  const [emailAddress, setEmailAddress] = useState(false);
   const [isEnabled2, setisEnabled2] = useState(false);
 
   const [reqUser, setReqUser] = useState(null);
@@ -232,12 +239,14 @@ const HomeScreen = ({ navigation }) => {
                   fontSize: 13
                 }}>{code}</Text></View>
               </View>
-              <View style={{
-                color: COLORS.black,
-                fontSize: 13
-              }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('CustomeEfilatedCode')}
+                style={{
+                  color: COLORS.black,
+                  fontSize: 13
+                }}>
                 <Edite width={20} height={20} />
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{
               width: width,
@@ -414,7 +423,9 @@ const HomeScreen = ({ navigation }) => {
                 }}>13 people used your
                   referral code this month</Text>
               </View>
-              <View style={{
+              <TouchableOpacity 
+              onPress={() => navigation.navigate('YourClients')}
+              style={{
                 color: COLORS.black,
                 fontSize: 13,
                 width: '5%'
@@ -425,7 +436,7 @@ const HomeScreen = ({ navigation }) => {
                   transform: [{ rotateZ: '-180deg' }],
                   tintColor: COLORS.black
                 }} />
-              </View>
+              </TouchableOpacity>
             </View>
 
 
@@ -473,7 +484,7 @@ const HomeScreen = ({ navigation }) => {
               <View style={{
                 alignItems: 'center'
               }}>
-                <Speedometer value={70} />
+                <Speedometer value={progressmeter} />
               </View>
 
               <View>
@@ -486,6 +497,320 @@ const HomeScreen = ({ navigation }) => {
                 </Text>
               </View>
             </View>
+
+            <View style={{
+              paddingVertical: 20
+            }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>
+                Send Invite
+              </Text>
+            </View>
+
+
+            <View style={{
+              // top: -20,
+              width: width / 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              backgroundColor: COLORS.white,
+              borderRadius: 10,
+              elevation: 5,
+              alignItems: 'center',
+              paddingRight: 20,
+              paddingVertical: 5,
+            }}>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+                <TextInput
+                  placeholder='enter email address'
+                  value={emailAddress}
+                  placeholderTextColor={COLORS.gray}
+                  onChangeText={(text) => setEmailAddress(text)}
+                  underlineColor={COLORS.transparent}
+                  activeUnderlineColor={COLORS.transparent}
+                  backgroundColor={COLORS.transparent}
+                  style={{
+                    width: width / 1.5,
+                    padding: 0,
+                    margin: 0,
+                    backgroundColor: COLORS.transparent
+                  }}
+                />
+              </View>
+              <View style={{
+                color: COLORS.black,
+                fontSize: 13
+              }}>
+                <Send width={20} height={20} />
+              </View>
+            </View>
+
+
+            <View style={{
+              marginTop: 30,
+              width: width / 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // backgroundColor: COLORS.white,
+              // borderRadius: 10,
+              // elevation: 5,
+              alignItems: 'center',
+              // paddingRight: 20,
+              paddingVertical: 5
+            }}>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <Twitter width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Twitter</Text>
+                </View>
+              </View>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <Facebook width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Facebook</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={{
+              marginTop: 10,
+              width: width / 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // backgroundColor: COLORS.white,
+              // borderRadius: 10,
+              // elevation: 5,
+              alignItems: 'center',
+              // paddingRight: 20,
+              paddingVertical: 5
+            }}>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <WhatsApp width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>WhatsApp</Text>
+                </View>
+              </View>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 10,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <WhatsApp width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Send to all on WhatsApp</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={{
+              marginTop: 10,
+              width: width / 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // backgroundColor: COLORS.white,
+              // borderRadius: 10,
+              // elevation: 5,
+              alignItems: 'center',
+              // paddingRight: 20,
+              paddingVertical: 5
+            }}>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <Reddit width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Reddit</Text>
+                </View>
+              </View>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <Linkedin width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Linked in </Text>
+                </View>
+              </View>
+            </View>
+
+
+            <View style={{
+              marginTop: 10,
+              width: width / 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // backgroundColor: COLORS.white,
+              // borderRadius: 10,
+              // elevation: 5,
+              alignItems: 'center',
+              // paddingRight: 20,
+              paddingVertical: 5
+            }}>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <TikTok width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>TikTok</Text>
+                </View>
+              </View>
+              <View style={{
+                width: '45%',
+                elevation: 5,
+                backgroundColor: COLORS.white,
+                borderRadius: 10,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+                alignItems: 'center'
+              }}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <CopyLink width={20} height={20} />
+                  <Text style={{
+                    paddingLeft: 5,
+                    fontSize: 13,
+                    color: COLORS.black
+                  }}>Copy Link</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={{
+              paddingVertical: 20
+            }}>
+              <CustomeButton title={'Send to all'} width={width / 1.1} />
+            </View>
+
+
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>
+                Send message on IG
+              </Text>
+              <Text style={{
+                fontSize: 12,
+                color: COLORS.black,
+                textAlign: 'center'
+              }}>
+                Don’t forget to share don't forget to invite your influencer friends on IG and make 5% of end user subscription they bring in
+              </Text>
+            </View>
+
+
+            <View style={{
+              paddingVertical: 20
+            }}>
+              <CustomeButton title={'Send message'} width={width / 1.1} />
+            </View>
+
 
 
 

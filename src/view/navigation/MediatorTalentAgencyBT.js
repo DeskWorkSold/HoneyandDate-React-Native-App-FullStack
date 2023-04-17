@@ -10,6 +10,8 @@ import HomeScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/HomeSc
 import ProfileScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/ProfileScreen';
 import EventScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/EventScreen';
 import AccountScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/AccountScreen';
+import CustomeEfilatedCode from '../screens/MediatorLogin/TalentAgencyORInfluencer/CustomeEfilatedCode';
+import YourClients from '../screens/MediatorLogin/TalentAgencyORInfluencer/YourClients';
 
 
 const Tab = createBottomTabNavigator();
@@ -30,7 +32,8 @@ const HomeStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name='HomeScreen' component={HomeScreen} />
-        {/* <Tab.Screen name='ChatingScreen' component={ChatingScreen} /> */}
+        <Tab.Screen name='CustomeEfilatedCode' component={CustomeEfilatedCode} />
+        <Tab.Screen name='YourClients' component={YourClients} />
     </Tab.Navigator>
 )
 const EventStack = ({ navigation }) => (

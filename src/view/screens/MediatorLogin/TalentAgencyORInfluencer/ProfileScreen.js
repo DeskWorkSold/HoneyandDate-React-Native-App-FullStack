@@ -7,12 +7,33 @@ import { logout, mediatorLogin, selectMediatorUser } from '../../../../../redux/
 import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import Path from '../../../../assets/Path.svg';
-// import Tik from '../../../../assets/tik.svg';
+import SVGImage from '../../../../assets/notify.svg';
+import Tik from '../../../../assets/tik.svg';
 import MyIcon from '../../../../assets/tik.svg';
-
+import Facebook from '../../../../assets/Facebook.svg';
+import Linkdin from '../../../../assets/Linkedin.svg';
+import Twitter from '../../../../assets/Twitter.svg';
+import Insta from '../../../../assets/insta.svg';
+import Edite from '../../../../assets/edit2.svg';
+import { RadioButton } from 'react-native-paper';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+
+const allDays = [
+    {
+        id: 1,
+        name: 'Week',
+    },
+    {
+        id: 2,
+        name: 'Daily',
+    },
+    {
+        id: 3,
+        name: 'Always',
+    },
+]
 
 const ProfileScreen = ({ navigation }) => {
     const [progress, setProgress] = useState(0.5);
@@ -21,12 +42,15 @@ const ProfileScreen = ({ navigation }) => {
     const [nameEdit, setNameEdit] = useState(false);
     const [email, setEmail] = useState(mediator?.userDetails?.email);
     const [emailEdit, setEmailEdit] = useState(false);
-    const [number, setNumber] = useState(mediator.Number ? mediator.Number : null);
+    const [number, setNumber] = useState(mediator?.userDetails?.Phonenumber ? mediator?.userDetails?.Phonenumber : null);
     const [numberEdit, setNumberEdit] = useState(false);
     const [about, setabout] = useState(mediator?.userDetails?.Bio);
     const [location, setLocation] = useState();
     const [locationEdit, setLocationEdit] = useState();
+    const [duration, setDuration] = useState();
     const dispatch = useDispatch();
+
+    // console.log(mediator.userDetails);
 
     const OnLogOut = () => {
         // navigation.navigate('LoginScreen')
@@ -189,7 +213,7 @@ const ProfileScreen = ({ navigation }) => {
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
-                        <View style={{ marginTop: 10 }}>
+                            <View style={{ marginTop: 10 }}>
                                 <Text style={{ color: COLORS.black, paddingBottom: 5 }}> Phone No </Text>
                                 <View style={styles.NumberInput}>
                                     <TextInput
@@ -214,7 +238,324 @@ const ProfileScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         </View>
-                        <View style={{ alignItems: 'center' }}>
+
+                        <View style={{
+                            paddingHorizontal: 10,
+                            marginTop: 20
+                        }}>
+                            <Text style={{
+                                fontSize: 13,
+                                color: COLORS.black,
+                            }}>About</Text>
+                            <Text style={{
+                                fontSize: 12,
+                                color: COLORS.gray,
+                            }}>(anything about you that you would like to share with our marketing team or a little about you)</Text>
+                        </View>
+
+                        <View style={{
+                            width: width / 1.2,
+                            alignSelf: 'center',
+                            borderRadius: 10,
+                            elevation: 5,
+                            backgroundColor: COLORS.white,
+                            padding: 10,
+                            marginVertical: 20
+                        }}>
+                            <Text style={{
+                                fontSize: 13,
+                                color: COLORS.gray
+                            }}>Lorem ipsum dolor sit amet, ConnectEDU advising elite. Rut rum in Masada unique consequent. Tells Eros Ohio Del donec cliquey in. Get caucus get dolor, sit nun. Odio Del donec cliquey in. Get caucus get dolor, sit nun Ohio Del done </Text>
+                        </View>
+
+                        <View>
+                            <Text style={{
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                                color: COLORS.black,
+                                fontSize: 16
+                            }}>Let us post on your behaf</Text>
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            paddingVertical: 20
+                        }}>
+                            <View style={{
+                                marginRight: 5
+                            }}>
+                                <SVGImage width={20} height={20} />
+                            </View>
+                            <Text style={{
+                                width: width / 1.2,
+                                fontSize: 12,
+                                color: COLORS.gray
+                            }}>
+                                When given this permission we post at times people are on there most and when we post on all our influencers stories at the same time you have much high chance of your flowers / all followers signing up through your link, so this is beneficial we will never post a post we will only post in your story if this permission is given.
+                            </Text>
+                        </View>
+
+
+                        <View style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            marginHorizontal: 20,
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            elevation: 6
+                        }}>
+
+                            {allDays.map((Item, index) => (
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    key={index}
+                                    onPress={() => setDuration(index)}
+                                    style={{
+                                        width: '31%',
+                                        paddingRight: 10,
+                                        marginRight: 5,
+                                        marginBottom: 10,
+                                        // height: 40,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        backgroundColor: COLORS.white,
+                                        elevation: 6,
+                                        borderRadius: 5,
+                                        // marginRight: 5,
+                                        paddingHorizontal: 10,
+                                        // paddingVertical: 5,
+                                    }}>
+                                    <View>
+                                        <Text style={{ fontSize: 12, color: COLORS.black }}>{Item.name}</Text>
+                                    </View>
+                                    <View style={{ paddingLeft: 5 }}>
+                                        <RadioButton
+                                            value={duration}
+                                            status={duration === index ? 'checked' : 'unchecked'}
+                                            onPress={() => setDuration('Not Public')}
+                                            color={COLORS.main}
+                                            uncheckedColor={COLORS.main}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+
+                        </View>
+
+                        <View style={{
+                            alignSelf: 'center',
+                            marginVertical: 10,
+                        }}>
+                            <CustomeButton width={width / 1.2} title={'Allow to post'} />
+                        </View>
+
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingHorizontal: 10,
+                            justifyContent: 'space-between'
+                        }}>
+                            <View>
+                                <Text style={{
+                                    color: COLORS.black,
+                                    fontWeight: 'bold'
+                                }}>Social media handles</Text>
+                            </View>
+                            <TouchableOpacity style={{
+                                paddingHorizontal: 10,
+                                paddingVertical: 5,
+                                backgroundColor: COLORS.main,
+                                borderRadius: 5,
+                            }}>
+                                <Text style={{
+                                    fontSize: 12,
+                                    color: COLORS.black
+                                }}>Add Handle</Text>
+                            </TouchableOpacity>
+                        </View>
+
+
+                        <View style={{
+                            marginTop: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: width / 1.2,
+                            alignSelf: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: COLORS.white,
+                            elevation: 5,
+                            borderRadius: 5,
+                            paddingVertical: 15,
+                            paddingHorizontal: 20,
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                                <View style={{
+                                    marginRight: 5
+                                }}>
+                                    <Facebook width={20} height={20} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                        color: COLORS.gray
+                                    }}>Signed in as: </Text>
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 13,
+                                        color: COLORS.black
+                                    }}>Username</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Edite width={20} height={20} />
+                            </View>
+                        </View>
+
+
+                        <View style={{
+                            marginTop: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: width / 1.2,
+                            alignSelf: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: COLORS.white,
+                            elevation: 5,
+                            borderRadius: 5,
+                            paddingVertical: 15,
+                            paddingHorizontal: 20,
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                                <View style={{
+                                    marginRight: 5
+                                }}>
+                                    <Linkdin width={20} height={20} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                        color: COLORS.gray
+                                    }}>Signed in as: </Text>
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 13,
+                                        color: COLORS.black
+                                    }}>Username</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Edite width={20} height={20} />
+                            </View>
+                        </View>
+
+
+                        <View style={{
+                            marginTop: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: width / 1.2,
+                            alignSelf: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: COLORS.white,
+                            elevation: 5,
+                            borderRadius: 5,
+                            paddingVertical: 15,
+                            paddingHorizontal: 20,
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                                <View style={{
+                                    marginRight: 5
+                                }}>
+                                    <Twitter width={20} height={20} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                        color: COLORS.gray
+                                    }}>Signed in as: </Text>
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 13,
+                                        color: COLORS.black
+                                    }}>Username</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Edite width={20} height={20} />
+                            </View>
+                        </View>
+
+
+
+                        <View style={{
+                            marginTop: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: width / 1.2,
+                            alignSelf: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: COLORS.white,
+                            elevation: 5,
+                            borderRadius: 5,
+                            paddingVertical: 15,
+                            paddingHorizontal: 20,
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                                <View style={{
+                                    marginRight: 5
+                                }}>
+                                    <Insta width={20} height={20} />
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 12,
+                                        color: COLORS.gray
+                                    }}>Signed in as: </Text>
+                                </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 13,
+                                        color: COLORS.black
+                                    }}>Username</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Edite width={20} height={20} />
+                            </View>
+                        </View>
+
+
+
+
+
+                        <View style={{
+                            marginTop:40,
+                        }}>
+                            <CustomeButton title={'Log out'} bcolor={COLORS.transparent} border={COLORS.gray} onpress={() => OnLogOut()} />
+                        </View>
+
+
+                        {/* <View style={{ alignItems: 'center' }}>
                             <View style={{ marginTop: 20 }} >
                                 <TouchableOpacity style={styles.NumberInput} onPress={() => OnLogOut()}>
                                     <View>
@@ -225,7 +566,7 @@ const ProfileScreen = ({ navigation }) => {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                        </View>
+                        </View> */}
 
 
                     </View>

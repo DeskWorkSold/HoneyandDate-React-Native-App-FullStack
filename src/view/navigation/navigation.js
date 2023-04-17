@@ -148,7 +148,7 @@ import QuestionConvertedReligion from '../screens/QuestionConvertedReligion';
 import QuestionHairColorScreen from '../screens/QuestionHairColorScreen';
 import QuestionEyeColorScreen from '../screens/QuestionEyeColorScreen';
 import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
-import MediatorMatchCoordinatorBT from './MediatorTalentAgencyBT';
+import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
 import MediatorTalentAgencyBT from './MediatorTalentAgencyBT';
 
 

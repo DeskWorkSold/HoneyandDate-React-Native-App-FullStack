@@ -91,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
 
                 <View style={{ paddingTop: 20, }}>
 
-                    <CustomeButton width={width / 1.2}  onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
+                    <CustomeButton width={width / 1.1}  onpress={() => navigation.navigate('LoginWithNumberScreen')} title={'Login with phone number'} />
                 </View>
 
                 <View style={{
@@ -116,19 +116,19 @@ const LoginScreen = ({ navigation }) => {
                 <View style={{
                     paddingTop: 35,
                 }}>
-                    <CustomeButton width={width / 1.2} color={COLORS.white} bcolor={COLORS.black} image={require('../../assets/apple.png')} title={'Continue with Apple'} />
+                    <CustomeButton width={width / 1.1} color={COLORS.white} bcolor={COLORS.black} image={require('../../assets/apple.png')} title={'Continue with Apple'} />
                 </View>
 
                 <View style={{
                     paddingTop: 15,
                 }}>
-                    <CustomeButton width={width / 1.2} color={COLORS.white} bcolor={COLORS.blue} image={require('../../assets/facebook.png')} title={'Continue with Facebook'} />
+                    <CustomeButton width={width / 1.1} bcolor={COLORS.blue} color={COLORS.white} image={require('../../assets/facebook.png')} title={'Continue with Facebook'} />
                 </View>
 
                 <View style={{
                     paddingTop: 15,
                 }}>
-                    <CustomeButton width={width / 1.2} color={COLORS.black} bcolor={COLORS.white} image={require('../../assets/google.png')} title={'Continue with Google'}
+                    <CustomeButton width={width / 1.1} color={COLORS.black} bcolor={COLORS.white} image={require('../../assets/google.png')} title={'Continue with Google'}
                         onpress={() => onGoogleSigninPress()} />
                 </View>
 

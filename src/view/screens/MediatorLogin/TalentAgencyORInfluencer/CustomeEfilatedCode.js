@@ -101,7 +101,7 @@ const CustomeEfilatedCode = ({ navigation }) => {
                                 fontSize: 13,
                                 color: COLORS.gray
                             }}>
-                                <Text>Onboard talent/modeling agencies
+                                <Text style={{color: COLORS.black}}>Onboard talent/modeling agencies
                                     and earn 2.5%</Text>
                             </View>
                         </View>
@@ -125,7 +125,7 @@ const CustomeEfilatedCode = ({ navigation }) => {
                                 fontSize: 13,
                                 color: COLORS.gray
                             }}>
-                                <Text>Talent agencies will earn 5% of
+                                <Text style={{color: COLORS.black}}>Talent agencies will earn 5% of
                                     subscription</Text>
                             </View>
                         </View>
@@ -149,7 +149,7 @@ const CustomeEfilatedCode = ({ navigation }) => {
                                 fontSize: 13,
                                 color: COLORS.gray
                             }}>
-                                <Text>Influnacers/ models will earn 10%
+                                <Text style={{color: COLORS.black}}>Influnacers/ models will earn 10%
                                     of subscription</Text>
                             </View>
                         </View>
@@ -173,7 +173,7 @@ const CustomeEfilatedCode = ({ navigation }) => {
                                 fontSize: 13,
                                 color: COLORS.gray
                             }}>
-                                <Text>You will earn most money when you sign up talent/ modeling Agancy’s that have the most influencers</Text>
+                                <Text style={{color: COLORS.black}}>You will earn most money when you sign up talent/ modeling Agancy’s that have the most influencers</Text>
                             </View>
                         </View>
                     </View>

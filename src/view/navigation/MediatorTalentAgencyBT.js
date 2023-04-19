@@ -12,6 +12,7 @@ import EventScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/Event
 import AccountScreen from '../screens/MediatorLogin/TalentAgencyORInfluencer/AccountScreen';
 import CustomeEfilatedCode from '../screens/MediatorLogin/TalentAgencyORInfluencer/CustomeEfilatedCode';
 import YourClients from '../screens/MediatorLogin/TalentAgencyORInfluencer/YourClients';
+import AddSocialMediaAccount from '../screens/MediatorLogin/TalentAgencyORInfluencer/AddSocialMediaAccount';
 
 
 const Tab = createBottomTabNavigator();
@@ -86,8 +87,8 @@ const ProfileStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
-        {/* <Tab.Screen name="PaymentType" component={PaymentType} />
-        <Tab.Screen name="PaymentTypeDetail" component={PaymentTypeDetail} />
+        <Tab.Screen name="AddSocialMediaAccount" component={AddSocialMediaAccount} />
+        {/* <Tab.Screen name="PaymentTypeDetail" component={PaymentTypeDetail} />
         <Tab.Screen name="TermsAndCondition" component={TermsAndCondition} />
         <Tab.Screen name="ReligionsWorkWith" component={ReligionsWorkWith} /> */}
     </Tab.Navigator>
@@ -137,7 +138,7 @@ const MediatorTalentAgencyBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Home</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 , color:COLORS.black }}>Home</Text>
                                 </View>
                             ) : (
                                 <View style={{
@@ -186,7 +187,7 @@ const MediatorTalentAgencyBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Events</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12, color:COLORS.black}}>Events</Text>
                                 </View>
                             ) : (
                                 <View style={{
@@ -238,7 +239,7 @@ const MediatorTalentAgencyBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Account</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 , color:COLORS.black}}>Account</Text>
                                 </View>
 
                             ) : (
@@ -288,7 +289,7 @@ const MediatorTalentAgencyBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12 }}>Profile</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12, color:COLORS.black }}>Profile</Text>
                                 </View>
 
                             ) : (

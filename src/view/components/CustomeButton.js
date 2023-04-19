@@ -28,7 +28,7 @@ const CustomeButton = ({ border, width, title, image, color , bcolor, onpress}) 
                 <TouchableOpacity onPress={onpress} activeOpacity={0.7}>
                     <View style={{
                         backgroundColor: bcolor ? bcolor : COLORS.main,
-                        width: 329,
+                        width: width ? width : 370,
                         height: 50,
                         borderRadius: 10,
                         alignItems: 'center',

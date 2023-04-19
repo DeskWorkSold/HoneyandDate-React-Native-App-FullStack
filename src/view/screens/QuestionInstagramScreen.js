@@ -71,7 +71,7 @@ const QuestionInstagramScreen = ({ navigation, route }) => {
               width: 150,
             }} />
 
-            <Image source={require('../../assets/instagram.png')} resizeMode='contain' style={{
+            <Image source={require('../../assets/Socialmedia4.png')} resizeMode='contain' style={{
               width: 150,
               position: 'absolute',
               marginTop: 80,

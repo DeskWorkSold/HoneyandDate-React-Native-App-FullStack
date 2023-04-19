@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
   title: { textAlign: 'center', fontSize: 30, },
   codeFieldRoot: { marginTop: 20 },
   cell: {
+    color:COLORS.black,
     width: 40,
     height: 40,
     lineHeight: 38,

@@ -141,7 +141,7 @@ import firestore from '@react-native-firebase/firestore';
 import DrawerNavigator from './DrawerNavigator';
 import MediatorApprovalScreen from '../screens/MediatorLogin/MediatorApprovalScreen';
 import MediatorDashboardScreen from '../screens/MediatorLogin/MediatorDashboardScreen';
-import MediatorBottomNavigator from './MediatorBottomNavigator';
+import MediatorBottomNavigator from './MediatorEventAndFoodCoordinatorBt';
 import QuestionPartnerAge from '../screens/QuestionPartnerAge';
 import QuestionDoyouSmoke from '../screens/QuestionDoyouSmoke';
 import QuestionConvertedReligion from '../screens/QuestionConvertedReligion';
@@ -150,6 +150,7 @@ import QuestionEyeColorScreen from '../screens/QuestionEyeColorScreen';
 import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
 import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
 import MediatorTalentAgencyBT from './MediatorTalentAgencyBT';
+import MediatorEventAndFoodCoordinatorBt from './MediatorEventAndFoodCoordinatorBt';
 
 
 
@@ -193,10 +194,20 @@ const MyStack = () => {
             <Stack.Screen name="MediatorApprovalScreen" component={MediatorApprovalScreen} />
             {MediatorUser?.userDetails?.MediatorId == 1 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorTalentAgencyBT" component={MediatorTalentAgencyBT} />
-                // <Stack.Screen name="MediatorDashboardScreen" component={MediatorBottomNavigator} />
             }
             {MediatorUser?.userDetails?.MediatorId == 2 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+            {MediatorUser?.userDetails?.MediatorId == 5 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorEventAndFoodCoordinatorBt" component={MediatorEventAndFoodCoordinatorBt} />
+                // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+            {MediatorUser?.userDetails?.MediatorId == 10 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorTalentAgencyBT" component={MediatorTalentAgencyBT} />
+            }
+             {MediatorUser?.userDetails?.MediatorId == 11 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorEventAndFoodCoordinatorBt" component={MediatorEventAndFoodCoordinatorBt} />
+                // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
             }
         </Stack.Navigator>
     )

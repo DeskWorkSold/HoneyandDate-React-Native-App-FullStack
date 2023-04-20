@@ -7,17 +7,19 @@ import COLORS from '../../consts/Colors';
 const { width, height } = Dimensions.get("window");
 
 
-const YourClinets = ({navigation , index, item}) => {
+const YourClinets = ({ navigation, key, item }) => {
     return (
-        <View key={index} style={{
-            paddingVertical: 20,
-            backgroundColor: COLORS.white,
-            width: width,
-            marginBottom: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-        }}>
+        <View
+            key={key}
+            style={{
+                paddingVertical: 20,
+                backgroundColor: COLORS.white,
+                width: width,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+            }}>
             <View style={{
                 borderWidth: 2,
                 borderRadius: 50,

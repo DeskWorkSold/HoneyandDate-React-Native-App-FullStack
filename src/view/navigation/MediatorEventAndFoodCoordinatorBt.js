@@ -75,7 +75,7 @@ const MediatorCreateStack = ({ navigation }) => (
     </Tab.Navigator>
 )
 
-const MediatorBottomNavigator = () => {
+const MediatorEventAndFoodCoordinatorBt = () => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -246,6 +246,6 @@ const MediatorBottomNavigator = () => {
     )
 }
 
-export default MediatorBottomNavigator
+export default MediatorEventAndFoodCoordinatorBt
 
 const styles = StyleSheet.create({})

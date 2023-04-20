@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, Image, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import COLORS from '../../../../consts/Colors';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ import Reddit from '../../../../assets/Reddit.svg';
 import Linkedin from '../../../../assets/Linkedin.svg';
 import TikTok from '../../../../assets/TikTok.svg';
 import CopyLink from '../../../../assets/copy.svg';
+import Share from 'react-native-share';
 // import Facebook from '../../../../assets/Facebook.svg';
 // import Facebook from '../../../../assets/Facebook.svg';
 import SuggestMatche from '../../../components/SuggestMatche';
@@ -25,6 +26,9 @@ import { BarChart, ProgressChart } from 'react-native-chart-kit';
 import Speedometer from '../../../components/Speedometer';
 import { TextInput } from 'react-native-paper';
 import CustomeButton from '../../../components/CustomeButton';
+import { selectMediatorUser } from '../../../../../redux/reducers/Reducers';
+import { useSelector } from 'react-redux';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,8 +54,8 @@ const data = {
 
 
 const HomeScreen = ({ navigation }) => {
-  let afcode = Math.random().toString(16).slice(2);
-  const [code, setCode] = useState(afcode);
+  // let afcode = Math.random().toString(16).slice(2);
+  // const [code, setCode] = useState(afcode);
   const [progressmeter, setProgressMeter] = useState(60);
   const [uploading, setUploading] = useState(false);
   const [emailAddress, setEmailAddress] = useState(false);
@@ -70,6 +74,7 @@ const HomeScreen = ({ navigation }) => {
 
   const [userTemp, setUserTemp] = useState(null);
   const [matchUserTemp, setMatchUserTemp] = useState(null);
+  const mediator = useSelector(selectMediatorUser);
 
 
   const CurrentUser = auth().currentUser.uid;
@@ -109,6 +114,209 @@ const HomeScreen = ({ navigation }) => {
           console.log('Permission Denied');
         }
       });
+  }
+
+  const SendToAll = async (autoCode) => {
+    // console.log(autoCode);
+    // return
+    const shareOptions = {
+      title: 'Share via',
+      // title: 'Promo Code: ' + autoCode,
+      message: 'Referal Code: ' + autoCode,  //string
+    };
+
+    // return
+    try {
+      const ShareResponce = await Share.open(shareOptions)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          err && console.log('Error2', err);
+        });
+    }
+    catch (e) {
+      console.log('Error', e);
+    }
+  }
+
+  const SendToSocial = async (autoCode, id) => {
+    // console.log(id);
+    // return;
+    if (id == 7) {
+      Clipboard.setString(autoCode);
+      ToastAndroid.show("Copied to clipboard!", ToastAndroid.SHORT);
+      // console.log('tes');
+    }
+    else {
+      let shareOptions
+      if (id == 1) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.TWITTER,
+          Twitter: 'test'
+          // whatsAppNumber: "9199999999",
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.twitter.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "TWITTER not installed",
+              "TWITTER not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      else if (id == 2) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.FACEBOOK,
+          Facebook: 'test',
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.facebook.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "FACEBOOK not installed",
+              "FACEBOOK not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      else if (id == 3) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.WHATSAPP,
+          whatsAppNumber: "9199999999",
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.whatsapp.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "Whatsapp not installed",
+              "Whatsapp not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      else if (id == 4) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.PINTEREST,
+          PINTEREST: 'test'
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.pinterest.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "PINTEREST not installed",
+              "PINTEREST not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      else if (id == 5) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.LINKEDIN,
+          Linkedin: 'teset'
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.linkedin.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "LINKEDIN not installed",
+              "LINKEDIN not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      else if (id == 6) {
+        shareOptions = {
+          title: 'Share via',
+          message: 'Referal Codsse: ' + autoCode,  //string
+          social: Share.Social.TELEGRAM,
+          TELEGRAM: 'test'
+        };
+        try {
+          const { isInstalled } = await Share.isPackageInstalled(
+            "com.telegram.android"
+          );
+
+          if (isInstalled) {
+            await Share.shareSingle(shareOptions);
+          } else {
+            Alert.alert(
+              "TELEGRAM not installed",
+              "TELEGRAM not installed, please install.",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+
+
+      // try {
+      //   const ShareResponce = await Share.shareSingle(shareOptions)
+      //     .then((res) => {
+      //       console.log(res);
+      //     })
+      //     .catch((err) => {
+      //       err && console.log('Error2', err);
+      //     });
+      // }
+      // catch (e) {
+      //   console.log('Error', e);
+      // }
+    }
   }
 
   useEffect(() => {
@@ -237,13 +445,13 @@ const HomeScreen = ({ navigation }) => {
                 <View><Text style={{
                   color: COLORS.black,
                   fontSize: 13
-                }}>{code}</Text></View>
+                }}>{mediator?.userDetails?.RefCode ? mediator?.userDetails?.RefCode : 'null'}</Text></View>
               </View>
               <TouchableOpacity
                 onPress={() => navigation.navigate('CustomeEfilatedCode')}
                 style={{
                   color: COLORS.black,
-                  fontSize: 13
+                  fontSize: 13,
                 }}>
                 <Edite width={20} height={20} />
               </TouchableOpacity>
@@ -362,7 +570,7 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={{ fontSize: 12, color: COLORS.black, fontWeight: 'bold' }}>$180</Text>
                   </View>
                 </View>
-                <View>
+                <TouchableOpacity onPress={() => navigation.navigate('AccountStack')}>
                   <Text style={{
                     color: COLORS.black,
                     backgroundColor: COLORS.main,
@@ -372,7 +580,7 @@ const HomeScreen = ({ navigation }) => {
                     fontSize: 12,
                     // fontWeight:'bold'
                   }}>See Balance</Text>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={{
@@ -423,13 +631,13 @@ const HomeScreen = ({ navigation }) => {
                 }}>13 people used your
                   referral code this month</Text>
               </View>
-              <TouchableOpacity 
-              onPress={() => navigation.navigate('YourClients')}
-              style={{
-                color: COLORS.black,
-                fontSize: 13,
-                width: '5%'
-              }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('YourClients')}
+                style={{
+                  color: COLORS.black,
+                  fontSize: 13,
+                  width: '5%'
+                }}>
                 <Image source={require('../../../../assets/goback.png')} resizeMode='contain' style={{
                   width: 12,
                   height: 12,
@@ -564,15 +772,17 @@ const HomeScreen = ({ navigation }) => {
               // paddingRight: 20,
               paddingVertical: 5
             }}>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 1)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -584,16 +794,18 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Twitter</Text>
                 </View>
-              </View>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 2)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -605,7 +817,7 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Facebook</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <View style={{
@@ -620,15 +832,17 @@ const HomeScreen = ({ navigation }) => {
               // paddingRight: 20,
               paddingVertical: 5
             }}>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 3)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -640,16 +854,18 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>WhatsApp</Text>
                 </View>
-              </View>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 3)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 10,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -661,7 +877,7 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Send to all on WhatsApp</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <View style={{
@@ -676,15 +892,17 @@ const HomeScreen = ({ navigation }) => {
               // paddingRight: 20,
               paddingVertical: 5
             }}>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 4)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -696,16 +914,18 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Reddit</Text>
                 </View>
-              </View>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 5)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -717,7 +937,7 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Linked in </Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
 
 
@@ -733,15 +953,17 @@ const HomeScreen = ({ navigation }) => {
               // paddingRight: 20,
               paddingVertical: 5
             }}>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 6)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -753,16 +975,18 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>TikTok</Text>
                 </View>
-              </View>
-              <View style={{
-                width: '45%',
-                elevation: 5,
-                backgroundColor: COLORS.white,
-                borderRadius: 10,
-                paddingVertical: 15,
-                paddingHorizontal: 10,
-                alignItems: 'center'
-              }}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => SendToSocial(mediator?.userDetails?.RefCode, 7)}
+                style={{
+                  width: '45%',
+                  elevation: 5,
+                  backgroundColor: COLORS.white,
+                  borderRadius: 10,
+                  paddingVertical: 15,
+                  paddingHorizontal: 10,
+                  alignItems: 'center'
+                }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -774,13 +998,13 @@ const HomeScreen = ({ navigation }) => {
                     color: COLORS.black
                   }}>Copy Link</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <View style={{
               paddingVertical: 20
             }}>
-              <CustomeButton title={'Send to all'} width={width / 1.1} />
+              <CustomeButton title={'Send to all'} onpress={() => SendToAll(mediator?.userDetails?.RefCode)} width={width / 1.1} />
             </View>
 
 

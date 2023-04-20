@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { mediatorLogin } from '../../../../redux/reducers/Reducers';
 import { useDispatch } from 'react-redux';
+import Loader from '../../components/Loader';
 
 
 const RelationshipTypes = [
@@ -24,7 +25,7 @@ const RelationshipTypes = [
   },
   {
     id: '4',
-    name: 'Profile Optimizer ',
+    name: 'Profile Optimizer',
   },
   {
     id: '5',
@@ -48,7 +49,8 @@ const RelationshipTypes = [
   },
   {
     id: '10',
-    name: 'Concierge Onboarding',
+    // name: 'Concierge Onboarding',
+    name: 'HR Manager',
   },
 ]
 
@@ -60,221 +62,503 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [uploading, setUploading] = useState(0);
   const [transferred, setTransferred] = useState(0);
-  const CurrentUser = auth().currentUser.uid;
+  const CurrentUser = auth().currentUser;
   const dispatch = useDispatch();
   // console.log(Education);
 
-  const onReligionScreen = async () => {
-    // const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
+  const onSubmitForm = async () => {
+    const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
     const category = 'Mediator'
-    if (category == 'Event Vendor - POS for booths') {
-      // console.log(selectitem);
-      // return;
-      try {
-        setUploading(true)
-        const imageUrl = await uploadImage();
-        var Data = new Object();
-        Data.Category = category;
-        Data.RequestAccessType = selectitem;
-        Data.PanelAccess = false;
-        Data.Event = 1;
-        Data.POSFood = 1;
-        Data.email = email;
-        Data.RelationshipStatus = RelationshipStatus;
-        Data.Clingy = clingy;
-        Data.Interest = Interest;
-        Data.Cuddling = Cuddling;
-        Data.InLife = InLife;
-        Data.InBed = InBed;
-        Data.MovieType = MovieType;
-        Data.NextLongestRelationship = NextLongestRelationship;
-        Data.LongestRelationship = LongestRelationship;
-        Data.OpenTo = OpenTo;
-        Data.DealBreaker = DealBreaker;
-        Data.DealMakers = DealMakers;
-        Data.Firstrefname = Firstrefname;
-        Data.FirstRefemail = FirstRefemail;
-        Data.FirstRefnumber = FirstRefnumber;
-        Data.Secrefname = Secrefname;
-        Data.SecRefemail = SecRefemail;
-        Data.SecRefnumber = SecRefnumber;
-        Data.PartnerBuildType = PartnerBuildType;
-        Data.BuildType = BuildType;
-        Data.PartnerMaxHeight = PartnerMaxHeight;
-        Data.PartnerMinHeight = PartnerMinHeight;
-        Data.Height = Height;
-        Data.PartnerDisability = PartnerDisability;
-        Data.Disability = Disability;
-        Data.DescribePartner = DescribePartner;
-        Data.DescribeYou = DescribeYou;
-        Data.Education = Education;
-        Data.RelationshipType = RelationshipType;
-        Data.Relagion = Relagion;
-        Data.KosherType = KosherType;
-        Data.foodtype = foodtype;
-        Data.religionType = religionType;
-        Data.relationshipLookingType = RelationshipLookingType;
-        Data.ParentReligion = ParentReligion;
-        Data.Diet = Diet;
-        Data.PartnerDiet = PartnerDiet;
-        Data.FavFood = FavFood;
-        Data.Exercise = Exercise;
-        Data.ExerciseStatus = ExerciseStatus;
-        Data.PartnerExercise = PartnerExercise;
-        Data.Ethnicity = Ethnicity;
-        Data.PartnerEthnicity = PartnerEthnicity;
-        Data.Name = name;
-        Data.InstaUsername = InstaUsername;
-        Data.Drink = Drink;
-        Data.Drugs = Drugs;
-        Data.Marijauna = Marijauna;
-        Data.Vape = Vape;
-        Data.Smoke = Smoke;
-        Data.Lookingfor = Lookingfor;
-        Data.Nature = Nature;
-        Data.PartnerNature = PartnerNature;
-        Data.PoliticalPartnerView = PoliticalPartnerView;
-        Data.PoliticalView = PoliticalView;
-        Data.Music = Music;
-        Data.Experince = Experince;
-        Data.Bio = Bio;
-        Data.Kids = Kids;
-        Data.PartnerGender = PartnerGender;
-        Data.Gender = Gender;
-        Data.Dates = DateOfBirth;
-        Data.image5 = image5;
-        Data.image4 = image4;
-        Data.image3 = image3;
-        Data.image2 = image2;
-        Data.image1 = imageUrl;
-        Data.CompanyType = CompanyType;
-        Data.PositioninCompany = PositioninCompany;
-        Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser;
-        Data.Location = {
-          latitude: 24.9028039,
-          longitude: 67.1145385,
+    if (!selectitem == '') {
+      console.log(selectitem);
+      if (selectitem == 'Event Staff - Check In') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.Category = 'Mediator';
+          Data.MediatorId = 3;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          // console.log('test data: ', Data);
+          // return;
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Staff Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
         }
-        // console.log('test data: ', Data);
-        // // dispatch(mediatorLogin(Data))
-        // return;
-        // console.log(CurrentUser);
-        firestore()
-          .collection('Users').doc(CurrentUser).set({
-            userDetails: Data
-          }).then(() => {
-            // redux
-            dispatch(mediatorLogin(Data))
-            ToastAndroid.show('Welcome to Honey and Dates Mediator Panel', ToastAndroid.SHORT)
-            // navigation.navigate('QuestionCongratulationScreen')
-          })
-        // setImage(null)
-        setUploading(false)
-      } catch (error) {
-        console.log('error test1', error);
       }
-    }
-    else if (selectitem == 'Event Coordinator') {
-      try {
-        // setUploading(false)
-        // const imageUrl = await uploadImage();
-        var Data = new Object();
-        Data.RequestAccess = selectitem;
-        Data.PanelAccess = false;
-        Data.Event = 1;
-        Data.POSFood = 0;
-        Data.email = email;
-        Data.RelationshipStatus = RelationshipStatus;
-        Data.Clingy = clingy;
-        Data.Interest = Interest;
-        Data.Cuddling = Cuddling;
-        Data.InLife = InLife;
-        Data.InBed = InBed;
-        Data.MovieType = MovieType;
-        Data.NextLongestRelationship = NextLongestRelationship;
-        Data.LongestRelationship = LongestRelationship;
-        Data.OpenTo = OpenTo;
-        Data.DealBreaker = DealBreaker;
-        Data.DealMakers = DealMakers;
-        Data.Firstrefname = Firstrefname;
-        Data.FirstRefemail = FirstRefemail;
-        Data.FirstRefnumber = FirstRefnumber;
-        Data.Secrefname = Secrefname;
-        Data.SecRefemail = SecRefemail;
-        Data.SecRefnumber = SecRefnumber;
-        Data.PartnerBuildType = PartnerBuildType;
-        Data.BuildType = BuildType;
-        Data.PartnerMaxHeight = PartnerMaxHeight;
-        Data.PartnerMinHeight = PartnerMinHeight;
-        Data.Hieght = Height;
-        Data.PartnerDisability = PartnerDisability;
-        Data.Disability = Disability;
-        Data.DescribePartner = DescribePartner;
-        Data.DescribeYou = DescribeYou;
-        Data.Education = Education;
-        Data.RelationshipType = RelationshipType;
-        Data.Relagion = Relagion;
-        Data.KosherType = KosherType;
-        Data.foodtype = foodtype;
-        Data.religionType = religionType;
-        Data.relationshipLookingType = RelationshipLookingType;
-        Data.ParentReligion = ParentReligion;
-        Data.Diet = Diet;
-        Data.PartnerDiet = PartnerDiet;
-        Data.FavFood = FavFood;
-        Data.Exercise = Exercise;
-        Data.ExerciseStatus = ExerciseStatus;
-        Data.PartnerExercise = PartnerExercise;
-        Data.Ethnicity = Ethnicity;
-        Data.PartnerEthnicity = PartnerEthnicity;
-        Data.Name = name;
-        Data.InstaUsername = InstaUsername;
-        Data.Drink = Drink;
-        Data.Drugs = Drugs;
-        Data.Marijauna = Marijauna;
-        Data.Vape = Vape;
-        Data.Smoke = Smoke;
-        Data.Lookingfor = Lookingfor;
-        Data.Nature = Nature;
-        Data.PartnerNature = PartnerNature;
-        Data.PoliticalPartnerView = PoliticalPartnerView;
-        Data.PoliticalView = PoliticalView;
-        Data.Music = Music;
-        Data.Experince = Experince;
-        Data.Bio = Bio;
-        Data.Kids = Kids;
-        Data.PartnerGender = PartnerGender;
-        Data.Gender = Gender;
-        Data.Dates = Date;
-        Data.image5 = image5;
-        Data.image4 = image4;
-        Data.image3 = image3;
-        Data.image2 = image2;
-        Data.image1 = 'imageUrl';
-        Data.CompanyType = CompanyType;
-        Data.PositioninCompany = PositioninCompany;
-        Data.CompanyName = CompanyName;
-        Data.uid = CurrentUser;
-        Data.Location = {
-          latitude: 24.9028039,
-          longitude: 67.1145385,
+      else if (selectitem == 'Front Door POS - Charge for Event Tickets') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 4;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
         }
-        // dispatch(mediatorLogin(Data))
-        // console.log('test data: ', Data);
-        // return;
-        // console.log(CurrentUser);
-        firestore()
-          .collection('Users').doc(CurrentUser).set({
-            userDetails: Data
-          }).then(() => {
-            // redux
-            ToastAndroid.show('Welcome to Honey and Dates', ToastAndroid.SHORT)
-            navigation.navigate('QuestionCongratulationScreen')
-          })
-        // setImage(null)
-        setUploading(false)
-      } catch (error) {
-        console.log('error test2', error);
+      }
+
+      else if (selectitem == 'Event Vendor - POS for booths') {
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.POSFood = 1;
+          Data.RefCode = Math.random().toString(16).slice(2);
+          Data.Category = 'Mediator';
+          Data.MediatorId = 5;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Vendor - POS for booths Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      // Profile Optimizer
+      // Social Media Manager
+      // Content Producer
+
+      else if (selectitem == 'Profile Optimizer') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 6;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+
+      else if (selectitem == 'Social Media Manager') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 7;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      else if (selectitem == 'Content Producer') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 8;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      // Legal Team
+      // In-house Talent Agency onboarding
+      // Event Coordinator
+      // Concierge Onboarding
+      else if (selectitem == 'Legal Team') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 9;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      else if (selectitem == 'In-house Talent Agency onboarding') {
+        // ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        // return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 10;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      else if (selectitem == 'Event Coordinator') {
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.POSFood = 0;
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 11;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          // console.log(Data);
+          // return
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Coordinator Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
+      }
+      else if (selectitem == 'HR Manager') {
+        ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        return
+        try {
+          setUploading(true)
+          // console.log(selectitem);
+          // return
+          const imageUrl = await uploadImage();
+          const imageUrl2 = await uploadImage2();
+          const imageUrl3 = await uploadImage3();
+          const imageUrl4 = await uploadImage4();
+          const imageUrl5 = await uploadImage5();
+          var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
+          Data.Category = 'Mediator';
+          Data.MediatorId = 12;
+          Data.PanelAccess = false;
+          Data.MediatorType = selectitem;
+          Data.email = email;
+          Data.image1 = imageUrl;
+          Data.image2 = imageUrl2;
+          Data.image3 = imageUrl3;
+          Data.image4 = imageUrl4;
+          Data.image5 = imageUrl5;
+          Data.organization = organization;
+          Data.Kids = HaveKids;
+          Data.relationshipStatus = relationshipStatus;
+          Data.Bio = bio;
+          Data.Dates = DateOfBirth;
+          Data.Name = name;
+          Data.uid = CurrentUser.uid;
+          Data.Phonenumber = CurrentUser.phoneNumber ? CurrentUser.phoneNumber : null;
+          Data.Location = {
+            latitude: 24.9028039,
+            longitude: 67.1145385,
+          }
+          firestore()
+            .collection('Users').doc(CurrentUser.uid).set({
+              userDetails: Data
+            }).then(() => {
+              dispatch(mediatorLogin(Data))
+              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              setUploading(false)
+            })
+        } catch (error) {
+          console.log('error test2', error);
+        }
       }
     }
     else {
@@ -320,6 +604,199 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
       // setUploading(false);
       // setImage(null);
 
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+
+  const uploadImage2 = async () => {
+    if (image2 == null) {
+      return null;
+    }
+    const uploadUri = image2;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage3 = async () => {
+    if (image3 == null) {
+      return null;
+    }
+    const uploadUri = image3;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage4 = async () => {
+    if (image4 == null) {
+      return null;
+    }
+    const uploadUri = image4;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+  };
+  const uploadImage5 = async () => {
+    if (image5 == null) {
+      return null;
+    }
+    const uploadUri = image5;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const storageRef = storage().ref(`Users/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+      // setUploading(false);
+      // setImage(null);
       // Alert.alert(
       //   'Image uploaded!',
       //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
@@ -431,31 +908,32 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
                   marginLeft: 2.5,
                 }}>
                   {!uploading == true ? (
-                    <CustomeButton 
-                    width={170}
-                    // onpress={() => onReligionScreen()}
+                    <CustomeButton
+                      width={170}
+                      onpress={() => onSubmitForm()}
                       title={'Continue'} />
 
                   ) : (
-                    <CustomeButton 
-                    width={170}
-                    // onpress={() => onReligionScreen()}
+                    <CustomeButton
+                      width={170}
+                      // onpress={() => onReligionScreen()}
                       title={'Please wait...'} />
                   )}
                 </View>
 
               </View>
-                <View style={{
-                  paddingTop: 0,
-                  // width: 310,
-                }}>
-                  <Text style={{ textAlign: 'center', fontSize: 10 }}>
-                    By continue you agree our Terms and Privacy Policy.
-                  </Text>
-                </View>
+              <View style={{
+                paddingTop: 0,
+                // width: 310,
+              }}>
+                <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                  By continue you agree our Terms and Privacy Policy.
+                </Text>
+              </View>
             </View>
           </ScrollView>
         </View>
+        <Loader modal={uploading} uploading={uploading} />
       </View>
 
 

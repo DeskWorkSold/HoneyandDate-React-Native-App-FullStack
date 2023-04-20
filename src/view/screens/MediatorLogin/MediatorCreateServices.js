@@ -54,7 +54,7 @@ const MediatorCreateServices = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    {user.POSFood == 1 &&
+                    {user?.userDetails?.POSFood == 1 &&
                         <View>
                             <TouchableOpacity
                                 activeOpacity={0.8}

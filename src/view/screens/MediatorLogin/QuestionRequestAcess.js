@@ -101,6 +101,7 @@ const MediatorQuestionRequestAcess = ({ navigation, route }) => {
           const imageUrl4 = await uploadImage4();
           const imageUrl5 = await uploadImage5();
           var Data = new Object();
+          Data.RefCode = Math.random().toString(16).slice(2)
           Data.Category = 'Mediator';
           Data.MediatorId = 1;
           Data.PanelAccess = false;

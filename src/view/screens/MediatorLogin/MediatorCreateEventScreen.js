@@ -960,11 +960,13 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                         </View>
                         <View style={{
                             flexDirection: 'row',
-                            alignItems: 'center',
-                            marginHorizontal: 20,
-                            width: '100%'
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            // marginHorizontal: 20,
+                            width: width,
+                            // backgroundColor:COLORS.black
                         }}>
-                            <View style={{ marginTop: 10, width: '45%', }}>
+                            <View style={{ marginTop: 10, width: width/2.2 }}>
                                 <Text style={{ color: COLORS.black }}> Start Date </Text>
                                 <View style={{
                                     height: 45,
@@ -1006,7 +1008,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                     }} />
                                 </View>
                             </View>
-                            <View style={{ marginTop: 10, width: '45%' }}>
+                            <View style={{ marginTop: 10, width: width/2.2 }}>
                                 <Text style={{ color: COLORS.black }}> End Date </Text>
                                 <View style={{
                                     height: 45,
@@ -1047,10 +1049,11 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            marginHorizontal: 20,
-                            width: '100%'
+                            justifyContent: 'center',
+                            // marginHorizontal: 20,
+                            width: width,
                         }}>
-                            <View style={{ marginTop: 10, width: '45%', }}>
+                            <View style={{ marginTop: 10, width: width/2.2, }}>
                                 <Text style={{ color: COLORS.black }}> Start Time </Text>
                                 <View style={{
                                     height: 45,
@@ -1110,7 +1113,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                     }} />
                                 </View>
                             </View>
-                            <View style={{ marginTop: 10, width: '45%' }}>
+                            <View style={{ marginTop: 10, width: width/2.2 }}>
                                 <Text style={{ color: COLORS.black }}> End Time </Text>
                                 <View style={{
                                     height: 45,
@@ -1152,7 +1155,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         </View>
-                        <View style={{ alignItems: 'center' }}>
+                        <View style={{
+                            alignItems: 'center',
+                            
+                        }}>
                             <View style={{ marginTop: 10 }}>
                                 <Text style={{ color: COLORS.black }}> Location </Text>
                                 <View style={styles.NumberInput}>
@@ -1914,7 +1920,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingRight: 10,
         height: 45,
-        width: 340,
+        // width: 340,
+        width: width/1.1,
+        // marginHorizontal:20,
         backgroundColor: COLORS.white,
         borderRadius: 5,
         elevation: 4
@@ -1927,7 +1935,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         // paddingHorizontal: 20,
-        width: 340,
+        width: width/1.1,
         backgroundColor: COLORS.white,
         borderRadius: 5,
         elevation: 4,

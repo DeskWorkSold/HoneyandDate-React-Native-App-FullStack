@@ -12,10 +12,11 @@ const height = Dimensions.get('window').height;
 
 const MediatorProfileScreen = ({ navigation }) => {
     const mediator = useSelector(selectMediatorUser);
-    const [name, setName] = useState(mediator?.Name);
-    const [email, setEmail] = useState(mediator?.email);
+    // console.log(mediator);
+    const [name, setName] = useState(mediator?.userDetails?.Name);
+    const [email, setEmail] = useState(mediator?.userDetails?.email);
     const [location, setLocation] = useState();
-    const [about, setabout] = useState(mediator?.Bio);
+    const [about, setabout] = useState(mediator?.userDetails?.Bio);
     const dispatch = useDispatch();
 
     const OnLogOut = () => {
@@ -58,15 +59,15 @@ const MediatorProfileScreen = ({ navigation }) => {
                                 borderColor: COLORS.main,
                                 borderRadius: 50
                             }}>
-                                <Image source={{ uri: mediator.image1 }} resizeMode='contain' style={{
+                                <Image source={{ uri: mediator?.userDetails?.image1 }} resizeMode='contain' style={{
                                     borderRadius: 80,
                                     width: 100,
                                     height: 100
                                 }} />
                             </View>
                             <View style={{
-                                justifyContent:'center'
-                                ,paddingLeft:20
+                                justifyContent: 'center'
+                                , paddingLeft: 20
                             }}>
                                 <View style={{
                                     justifyContent: 'center'
@@ -75,20 +76,35 @@ const MediatorProfileScreen = ({ navigation }) => {
                                         fontSize: 20,
                                         fontWeight: 'bold',
                                         color: COLORS.black
-                                    }}>{mediator?.Name}</Text>
+                                    }}>{mediator?.userDetails?.Name}</Text>
                                 </View>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    backgroundColor: COLORS.light,
-                                    borderRadius: 5,
-                                    width: '80%',
-                                    padding: 5,
-                                    paddingHorizontal: 10,
-                                    marginTop:5,
-                                }}>
-                                    <Text style={{ color: COLORS.black, fontSize: 13 }}>Event Vendor</Text>
-                                </View>
+                                {mediator?.userDetails?.POSFood == 1 ?
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        backgroundColor: COLORS.light,
+                                        borderRadius: 5,
+                                        // width: '80%',
+                                        padding: 5,
+                                        paddingHorizontal: 10,
+                                        marginTop: 5,
+                                    }}>
+                                        <Text style={{ color: COLORS.black, fontSize: 13 }}>Event & Food Vendor</Text>
+                                    </View>
+                                    :
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        backgroundColor: COLORS.light,
+                                        borderRadius: 5,
+                                        // width: '80%',
+                                        padding: 5,
+                                        paddingHorizontal: 10,
+                                        marginTop: 5,
+                                    }}>
+                                        <Text style={{ color: COLORS.black, fontSize: 13 }}>Event Vendor</Text>
+                                    </View>
+                                }
                             </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
@@ -168,14 +184,12 @@ const MediatorProfileScreen = ({ navigation }) => {
                         <View style={{
                             alignItems: 'center',
                             marginTop: 40,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            paddingHorizontal: 20,
+                            // paddingHorizontal: 20,
                         }}>
-                            <CustomeButton onpress={() => OnLogOut()}
-                                title={'Log out'} width={150} color={COLORS.black} bcolor={COLORS.transparent} border={COLORS.black} />
-                            <CustomeButton
-                                title={'Change Password'} width={150} color={COLORS.white} />
+                            {/* <CustomeButton onpress={() => OnLogOut()}
+                                title={'Log out'} width={150} color={COLORS.black} bcolor={COLORS.transparent} border={COLORS.black} /> */}
+                            <CustomeButton  onpress={() => OnLogOut()}
+                                title={'Log out'} width={width/1.2} color={COLORS.white} />
                         </View>
 
 

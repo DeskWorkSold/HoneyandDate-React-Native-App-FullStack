@@ -6,27 +6,45 @@ import auth from '@react-native-firebase/auth';
 import { mediatorLogin, selectMediatorUser } from '../../../../redux/reducers/Reducers';
 import { useDispatch, useSelector } from 'react-redux';
 
-const MediatorApprovalScreen = ({navigation}) => {
+const MediatorApprovalScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const MediatorUser = useSelector(selectMediatorUser);
-  
+
 
   const CheckApproval = () => {
     // console.log(MediatorUser?.userDetails.PanelAccess)
     // console.log(MediatorUser.userDetails.MediatorId);
-    if(MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 2){
-      setTimeout(() => {
-        navigation.navigate('MediatorMatchCoordinatorBT');
-        console.log('Approval Accepted');
-      }, 1000);
-    }
-    else if(MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 1){
+    if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 1) {
       setTimeout(() => {
         navigation.navigate('MediatorTalentAgencyBT');
         console.log('Approval Accepted');
       }, 1000);
     }
-    else{
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 2) {
+      setTimeout(() => {
+        navigation.navigate('MediatorMatchCoordinatorBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 5) {
+      setTimeout(() => {
+        navigation.navigate('MediatorEventAndFoodCoordinatorBt');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 10) {
+      setTimeout(() => {
+        navigation.navigate('MediatorTalentAgencyBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 11) {
+      setTimeout(() => {
+        navigation.navigate('MediatorEventAndFoodCoordinatorBt');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else {
       console.log('Approval unaccepted');
     }
   }
@@ -42,8 +60,8 @@ const MediatorApprovalScreen = ({navigation}) => {
           // navigation.('SignUpScreen')
         );
       // const userData = await AsyncStorage.getItem('session');
-    //   await AsyncStorage.removeItem('CurrentUserData')
-    //   await AsyncStorage.removeItem('CurrentUser')
+      //   await AsyncStorage.removeItem('CurrentUserData')
+      //   await AsyncStorage.removeItem('CurrentUser')
       dispatch(mediatorLogin(null));
     }
     catch (exception) {
@@ -54,7 +72,7 @@ const MediatorApprovalScreen = ({navigation}) => {
   useEffect(() => {
     CheckApproval();
   }, [])
-  
+
 
   return (
     <SafeAreaView style={{
@@ -65,7 +83,7 @@ const MediatorApprovalScreen = ({navigation}) => {
       <View style={styles.container}>
         <View style={{
           height: '85%',
-          alignItems:'center'
+          alignItems: 'center'
         }}>
           <View style={{
             paddingHorizontal: 20,
@@ -97,7 +115,7 @@ const MediatorApprovalScreen = ({navigation}) => {
         </View>
         <View style={{
           height: '15%',
-          alignItems:'center'
+          alignItems: 'center'
         }}>
           <CustomeButton onpress={() => OnApprovalWait()}
             title={'Ok'} />

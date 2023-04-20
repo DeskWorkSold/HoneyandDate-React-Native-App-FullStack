@@ -31,7 +31,7 @@ const Eventdata = [
 
 const MediatorDashboardScreen = ({ navigation }) => {
     const currentuser = useSelector(selectMediatorUser);
-    // console.log(currentuser.uid);
+    // console.log(currentuser.POSFood);
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [allEvents, setAllEvents] = useState();
@@ -52,7 +52,7 @@ const MediatorDashboardScreen = ({ navigation }) => {
                 const data = [];
                 querySnapshot.forEach((documentSnapshot) => {
                     const eventdata = documentSnapshot.data()
-                    if (eventdata.owneruid == currentuser.uid) {
+                    if (eventdata.owneruid == currentuser?.userDetails?.uid) {
                         // console.log('User ID: ', documentSnapshot.data());
                         data.push(documentSnapshot.data());
                     }
@@ -74,7 +74,7 @@ const MediatorDashboardScreen = ({ navigation }) => {
                     const data = [];
                     querySnapshot.forEach((documentSnapshot) => {
                         const FoodData = documentSnapshot.data()
-                        if (FoodData.owneruid == currentuser.uid) {
+                        if (FoodData.owneruid == currentuser?.userDetails?.uid) {
                             data.push(documentSnapshot.data());
                         }
                     });
@@ -212,106 +212,108 @@ const MediatorDashboardScreen = ({ navigation }) => {
                         </View>}
 
 
-                    <View style={{
-                        alignItems: 'center',
-                        paddingTop: 20
-                    }}>
-                        <Text style={{
-                            fontSize: 20,
-                            fontWeight: 'bold',
-                            color: COLORS.black,
-                        }}>Your Foods</Text>
-                    </View>
+                    {currentuser?.userDetails?.POSFood == 1 &&
+                        <>
+                            <View style={{
+                                alignItems: 'center',
+                                paddingTop: 20
+                            }}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black,
+                                }}>Your Foods</Text>
+                            </View>
 
-                    {currentuser?.POSFood == 1 &&
-                        <View style={{ marginBottom: 40, }}>
-                            {!foods?.length == 0 ?
-                                <View style={{
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    justifyContent: "space-between",
-                                    width: '100%',
-                                    marginBottom: 50
-                                }}>
-                                    {foods?.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            style={{
-                                                marginTop: 20,
-                                                width: '45%',
-                                                backgroundColor: COLORS.white,
-                                                marginBottom: 5,
-                                                borderRadius: 10,
-                                                // elevation:8
-                                            }}>
-                                            <TouchableOpacity
-                                                onPress={() => navigation.navigate('FoodmenuDetail', { details: item })}
+                            <View style={{ marginBottom: 40, }}>
+                                {!foods?.length == 0 ?
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        justifyContent: "space-between",
+                                        width: '100%',
+                                        marginBottom: 50
+                                    }}>
+                                        {foods?.map((item, index) => (
+                                            <View
+                                                key={index}
                                                 style={{
-                                                    width: '100%',
+                                                    marginTop: 20,
+                                                    width: '45%',
+                                                    backgroundColor: COLORS.white,
+                                                    marginBottom: 5,
+                                                    borderRadius: 10,
+                                                    // elevation:8
                                                 }}>
-                                                <Image source={{ uri: item.image1 }} resizeMode='contain' style={{
-                                                    width: '100%',
-                                                    height: 120
-                                                }} />
-                                            </TouchableOpacity>
-                                            <View style={{
-                                                width: '100%',
-                                                // backgroundColor:COLORS.main,
-                                                paddingLeft: 10,
-                                                marginVertical: 3,
-                                            }}>
-                                                <Text style={{
-                                                    color: COLORS.black,
-                                                    fontSize: 15
-                                                }}>{item.name}</Text>
-                                            </View>
-                                            <View style={{
-                                                width: '100%',
-                                                flexDirection: 'row',
-                                                marginBottom: 3,
-                                                paddingHorizontal: 10,
-                                                paddingTop: 20,
-                                                justifyContent: 'space-between'
-                                            }}>
-                                                <View style={{
-                                                    // width: '70%',
-                                                    // backgroundColor: COLORS.gray
-                                                }}>
-                                                    <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>${item.PricePerItem}</Text>
-                                                </View>
                                                 <TouchableOpacity
-                                                    onPress={() => navigation.navigate('MediatorEditFoodScreen', { details: item })} style={{
-                                                        // width: '30%',
-                                                        paddingHorizontal: 10,
-                                                        backgroundColor: COLORS.main,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        paddingVertical: 5,
-                                                        borderRadius: 5,
-                                                        marginTop: -10
+                                                    onPress={() => navigation.navigate('FoodmenuDetail', { details: item })}
+                                                    style={{
+                                                        width: '100%',
                                                     }}>
+                                                    <Image source={{ uri: item.image1 }} resizeMode='contain' style={{
+                                                        width: '100%',
+                                                        height: 120
+                                                    }} />
+                                                </TouchableOpacity>
+                                                <View style={{
+                                                    width: '100%',
+                                                    // backgroundColor:COLORS.main,
+                                                    paddingLeft: 10,
+                                                    marginVertical: 3,
+                                                }}>
                                                     <Text style={{
                                                         color: COLORS.black,
-                                                        fontSize: 12
-                                                    }}>Details</Text>
-                                                </TouchableOpacity>
+                                                        fontSize: 15
+                                                    }}>{item.name}</Text>
+                                                </View>
+                                                <View style={{
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    marginBottom: 3,
+                                                    paddingHorizontal: 10,
+                                                    paddingTop: 20,
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                    <View style={{
+                                                        // width: '70%',
+                                                        // backgroundColor: COLORS.gray
+                                                    }}>
+                                                        <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>${item.PricePerItem}</Text>
+                                                    </View>
+                                                    <TouchableOpacity
+                                                        onPress={() => navigation.navigate('MediatorEditFoodScreen', { details: item })} style={{
+                                                            // width: '30%',
+                                                            paddingHorizontal: 10,
+                                                            backgroundColor: COLORS.main,
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            paddingVertical: 5,
+                                                            borderRadius: 5,
+                                                            marginTop: -10
+                                                        }}>
+                                                        <Text style={{
+                                                            color: COLORS.black,
+                                                            fontSize: 12
+                                                        }}>Details</Text>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
-                                        </View>
 
-                                    ))}
+                                        ))}
 
-                                </View>
-                                :
-                                <View style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginBottom:100,
-                                    paddingTop:10
-                                }}>
-                                    <Text>Dont Have Foods? Please Upload It First.</Text>
-                                </View>
-                            }
-                        </View>
+                                    </View>
+                                    :
+                                    <View style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: 100,
+                                        paddingTop: 10
+                                    }}>
+                                        <Text>Dont Have Foods? Please Upload It First.</Text>
+                                    </View>
+                                }
+                            </View>
+                        </>
                     }
 
 

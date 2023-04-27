@@ -151,6 +151,7 @@ import QuestionLanguageScreen from '../screens/QuestionLanguageScreen';
 import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
 import MediatorTalentAgencyBT from './MediatorTalentAgencyBT';
 import MediatorEventAndFoodCoordinatorBt from './MediatorEventAndFoodCoordinatorBt';
+import MediatorHumainResourcesBT from './MediatorHumainResourcesBT';
 
 
 
@@ -205,8 +206,12 @@ const MyStack = () => {
             {MediatorUser?.userDetails?.MediatorId == 10 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorTalentAgencyBT" component={MediatorTalentAgencyBT} />
             }
-             {MediatorUser?.userDetails?.MediatorId == 11 && MediatorUser?.userDetails?.PanelAccess == true &&
+            {MediatorUser?.userDetails?.MediatorId == 11 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorEventAndFoodCoordinatorBt" component={MediatorEventAndFoodCoordinatorBt} />
+                // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+            {MediatorUser?.userDetails?.MediatorId == 12 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorHumainResourcesBT" component={MediatorHumainResourcesBT} />
                 // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
             }
         </Stack.Navigator>

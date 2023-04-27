@@ -44,6 +44,12 @@ const MediatorApprovalScreen = ({ navigation }) => {
         console.log('Approval Accepted');
       }, 1000);
     }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 12) {
+      setTimeout(() => {
+        navigation.navigate('MediatorHumainResourcesBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
     else {
       console.log('Approval unaccepted');
     }

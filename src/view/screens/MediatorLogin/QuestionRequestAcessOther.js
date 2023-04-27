@@ -513,8 +513,8 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
         }
       }
       else if (selectitem == 'HR Manager') {
-        ToastAndroid.show('pending...', ToastAndroid.SHORT)
-        return
+        // ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        // return
         try {
           setUploading(true)
           // console.log(selectitem);

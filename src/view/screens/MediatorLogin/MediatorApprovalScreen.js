@@ -32,6 +32,18 @@ const MediatorApprovalScreen = ({ navigation }) => {
         console.log('Approval Accepted');
       }, 1000);
     }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 6) {
+      setTimeout(() => {
+        navigation.navigate('MediatorProfileOptimizerBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 9) {
+      setTimeout(() => {
+        navigation.navigate('MediatorLegalTeamBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
     else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 10) {
       setTimeout(() => {
         navigation.navigate('MediatorTalentAgencyBT');

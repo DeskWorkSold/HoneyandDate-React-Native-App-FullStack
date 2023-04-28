@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
         querySnapshot.forEach((documentSnapshot) => {
           // console.log(documentSnapshot.data());
           const data = documentSnapshot.data().userDetails;
-          if (data.MatchcoordinaterStatus != CurrentUser && data.MatchcoordinaterStatus != CurrentUser) {
+          if (data.MatchcoordinaterStatus != CurrentUser && !data.Category) {
             users.push(data);
           }
           // if (data.Category == 'Mediator') {

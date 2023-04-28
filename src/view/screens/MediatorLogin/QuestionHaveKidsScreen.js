@@ -87,7 +87,7 @@ const MediatorQuestionHaveKidsScreen = ({ navigation, route }) => {
       }
     }
     else {
-      ToastAndroid.show("Please select your Disability!", ToastAndroid.SHORT);
+      ToastAndroid.show("Please select Have kids!", ToastAndroid.SHORT);
     }
   }
 

@@ -210,10 +210,10 @@ const HomeScreen = ({ navigation }) => {
         const users = [];
         querySnapshot.forEach((documentSnapshot) => {
           const data = documentSnapshot.data().userDetails;
-          if (data?.Category == 'Mediator' && !data?.PanelAccess && data?.MediatorId != 12 && !data?.AccessGiven == CurrentUser) {
+          if (data?.Category == 'Mediator' && !data?.PanelAccess && data?.uid != CurrentUser && !data?.AccessGiven == CurrentUser) {
             users.push(data)
           }
-          else if (data.Category == 'Mediator' && !data.PanelAccess && data.MediatorId != 12) {
+          else if (data.Category == 'Mediator' && !data.PanelAccess && data.uid != CurrentUser) {
             // console.log('==>1', data);
             users.push(data);
           }

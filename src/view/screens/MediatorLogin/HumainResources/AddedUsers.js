@@ -117,9 +117,7 @@ const AddedUsers = ({ navigation }) => {
             // console.log(selectedItems);
             setUploading(true)
             // const combinedArray = mediator.AccessGiven.concat(selectedItems);
-
             const uniqueArray = mediator.AccessGiven.filter((value) => !selectedItems.includes(value));
-
             // console.log(uniqueArray);
             // return
             selectedItems.map((j, i) => {

@@ -152,6 +152,8 @@ import MediatorMatchCoordinatorBT from './MediatorMatchCoordinatorBT';
 import MediatorTalentAgencyBT from './MediatorTalentAgencyBT';
 import MediatorEventAndFoodCoordinatorBt from './MediatorEventAndFoodCoordinatorBt';
 import MediatorHumainResourcesBT from './MediatorHumainResourcesBT';
+import MediatorLegalTeamBT from './MediatorProfileOptimizerBT';
+import MediatorProfileOptimizerBT from './MediatorProfileOptimizerBT';
 
 
 
@@ -202,6 +204,13 @@ const MyStack = () => {
             {MediatorUser?.userDetails?.MediatorId == 5 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorEventAndFoodCoordinatorBt" component={MediatorEventAndFoodCoordinatorBt} />
                 // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+            {MediatorUser?.userDetails?.MediatorId == 6 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorProfileOptimizerBT" component={MediatorProfileOptimizerBT} />
+                // <Stack.Screen name="MediatorMatchCoordinatorBT" component={MediatorMatchCoordinatorBT} />
+            }
+            {MediatorUser?.userDetails?.MediatorId == 9 && MediatorUser?.userDetails?.PanelAccess == true &&
+                <Stack.Screen name="MediatorLegalTeamBT" component={MediatorLegalTeamBT} />
             }
             {MediatorUser?.userDetails?.MediatorId == 10 && MediatorUser?.userDetails?.PanelAccess == true &&
                 <Stack.Screen name="MediatorTalentAgencyBT" component={MediatorTalentAgencyBT} />

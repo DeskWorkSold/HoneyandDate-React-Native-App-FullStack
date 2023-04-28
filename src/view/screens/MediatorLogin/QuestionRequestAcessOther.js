@@ -219,8 +219,8 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
       // Content Producer
 
       else if (selectitem == 'Profile Optimizer') {
-        ToastAndroid.show('pending...', ToastAndroid.SHORT)
-        return
+        // ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        // return
         try {
           setUploading(true)
           // console.log(selectitem);
@@ -368,8 +368,8 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
       // Event Coordinator
       // Concierge Onboarding
       else if (selectitem == 'Legal Team') {
-        ToastAndroid.show('pending...', ToastAndroid.SHORT)
-        return
+        // ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        // return
         try {
           setUploading(true)
           // console.log(selectitem);
@@ -408,7 +408,7 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
               userDetails: Data
             }).then(() => {
               dispatch(mediatorLogin(Data))
-              ToastAndroid.show('Welcome to Honey and Dates Event Tickets Panel', ToastAndroid.SHORT)
+              ToastAndroid.show('Welcome to Honey and Dates Legal Team Panel', ToastAndroid.SHORT)
               setUploading(false)
             })
         } catch (error) {

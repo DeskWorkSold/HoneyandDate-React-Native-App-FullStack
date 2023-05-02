@@ -191,7 +191,7 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
         const categoryName = FoodType[foodTypeindex].category
         const categoryid = FoodType[foodTypeindex].uid
         // const categoryImage = FoodType[foodTypeindex].image
-        const Eventid = yourEvents[selectEvent].uid
+        // const Eventid = yourEvents[selectEvent].uid
 
         // console.log(Eventid);
         // return
@@ -285,7 +285,7 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
     }
 
     const DeleteForm = () => {
-        console.log('delete' , details.uid);
+        console.log('delete', details.uid);
         // return
         firestore()
             .collection('Foods')
@@ -340,24 +340,27 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
     // console.log('===>', TicketModaldata);
     const FetchEvents = async () => {
         // setLoading(true)
-        await firestore()
-            .collection('Events')
-            .onSnapshot(querySnapshot => {
-                // console.log('==>' , querySnapshot.data());
-                const data = [];
-                querySnapshot.forEach((documentSnapshot) => {
-                    const eventdata = documentSnapshot.data()
-                    if (eventdata.owneruid == currentuser.uid) {
-                        // console.log('User ID: ', documentSnapshot.data());
-                        data.push(documentSnapshot.data());
-                    }
-                    //   // modalDataUid.push(documentSnapshot.id);
+        if (details?.Eventid) {
+            await firestore()
+                .collection('Events').doc(details?.Eventid)
+                .onSnapshot(querySnapshot => {
+                    console.log('==>', querySnapshot.data());
+                    // const data = [];
+                    setYourEvents(querySnapshot.data())
+                    // querySnapshot.forEach((documentSnapshot) => {
+                    //     const eventdata = documentSnapshot.data()
+                    //     if (eventdata.owneruid == currentuser.uid) {
+                    //         // console.log('User ID: ', documentSnapshot.data());
+                    //         data.push(documentSnapshot.data());
+                    //     }
+                    //     //   // modalDataUid.push(documentSnapshot.id);
+                    // });
+                    // dispatch(events(data))
+                    // setYourEvents(data)
+                    // console.log(data);
                 });
-                // dispatch(events(data))
-                setYourEvents(data)
-                // console.log(data);
-            });
-        // setLoading(false)
+            // setLoading(false)
+        }
     }
 
 
@@ -785,69 +788,80 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
                                     width: 400,
                                 }}>
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {FoodType ?
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                paddingRight: 50,
-                                            }}>
-                                                {FoodType.map((item, index) => (
-                                                    // console.log(item.menu),
-                                                    <TouchableOpacity key={index}
-                                                        onPress={() => setFoodTypeIndex(index)}
-                                                        style={{
-                                                            marginRight: 10,
-                                                            borderRadius: 10,
-                                                            backgroundColor: foodTypeindex == index ? COLORS.mainlight : COLORS.transparent,
-                                                            // paddingHorizontal: 10,
-                                                            borderWidth: 1,
-                                                            borderColor: foodTypeindex == index ? COLORS.transparent : COLORS.gray2,
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center',
-                                                            paddingHorizontal: 10,
-                                                            height: 40,
-                                                            width: 120,
-                                                            justifyContent: 'space-between'
-                                                        }}>
-                                                        <View style={{
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center',
-                                                        }}>
-                                                            <Image source={{ uri: item.image }} resizeMode="contain" style={{
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            paddingRight: 50,
+                                        }}>
+                                            <TouchableOpacity
+                                                // onPress={() => setFoodTypeIndex(index)}
+                                                style={{
+                                                    marginRight: 10,
+                                                    borderRadius: 10,
+                                                    backgroundColor: COLORS.mainlight,
+                                                    // paddingHorizontal: 10,
+                                                    borderWidth: 1,
+                                                    borderColor: COLORS.transparent,
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    paddingHorizontal: 10,
+                                                    height: 40,
+                                                    width: 120,
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    {details.categoryName == 'Burgers' &&
+                                                        <>
+                                                            <Image source={require('../../../assets/bargers.png')} resizeMode="contain" style={{
                                                                 width: 30,
                                                                 height: 30,
                                                                 borderRadius: 10,
                                                                 // padding:15,
                                                                 justifyContent: 'center',
                                                             }} />
-                                                            <Text style={{ fontSize: 12, fontWeight: 'bold', paddingLeft: 5 }}>{item.category}</Text>
-                                                        </View>
-                                                        {foodTypeindex == index ?
-                                                            <Image source={require('../../../assets/add2.png')} resizeMode="contain" style={{
-                                                                width: 10,
-                                                                height: 10,
-                                                                borderRadius: 10,
-                                                                padding: 6,
-                                                                backgroundColor: COLORS.main,
-                                                                // padding:15,
-                                                                tintColor: COLORS.black,
-                                                                justifyContent: 'center',
-                                                            }} />
-                                                            :
-                                                            <Image source={require('../../../assets/cross.png')} resizeMode="contain" style={{
-                                                                width: 10,
-                                                                height: 10,
+                                                            <Text style={{ fontSize: 12, fontWeight: 'bold', paddingLeft: 5 }}>{details.categoryName}</Text>
+                                                        </>
+                                                    }
+                                                    {details.categoryName == 'Pizzas' &&
+                                                        <>
+                                                            <Image source={require('../../../assets/pizza.png')} resizeMode="contain" style={{
+                                                                width: 30,
+                                                                height: 30,
                                                                 borderRadius: 10,
                                                                 // padding:15,
-                                                                tintColor: COLORS.black,
                                                                 justifyContent: 'center',
                                                             }} />
-                                                        }
-                                                    </TouchableOpacity>
-                                                ))}
-                                            </View>
-                                            :
-                                            null}
+                                                            <Text style={{ fontSize: 12, fontWeight: 'bold', paddingLeft: 5 }}>{details.categoryName}</Text>
+                                                        </>
+                                                    }
+                                                    {details.categoryName == 'Cakes' &&
+                                                        <>
+                                                            <Image source={require('../../../assets/cake.png')} resizeMode="contain" style={{
+                                                                width: 30,
+                                                                height: 30,
+                                                                borderRadius: 10,
+                                                                // padding:15,
+                                                                justifyContent: 'center',
+                                                            }} />
+                                                            <Text style={{ fontSize: 12, fontWeight: 'bold', paddingLeft: 5 }}>{details.categoryName}</Text>
+                                                        </>
+                                                    }
+                                                </View>
+                                                <Image source={require('../../../assets/add2.png')} resizeMode="contain" style={{
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: 10,
+                                                    padding: 6,
+                                                    backgroundColor: COLORS.main,
+                                                    // padding:15,
+                                                    tintColor: COLORS.black,
+                                                    justifyContent: 'center',
+                                                }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     </ScrollView>
                                 </View>
                             </View>
@@ -961,126 +975,110 @@ const MediatorEditFoodScreen = ({ navigation, route }) => {
                                     />
                                 </View>
                             </View>
-                            {yourEvents ?
-                                <ScrollView horizontal showsHorizontalScrollIndicator={false}
-                                    style={{
-                                        // marginBottom: 200,
-                                    }}>
-                                    {yourEvents?.map((item, index) => (
-                                        <TouchableOpacity key={index}
-                                            // onPress={() => navigation.navigate('EventDetails', { detail: item })}
-                                            activeOpacity={0.7}
-                                            style={{
-                                                backgroundColor: COLORS.white,
-                                                elevation: 5,
-                                                borderColor: COLORS.light,
-                                                borderRadius: 10,
-                                                borderWidth: 1,
-                                                marginLeft: 20,
-                                                marginVertical: 20,
-                                                width: 270,
-                                            }}>
-                                            <View>
-                                                <Image source={{ uri: item?.image1 }} resizeMode='cover'
-                                                    style={{
-                                                        // width: 270,
-                                                        height: 200,
-                                                        borderRadius: 10,
-                                                    }} />
-                                            </View>
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                padding: 10,
-                                            }}>
-                                                <View style={{
-                                                    width: '70%',
-                                                    paddingRight: 5,
-                                                    // backgroundColor:COLORS.gray
-                                                }}>
-                                                    <Text style={{
-                                                        fontSize: 16,
-                                                        color: COLORS.black,
-                                                    }}>{item?.Title}</Text>
-                                                </View>
-                                                <View style={{
-                                                    width: '30%',
-                                                    alignItems: 'flex-end'
-                                                }}>
-                                                    <Text style={{
-                                                        fontSize: 13,
-                                                        color: COLORS.black,
-                                                        fontWeight: 'bold'
-                                                    }}>${item?.totalTicketPrice}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                paddingHorizontal: 10,
-                                                paddingBottom: 10,
-                                                justifyContent: 'space-between'
-                                            }}>
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                }}>
-                                                    <View style={{
-                                                        marginRight: 10,
-                                                    }}>
-                                                        <Image source={require('../../../assets/location.png')} style={{
-                                                            borderTopRightRadius: 20,
-                                                            borderTopLeftRadius: 20,
-                                                        }} />
-                                                    </View>
-                                                    <View>
-                                                        <Text style={{
-                                                            color: COLORS.black,
-                                                        }}>{item?.location?.latitude}</Text>
-                                                    </View>
-                                                </View>
-                                                <View style={{
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center'
-                                                }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => setSelectEvent(index)}
-                                                    >
-                                                        {selectEvent == index ?
-                                                            <Text style={{
-                                                                fontSize: 12,
-                                                                padding: 5,
-                                                                paddingHorizontal: 10,
-                                                                backgroundColor: COLORS.green,
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                borderRadius: 5,
-                                                                color: COLORS.white
-                                                            }}>Selected</Text>
-                                                            :
-                                                            <Text style={{
-                                                                fontSize: 12,
-                                                                padding: 5,
-                                                                paddingHorizontal: 10,
-                                                                backgroundColor: COLORS.main,
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                borderRadius: 5,
-                                                            }}>Select</Text>
-                                                        }
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
-                                    ))}
-                                    {/* <EventItems navigation={navigation} width={270} data={yourEvents} /> */}
-                                </ScrollView>
-                                :
-                                <View style={{
-                                    alignItems: 'center',
-                                    paddingVertical: 20
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}
+                                style={{
+                                    // marginBottom: 200,
                                 }}>
-                                    <Text>No events found</Text>
-                                </View>
-                            }
+                                {yourEvents ?
+                                    <TouchableOpacity
+                                        // onPress={() => navigation.navigate('EventDetails', { detail: item })}
+                                        activeOpacity={0.7}
+                                        style={{
+                                            backgroundColor: COLORS.white,
+                                            elevation: 5,
+                                            borderColor: COLORS.light,
+                                            borderRadius: 10,
+                                            borderWidth: 1,
+                                            marginLeft: 20,
+                                            marginVertical: 20,
+                                            width: width - 40,
+                                        }}>
+                                        <View>
+                                            <Image source={{ uri: yourEvents?.image1 }} resizeMode='cover'
+                                                style={{
+                                                    // width: 270,
+                                                    height: 200,
+                                                    borderRadius: 10,
+                                                }} />
+                                        </View>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            padding: 10,
+                                        }}>
+                                            <View style={{
+                                                width: '70%',
+                                                paddingRight: 5,
+                                                // backgroundColor:COLORS.gray
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: 16,
+                                                    color: COLORS.black,
+                                                }}>{yourEvents?.Title}</Text>
+                                            </View>
+                                            <View style={{
+                                                width: '30%',
+                                                alignItems: 'flex-end'
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: 13,
+                                                    color: COLORS.black,
+                                                    fontWeight: 'bold'
+                                                }}>${yourEvents?.totalTicketPrice}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 10,
+                                            justifyContent: 'space-between'
+                                        }}>
+                                            <View style={{
+                                                width: '75%',
+                                                flexDirection: 'row',
+                                            }}>
+                                                <View style={{
+                                                    marginRight: 10,
+                                                }}>
+                                                    <Image source={require('../../../assets/location.png')} style={{
+                                                        borderTopRightRadius: 20,
+                                                        borderTopLeftRadius: 20,
+                                                    }} />
+                                                </View>
+                                                <View>
+                                                    <Text style={{
+                                                        color: COLORS.black,
+                                                    }}>{yourEvents?.location}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{
+                                                width: '25%',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <TouchableOpacity
+                                                // onPress={() => setSelectEvent(index)}
+                                                >
+                                                    <Text style={{
+                                                        fontSize: 12,
+                                                        padding: 5,
+                                                        paddingHorizontal: 10,
+                                                        backgroundColor: COLORS.green,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: 5,
+                                                        color: COLORS.white
+                                                    }}>Selected</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                    :
+                                    <View>
+                                        <Text>No events found</Text>
+                                    </View>
+                                }
+                            </ScrollView>
                         </View>
 
                         <View style={{

@@ -6,12 +6,10 @@ import SVGimage1 from '../../assets/influencermain.svg';
 import SVGimage2 from '../../assets/influencerfeed.svg';
 import SVGimage3 from '../../assets/manage.svg';
 import SVGimage4 from '../../assets/profile.svg';
-import HomeScreen from '../screens/MediatorLogin/ProfileOptimizer/HomeScreen';
-import ProfileScreen from '../screens/MediatorLogin/ProfileOptimizer/ProfileScreen';
-import AddedScreen from '../screens/MediatorLogin/ProfileOptimizer/AddedScreen';
-import SubmitTermAndCondition from '../screens/MediatorLogin/ProfileOptimizer/SubmitTermAndCondition';
-import SuggestionScreen from '../screens/MediatorLogin/ProfileOptimizer/SuggestionScreen';
-
+import HomeScreen from '../../view/screens/MediatorLogin/EventStaffCheckIn/HomeScreen';
+import ProfileScreen from '../../view/screens/MediatorLogin/EventStaffCheckIn/ProfileScreen';
+import ScanDoc from '../../view/screens/MediatorLogin/EventStaffCheckIn/ScanDoc';
+import AttendeDetails from '../screens/MediatorLogin/EventStaffCheckIn/AttendeDetails';
 
 const Tab = createBottomTabNavigator();
 const CustomTabBarButton = ({ children, onPress }) => (
@@ -25,9 +23,9 @@ const CustomTabBarButton = ({ children, onPress }) => (
         onPress={onPress}
     >
         <View style={{
-            width: 60,
-            height: 60,
-            borderRadius: 35,
+            width: 70,
+            height: 70,
+            borderRadius: 40,
             backgroundColor: COLORS.main,
             borderColor: 'white',
             borderWidth: 2,
@@ -53,11 +51,11 @@ const ClientStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name='HomeScreen' component={HomeScreen} />
-        <Tab.Screen name='SuggestionScreen' component={SuggestionScreen} />
+        <Tab.Screen name="AttendeDetails" component={AttendeDetails} />
         {/* <Tab.Screen name='YourClients' component={YourClients} /> */}
     </Tab.Navigator>
 )
-const AddedStack = ({ navigation }) => (
+const ScanDocStack = ({ navigation }) => (
     <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBar: false,
@@ -71,7 +69,7 @@ const AddedStack = ({ navigation }) => (
             borderTopLeftRadius: 20,
         },
     }}>
-        <Tab.Screen name="AddedScreen" component={AddedScreen} />
+        <Tab.Screen name="ScanDoc" component={ScanDoc} />
     </Tab.Navigator>
 )
 const ProfileStack = ({ navigation }) => (
@@ -95,7 +93,7 @@ const ProfileStack = ({ navigation }) => (
     </Tab.Navigator>
 )
 
-const MediatorProfileOptimizerBT = () => {
+const MediatorEventStaffChekInBT = () => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -128,7 +126,7 @@ const MediatorProfileOptimizerBT = () => {
                                     borderRadius: 5
                                 }}>
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -136,7 +134,7 @@ const MediatorProfileOptimizerBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12, color: COLORS.black }}>Clients</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12, color: COLORS.black }}>Home</Text>
                                 </View>
                             ) : (
                                 <View style={{
@@ -145,7 +143,7 @@ const MediatorProfileOptimizerBT = () => {
                                     flexDirection: 'row',
                                 }}>
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -160,7 +158,7 @@ const MediatorProfileOptimizerBT = () => {
                     )
                 }} />
 
-            {/* <Tab.Screen name="AddedStack" component={AddedStack}
+            <Tab.Screen name="ScanDocStack" component={ScanDocStack}
                 options={{
                     tabBarIcon: ({ focused, color }) => (
                         <View>
@@ -173,11 +171,11 @@ const MediatorProfileOptimizerBT = () => {
                                     borderRadius: 5
                                 }}>
                                     <Image
-                                        source={require('../../assets/plus.png')}
+                                        source={require('../../assets/checkIn.png')}
                                         resizeMode='contain'
                                         style={{
-                                            height: 20,
-                                            width: 20,
+                                            height: 30,
+                                            width: 30,
                                             backgroundColor: COLORS.main,
                                             tintColor: COLORS.black,
                                         }}
@@ -188,11 +186,11 @@ const MediatorProfileOptimizerBT = () => {
                                     alignItems: 'center', justifyContent: 'center',
                                 }}>
                                     <Image
-                                        source={require('../../assets/plus.png')}
+                                        source={require('../../assets/checkIn.png')}
                                         resizeMode='contain'
                                         style={{
-                                            height: 20,
-                                            width: 20,
+                                            height: 30,
+                                            width: 30,
                                             // color:COLORS.white
                                             tintColor: COLORS.white,
                                         }}
@@ -206,7 +204,7 @@ const MediatorProfileOptimizerBT = () => {
                     tabBarButton: (props) => (
                         <CustomTabBarButton {...props} />
                     )
-                }} /> */}
+                }} />
 
             <Tab.Screen name="ProfileStack" component={ProfileStack}
                 options={{
@@ -255,6 +253,6 @@ const MediatorProfileOptimizerBT = () => {
     )
 }
 
-export default MediatorProfileOptimizerBT
+export default MediatorEventStaffChekInBT
 
 const styles = StyleSheet.create({})

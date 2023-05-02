@@ -70,10 +70,10 @@ const MediatoreQuestionRequestAcessOther = ({ navigation, route }) => {
     const selectitem = RelationshipTypes[selectedCategoryIndex]?.name;
     const category = 'Mediator'
     if (!selectitem == '') {
-      console.log(selectitem);
+      // console.log(selectitem);
       if (selectitem == 'Event Staff - Check In') {
-        ToastAndroid.show('pending...', ToastAndroid.SHORT)
-        return
+        // ToastAndroid.show('pending...', ToastAndroid.SHORT)
+        // return
         try {
           setUploading(true)
           const imageUrl = await uploadImage();

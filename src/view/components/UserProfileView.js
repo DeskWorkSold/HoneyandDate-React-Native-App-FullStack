@@ -40,24 +40,22 @@ import Location from '../../assets/location.svg';
 import Info from '../../assets/info.svg';
 const { width, height } = Dimensions.get("window");
 
-const UserProfileView = ({ navigation, data }) => {
+const UserProfileView = ({ navigation, data, setValue , setValueIndex, id }) => {
     const mediator = useSelector(selectMediatorUser);
     // const {data} = route.params
+    const years = new Date().getFullYear() - new Date(data?.Dates).getFullYear();
     const [address, setAddress] = useState(null);
     const Address = Geocoder.from(data?.Location.latitude, data?.Location.longitude)
-    .then(json => {
-        var addressComponent = json.results[0].address_components[0];
-        // console.log('address', addressComponent);
-        setAddress(addressComponent)
-        // console.log(test);
-        // const updated = {
-        //     ...test,
-        //     Address: addressComponent,
-        // };
-        // console.log(updated);
-        // setModalData(updated);
-        // return json.results[0].address_components[0];
-    })
+        .then(json => {
+            var addressComponent = json.results[0].address_components[0];
+            setAddress(addressComponent)
+        })
+
+    const handleTab = () => {
+        // console.log('slide');
+        setValueIndex(0)
+        setValue('Edit')
+    };
 
     return (
         <View style={{
@@ -65,11 +63,7 @@ const UserProfileView = ({ navigation, data }) => {
             alignItems: 'center',
         }}>
             <View style={{
-                // marginTop: 0, 
-                // paddingHorizontal: 20, 
-                // backgroundColor: COLORS.white 
                 width: '100%',
-                marginBottom: 20,
                 backgroundColor: COLORS.white,
                 elevation: 5,
                 borderRadius: 25,
@@ -78,7 +72,7 @@ const UserProfileView = ({ navigation, data }) => {
                 marginTop: 10,
                 borderWidth: 5,
                 borderColor: COLORS.white,
-                marginBottom: 50
+                marginBottom: 200,
             }}>
                 <ScrollView vertical showsVerticalScrollIndicator={false}>
                     <View style={{
@@ -97,6 +91,153 @@ const UserProfileView = ({ navigation, data }) => {
                                     // paddingHorizontal: 10
                                 }}
                             />
+                            {data?.Flake > 0 &&
+                                <View style={{
+                                    backgroundColor: COLORS.white,
+                                    borderRadius: 15,
+                                    marginTop: height / 2.3,
+                                    alignItems: 'center',
+                                    position: 'absolute',
+                                    paddingVertical: 5,
+                                    paddingHorizontal: 10,
+                                    marginLeft: 15
+                                }}>
+                                    <Text style={{
+                                        color: COLORS.black,
+                                        // textAlign: 'center'
+                                        fontWeight: 'bold'
+                                    }}>
+                                        #flakemeter
+                                    </Text>
+                                    {data?.Flake == 1 &&
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Text>
+                                                +{data?.userDetails?.Flake}
+                                            </Text>
+                                        </View>
+                                        // <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                    }
+                                    {data?.Flake == 2 &&
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Text>
+                                                +{data?.userDetails?.Flake}
+                                            </Text>
+                                        </View>
+                                    }
+                                    {data?.Flake == 3 &&
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Text>
+                                                +{data?.userDetails?.Flake}
+                                            </Text>
+                                        </View>
+                                    }
+                                    {data?.Flake > 3 &&
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' style={{
+                                                tintColor: COLORS.main,
+                                                width: 20,
+                                                height: 20
+                                            }} />
+                                            <Text>
+                                                +{data?.userDetails?.Flake}
+                                            </Text>
+                                        </View>
+                                    }
+                                    {data?.Flake < 1 &&
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                            <Image source={require('../../assets/flake.png')} resizeMode='contain' />
+                                            <Text>
+                                                +0
+                                            </Text>
+                                        </View>
+
+                                    }
+                                </View>
+                            }
+
+                            <TouchableOpacity
+                                onPress={() => handleTab()}
+                                style={{
+                                    backgroundColor: COLORS.main,
+                                    borderRadius: 5,
+                                    marginTop: height / 2.3,
+                                    alignSelf: 'flex-end',
+                                    position: 'absolute',
+                                    paddingVertical: 5,
+                                    paddingHorizontal: 10,
+                                    // marginLeft: 15
+                                }}>
+                                <Text style={{ color: COLORS.black, fontSize: 12, }}>Suggest Profile</Text>
+                            </TouchableOpacity>
                         </View>
                         <View>
                             <View style={{
@@ -122,7 +263,7 @@ const UserProfileView = ({ navigation, data }) => {
                                     fontSize: 20,
                                     color: COLORS.black,
                                     marginRight: 5
-                                }}>25</Text>
+                                }}>{years ? years : 0}</Text>
                                 <Image source={require('../../assets/conform.png')} resizeMode='contain'
                                     style={{
                                         width: 25,
@@ -194,7 +335,7 @@ const UserProfileView = ({ navigation, data }) => {
                                     elevation: 5,
                                     // marginRight: 10,
                                 }}>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                     // onPress={() => requestDetail()}
                                     >
                                         <Match width={35} height={35} />
@@ -209,7 +350,7 @@ const UserProfileView = ({ navigation, data }) => {
                                     marginLeft: 10,
 
                                 }}>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                     // onPress={() => navigation.navigate('MessageScreen')}
                                     >
 

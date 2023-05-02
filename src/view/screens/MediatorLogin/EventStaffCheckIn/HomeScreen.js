@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Dimensions, Image, Modal, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Modal, PermissionsAndroid, Platform, SafeAreaView, ScrollView, SectionList, StyleSheet, Switch, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import COLORS from '../../../../consts/Colors';
 import { useState } from 'react';
@@ -34,29 +34,40 @@ import ManageStaffCard from '../../../components/ManageStaffCard';
 
 const { width, height } = Dimensions.get("window");
 
-const FilterTag = [
-  {
-    id: '1',
-    Title: 'Smoe Van',
-    description: require('../../../../assets/profile1.png'),
-  },
-  {
-    id: '2',
-    Title: 'Smoe Van',
-    description: require('../../../../assets/profile1.png'),
-  },
-  {
-    id: '3',
-    Title: 'Smoe Van',
-    description: require('../../../../assets/profile1.png'),
-  },
+const contacts = [
+  { id: '1', name: 'Anghel, Jason', slogan: 'Early Bird' },
+  { id: '2', name: 'Bob', slogan: 'Early Bird' },
+  { id: '3', name: 'Charlie', slogan: 'Early Bird' },
+  { id: '4', name: 'David', slogan: 'Early Bird' },
+  { id: '5', name: 'Emily', slogan: 'Early Bird' },
+  { id: '6', name: 'Frank', slogan: 'Early Bird' },
+  { id: '7', name: 'Grace', slogan: 'Early Bird' },
+  { id: '8', name: 'Henry', slogan: 'Early Bird' },
+  { id: '9', name: 'Isaac', slogan: 'Early Bird' },
+  { id: '10', name: 'Jack', slogan: 'Early Bird' },
+  { id: '11', name: 'Kate', slogan: 'Early Bird' },
+  { id: '12', name: 'Lucy', slogan: 'Early Bird' },
+  { id: '13', name: 'Mike', slogan: 'Early Bird' },
+  { id: '14', name: 'Nancy', slogan: 'Early Bird' },
+  { id: '15', name: 'Olivia', slogan: 'Early Bird' },
+  { id: '16', name: 'Peter', slogan: 'Early Bird' },
+  { id: '17', name: 'Quincy', slogan: 'Early Bird' },
+  { id: '18', name: 'Rachel', slogan: 'Early Bird' },
+  { id: '19', name: 'Sarah', slogan: 'Early Bird' },
+  { id: '20', name: 'Tom', slogan: 'Early Bird' },
+  { id: '21', name: 'Uma', slogan: 'Early Bird' },
+  { id: '22', name: 'Victor', slogan: 'Early Bird' },
+  { id: '23', name: 'Wendy', slogan: 'Early Bird' },
+  { id: '24', name: 'Xavier', slogan: 'Early Bird' },
+  { id: '25', name: 'Yvonne', slogan: 'Early Bird' },
+  { id: '26', name: 'Zoe', slogan: 'Early Bird' },
+  { id: '27', name: 'Zoe Two', slogan: 'Early Bird' },
 ];
 
 
 const HomeScreen = ({ navigation }) => {
   // let afcode = Math.random().toString(16).slice(2);
   // const [code, setCode] = useState(afcode);
-  const [staffCategory, setStaffCategory] = useState(FilterTag);
   const [staffCategoryIndex, setStaffCategoryIndex] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingTwo, setUploadingTwo] = useState(false);
@@ -80,8 +91,59 @@ const HomeScreen = ({ navigation }) => {
   const [matchUserTemp, setMatchUserTemp] = useState(null);
   const mediator = useSelector(selectMediatorUser);
 
-
   const CurrentUser = auth().currentUser.uid;
+
+
+  const AttendeeDetails = (item) => {
+    console.log(item)
+    navigation.navigate('AttendeDetails', { data: item })
+  }
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => AttendeeDetails(item)} style={{
+      backgroundColor: 'white',
+      borderRadius: 10,
+      elevation: 5,
+      marginHorizontal: 20,
+      marginVertical: 10,
+      padding: 10,
+    }}>
+      <Text style={{
+        fontWeight: 'bold',
+        color: COLORS.black,
+        fontSize: 16,
+      }}>{item.Name}</Text>
+      <Text style={{
+        fontSize: 12,
+        color: COLORS.gray,
+      }}>{item.MediatorType}</Text>
+    </TouchableOpacity>
+  );
+
+
+  const renderSectionHeader = ({ section }) => (
+    <View style={{
+      paddingHorizontal: 20, backgroundColor: COLORS.white,
+    }}>
+      <Text style={{
+        fontWeight: 'bold', color: COLORS.black,
+        fontSize: 16,
+      }}>{section.title}</Text>
+    </View>
+  );
+
+
+  const sections = rUserTemp?.reduce((acc, contact) => {
+    const firstLetter = contact?.Name[0]?.toUpperCase();
+    const index = acc?.findIndex((section) => section?.title === firstLetter);
+    if (index !== -1) {
+      acc[index]?.data?.push(contact);
+    } else {
+      acc?.push({ title: firstLetter, data: [contact] });
+    }
+    return acc;
+  }, []);
+
 
   const fetchUsers = async () => {
     setUploadingTwo(true)
@@ -91,17 +153,17 @@ const HomeScreen = ({ navigation }) => {
         const users = [];
         querySnapshot.forEach((documentSnapshot) => {
           const data = documentSnapshot.data().userDetails;
-          if (data.uid != CurrentUser && data.PackageId ==
-            654) {
+          if (data?.uid != CurrentUser && data?.Category == 'Mediator') {
             users.push(data);
             // console.log(data);
           }
           // if (data.Category == 'Mediator') {
           // }
         })
+        setRUser(users)
+        setRUserTemp(users)
         // console.log(users);
         setUploadingTwo(false)
-        setRUser(users.slice(0, 5))
       })
   }
 
@@ -141,72 +203,6 @@ const HomeScreen = ({ navigation }) => {
         }
       });
   }
-
-
-  const OnSubmitNote = async () => {
-    // console.log('test');
-    if (selectedItems.length != 0) {
-
-      // const newArray = mediator.AccessGiven
-
-      if (mediator?.AccessGiven) {
-        setUploadingTwo(true)
-        const combinedArray = mediator.AccessGiven.concat(selectedItems);
-
-        const uniqueArray = combinedArray.filter((item, index) => {
-          return combinedArray.indexOf(item) === index;
-        });
-        await firestore()
-          .collection('Users').doc(CurrentUser).update({
-            AccessGiven: uniqueArray,
-          })
-          .then(() => {
-            ToastAndroid.show("Added to your record!", ToastAndroid.SHORT);
-            setUploadingTwo(false)
-            setModal(false)
-          });
-        selectedItems.map((j, i) => {
-          firestore()
-            .collection('Users').doc(j.uid).update({
-              'userDetails.AccessGiven': CurrentUser,
-              'userDetails.PanelAccess': true,
-            })
-            .then(() => {
-              console.log('Access given to user');
-            });
-        })
-      }
-      else if (!mediator?.AccessGiven) {
-        setUploadingTwo(true)
-
-        await firestore()
-          .collection('Users').doc(CurrentUser).update({
-            AccessGiven: selectedItems,
-          })
-          .then(() => {
-            ToastAndroid.show("Added to your record!", ToastAndroid.SHORT);
-            setUploadingTwo(false)
-            setModal(false)
-          });
-        selectedItems.map((j, i) => {
-          firestore()
-            .collection('Users').doc(j.uid).update({
-              'userDetails.AccessGiven': CurrentUser,
-              'userDetails.PanelAccess': true,
-            })
-            .then(() => {
-              console.log('Access given to user');
-            });
-        })
-      }
-
-      // setModal(true)
-    }
-    else {
-      ToastAndroid.show("Please select staff!", ToastAndroid.SHORT);
-    }
-  }
-
 
 
   useEffect(() => {
@@ -275,6 +271,32 @@ const HomeScreen = ({ navigation }) => {
     }, 5000);
   }
 
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      const newData = rUser.filter((item) => {
+        const itemData = item.Name ? item.Name.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      // setFilteredDataSource(newData);
+      setRUserTemp(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setRUserTemp(rUser);
+      setSearch(text);
+    }
+  };
+
+  const FlatListItemSeparator = () => {
+    return (
+      //Item Separator
+      <View style={styles.listItemSeparatorStyle} />
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -285,111 +307,61 @@ const HomeScreen = ({ navigation }) => {
             textAlign: 'center',
             color: COLORS.black,
             fontWeight: 'bold',
-          }}>Premium Clients</Text>
+          }}>Check-ins on this device</Text>
         </View>
-
 
         <View style={{
-          marginTop: 10,
-          // paddingHorizontal: 20
+          backgroundColor: COLORS.light,
+          marginHorizontal: 20,
+          paddingHorizontal: 10,
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderRadius: 10,
+          marginVertical: 10,
         }}>
-          <ScrollView vertical showsVerticalScrollIndicator={false} >
-            <View style={{
-              marginTop: 20,
-              marginBottom: 70
-            }}>
-              {!uploading ?
-                <>
-                  {rUser ?
-                    <>
-                      {rUser.map((item, index) => (
-                        <View
-                          // onPress={() => filterUserFunction(item, index)}
-                          key={index} style={{
-                            width: width,
-                            alignSelf: 'center',
-                            // borderWidth: 1,
-                            marginBottom: 10,
-                            backgroundColor: COLORS.white,
-                            elevation: 1,
-                            // justifyContent: 'center',
-                          }}>
-                          <View style={{
-                            // width: '90%',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: 20,
-                            width: '100%',
-                            borderBottomWidth: 1,
-                            borderBottomColor: COLORS.light
-                          }}>
-                            <View style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                            }}>
-
-                              <View style={{
-                                borderWidth: 3,
-                                borderColor: COLORS.main,
-                                borderRadius: 100,
-                              }}>
-                                <Image source={{ uri: item.image1 }} resizeMode='cover' style={{
-                                  borderRadius: 80,
-                                  width: 50,
-                                  height: 50
-                                }} />
-                              </View>
-                              <Text style={{
-                                color: COLORS.black,
-                                marginHorizontal: 20,
-                                fontSize: 16,
-                              }}>{item.Name}</Text>
-                            </View>
-                            <View style={{
-                              flex: 1,
-                              alignItems: 'flex-end'
-                            }}>
-                              <TouchableOpacity
-                                onPress={() => navigation.navigate('SuggestionScreen', {
-                                  data: item,
-                                  id: index
-                                })}
-                                style={{
-                                  backgroundColor: COLORS.main,
-                                  paddingVertical: 7,
-                                  paddingHorizontal: 15,
-                                  borderRadius: 5,
-                                }}>
-                                <Text style={{
-                                  fontSize: 12,
-                                  color: COLORS.black
-                                }}>Profile</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ))}
-                    </>
-                    :
-                    <View style={{
-                      alignSelf: 'center',
-                      padding: 20
-                    }}>
-                      <ActivityIndicator color={COLORS.main} animating={uploadingTwo} />
-                    </View>
-                  }
-                </>
-                :
-                <View style={{
-                  alignSelf: 'center',
-                  padding: 20
-                }}>
-                  <Text>No users found</Text>
-                </View>
-              }
-            </View>
-          </ScrollView>
+          <Image source={require('../../../../assets/search.png')} resizeMode='contain' style={{
+            width: 20,
+            height: 20,
+          }} />
+          <TextInput
+            placeholder='Search for attendees'
+            placeholderTextColor={COLORS.gray}
+            value={search}
+            underlineColor={COLORS.transparent}
+            activeUnderlineColor={COLORS.transparent}
+            onChangeText={(search) => searchFilterFunction(search)}
+            style={{
+              width: '90%',
+              backgroundColor: COLORS.transparent
+            }}
+          />
         </View>
+
+
+        {rUserTemp?.length > 0 ?
+
+          <View style={{
+            // marginVertical: 20,
+            // paddingHorizontal: 20
+          }}>
+            {/* <ScrollView vertical showsVerticalScrollIndicator={false} > */}
+            <SectionList
+              sections={sections}
+              renderItem={renderItem}
+              renderSectionHeader={renderSectionHeader}
+              keyExtractor={(item) => item.uid}
+              stickySectionHeadersEnabled={true}
+              ItemSeparatorComponent={FlatListItemSeparator}
+            />
+            {/* </ScrollView> */}
+          </View>
+          :
+          <View style={{
+            paddingVertical: 20,
+          }}>
+            <ActivityIndicator size="small" color={COLORS.main} animating={uploadingTwo} />
+          </View>
+        }
       </View>
     </SafeAreaView>
   )
@@ -412,5 +384,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 30
     // backgroundColor:COLORS.black
+  },
+  list: {
+    backgroundColor: COLORS.main,
+    borderRadius: 20,
+  },
+  listItemSeparatorStyle: {
+    width: 20,
   },
 })

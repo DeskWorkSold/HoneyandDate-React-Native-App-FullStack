@@ -51,6 +51,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     });
+    const [imageArray, setImageArray] = useState([]);
     const [image1, setImage1] = useState(null);
     const [image2, setImage2] = useState(null);
     const [image3, setImage3] = useState(null);
@@ -63,7 +64,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = useState(false);
     const [LocationModalVisible, setLocationModalVisible] = useState(false);
     const [actionTriggered, setActionTriggered] = useState(false);
-    const [Date, setDate] = useState('');
+    // const [Date, setDate] = useState(new Date());
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
 
@@ -111,6 +112,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage1(result.assets[0].uri);
     };
     const pickImage2 = async () => {
@@ -118,6 +123,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage2(result.assets[0].uri);
     };
     const pickImage3 = async () => {
@@ -125,6 +134,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage3(result.assets[0].uri);
     };
     const pickImage4 = async () => {
@@ -132,6 +145,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage4(result.assets[0].uri);
     };
     const pickImage5 = async () => {
@@ -139,6 +156,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage5(result.assets[0].uri);
     };
     const pickImage6 = async () => {
@@ -146,6 +167,10 @@ const MediatorCreateEventScreen = ({ navigation }) => {
             mediaType: 'photo',
             saveToPhotos: true,
         });
+        if (result.assets[0].uri) {
+            const newSelectedItems = [...imageArray, result.assets[0].uri];
+            setImageArray(newSelectedItems);
+        }
         setImage6(result.assets[0].uri);
     };
 
@@ -348,8 +373,8 @@ const MediatorCreateEventScreen = ({ navigation }) => {
 
 
     const OnHandleEvents = () => {
-        if (!image1 || !image2 || !image3 || !name || !description || !startDate || !endDate || !startTime || !endTime || !location || !totalTicketPrice || TicketModaldata.length == 0) {
-            if (!image1 || !image2 || !image3) {
+        if (imageArray?.length < 3 || !name || !description || !startDate || !endDate || !startTime || !endTime || !location || !totalTicketPrice || TicketModaldata.length == 0) {
+            if (imageArray?.length < 3) {
                 // console.log('aklxjn');
                 ToastAndroid.show("Please select at least three images!", ToastAndroid.SHORT);
             }
@@ -384,57 +409,55 @@ const MediatorCreateEventScreen = ({ navigation }) => {
         }
         else {
             // console.log('test');
+            // return
             OnSubmitEvents();
         }
     }
 
-    const OnSubmitEvents = async () => {
+    const OnSubmitEvents =async () => {
         // console.log('add events here: ',Data);
-        try {
-            setUploading(true)
-            const imageUrl = await uploadImage();
-            const secimageUrl = await uploadSecondImage();
-            const thirdimageUrl = await uploadThirdImage();
-            const fourthimageUrl = await uploadFourthImage();
-            const fifthimageUrl = await uploadFifthImage();
-            const sixthimageUrl = await uploadSixthImage();
-            var Data = new Object();
-            Data.Title = name;
-            Data.description = description;
-            Data.startDate = startDate;
-            Data.endDate = endDate;
-            Data.startTime = startTime;
-            Data.endTime = endTime;
-            Data.location = location;
-            Data.Address = region;
-            Data.totalTicketPrice = totalTicketPrice;
-            Data.TicketModaldata = TicketModaldata;
-            Data.owneruid = currentuser.uid;
-            Data.ownerName = currentuser.Name;
-            Data.owneremail = currentuser.email;
-            Data.uid = Math.random().toString(16).slice(2);
-            Data.image1 = imageUrl;
-            Data.secimageUrl = secimageUrl;
-            Data.thirdimageUrl = thirdimageUrl;
-            Data.fourthimageUrl = fourthimageUrl;
-            Data.fifthimageUrl = fifthimageUrl;
-            Data.sixthimageUrl = sixthimageUrl;
-            timeStamp = new Date().toDateString()
-            // console.log(Data);
-            // return;
-            firestore()
-                .collection('Events')
-                .doc(Data.uid)
-                .set(Data)
-                .then(() => {
-                    ToastAndroid.show('Event created successfully', ToastAndroid.SHORT)
-                    RefereshForm();
-                })
-            // // setImage(null)
-            setUploading(false)
-        } catch (error) {
-            console.log('error test1', error);
-        }
+        setUploading(true)
+        const imageUrl = await uploadImage();
+        const secimageUrl = await uploadSecondImage();
+        const thirdimageUrl = await uploadThirdImage();
+        const fourthimageUrl = await uploadFourthImage();
+        const fifthimageUrl = await uploadFifthImage();
+        const sixthimageUrl = await uploadSixthImage();
+        var Data = new Object();
+        Data.Title = name;
+        Data.description = description;
+        Data.startDate = startDate;
+        Data.endDate = endDate;
+        Data.startTime = startTime;
+        Data.endTime = endTime;
+        Data.location = location;
+        Data.Address = region;
+        Data.totalTicketPrice = totalTicketPrice;
+        Data.TicketModaldata = TicketModaldata;
+        Data.owneruid = currentuser?.userDetails?.uid;
+        Data.ownerName = currentuser?.userDetails?.Name;
+        Data.owneremail = currentuser?.userDetails?.email;
+        Data.uid = Math.random().toString(16).slice(2);
+        Data.image1 = imageUrl;
+        Data.secimageUrl = secimageUrl;
+        Data.thirdimageUrl = thirdimageUrl;
+        Data.fourthimageUrl = fourthimageUrl;
+        Data.fifthimageUrl = fifthimageUrl;
+        Data.sixthimageUrl = sixthimageUrl;
+        timeStamp = new Date().toString();
+        // console.log(Data);
+        // return;
+        firestore()
+            .collection('Events')
+            .doc(Data.uid)
+            .set(Data)
+            .then(() => {
+                ToastAndroid.show('Event created successfully', ToastAndroid.SHORT)
+                RefereshForm();
+                setUploading(false)
+            })
+        // // setImage(null)
+
     }
 
     const uploadImage = async () => {
@@ -966,7 +989,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                             width: width,
                             // backgroundColor:COLORS.black
                         }}>
-                            <View style={{ marginTop: 10, width: width/2.2 }}>
+                            <View style={{ marginTop: 10, width: width / 2.2 }}>
                                 <Text style={{ color: COLORS.black }}> Start Date </Text>
                                 <View style={{
                                     height: 45,
@@ -1008,7 +1031,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                     }} />
                                 </View>
                             </View>
-                            <View style={{ marginTop: 10, width: width/2.2 }}>
+                            <View style={{ marginTop: 10, width: width / 2.2 }}>
                                 <Text style={{ color: COLORS.black }}> End Date </Text>
                                 <View style={{
                                     height: 45,
@@ -1053,7 +1076,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                             // marginHorizontal: 20,
                             width: width,
                         }}>
-                            <View style={{ marginTop: 10, width: width/2.2, }}>
+                            <View style={{ marginTop: 10, width: width / 2.2, }}>
                                 <Text style={{ color: COLORS.black }}> Start Time </Text>
                                 <View style={{
                                     height: 45,
@@ -1113,7 +1136,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                                     }} />
                                 </View>
                             </View>
-                            <View style={{ marginTop: 10, width: width/2.2 }}>
+                            <View style={{ marginTop: 10, width: width / 2.2 }}>
                                 <Text style={{ color: COLORS.black }}> End Time </Text>
                                 <View style={{
                                     height: 45,
@@ -1157,7 +1180,7 @@ const MediatorCreateEventScreen = ({ navigation }) => {
                         </View>
                         <View style={{
                             alignItems: 'center',
-                            
+
                         }}>
                             <View style={{ marginTop: 10 }}>
                                 <Text style={{ color: COLORS.black }}> Location </Text>
@@ -1921,13 +1944,14 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         height: 45,
         // width: 340,
-        width: width/1.1,
+        width: width / 1.1,
         // marginHorizontal:20,
         backgroundColor: COLORS.white,
         borderRadius: 5,
         elevation: 4
     },
     TextInput: {
+        width: '80%',
         padding: 0,
         backgroundColor: COLORS.transparent,
     },
@@ -1935,7 +1959,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         // paddingHorizontal: 20,
-        width: width/1.1,
+        width: width / 1.1,
         backgroundColor: COLORS.white,
         borderRadius: 5,
         elevation: 4,

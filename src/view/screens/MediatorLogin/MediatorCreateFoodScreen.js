@@ -142,7 +142,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
                 const data = [];
                 querySnapshot.forEach((documentSnapshot) => {
                     const eventdata = documentSnapshot.data()
-                    if (eventdata.owneruid == currentuser.uid) {
+                    if (eventdata.owneruid == currentuser?.userDetails?.uid) {
                         // console.log('User ID: ', documentSnapshot.data());
                         data.push(documentSnapshot.data());
                     }
@@ -426,7 +426,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
     const OnHandleEvents = () => {
         if (!image1 || !name || !description || !PricePerItem || !DeliveryTime || !selectEvent < 0 || !foodTypeindex < 0) {
             if (!image1) {
-                ToastAndroid.show("Please Select At Least Three Images!", ToastAndroid.SHORT);
+                ToastAndroid.show("Please Select At Least One Image!", ToastAndroid.SHORT);
             }
             else if (!name) {
                 ToastAndroid.show("Please Enter Food Name First!", ToastAndroid.SHORT);
@@ -453,10 +453,10 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
     }
 
     const OnSubmitEvents = async () => {
-        const categoryName = FoodType[foodTypeindex].category
-        const categoryid = FoodType[foodTypeindex].uid
+        const categoryName = FoodType[foodTypeindex]?.category
+        const categoryid = FoodType[foodTypeindex]?.uid
         // const categoryImage = FoodType[foodTypeindex].image
-        const Eventid = yourEvents[selectEvent].uid
+        const Eventid = yourEvents[selectEvent]?.uid
         // console.log(
         //     category,
         //     'id here',categoryid,
@@ -469,46 +469,53 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
         //     DeliveryTime,
         // );
         // return;
-        try {
-            setUploading(true)
-            const imageUrl = await uploadImage();
-            const secimageUrl = await uploadSecondImage();
-            const thirdimageUrl = await uploadThirdImage();
-            const fourthimageUrl = await uploadFourthImage();
-            const fifthimageUrl = await uploadFifthImage();
-            const sixthimageUrl = await uploadSixthImage();
-            var Data = new Object();
-            Data.categoryid = categoryid;
-            Data.categoryName = categoryName;
-            Data.Eventid = Eventid;
-            Data.name = name;
-            Data.description = description;
-            Data.PricePerItem = PricePerItem;
-            Data.DeliveryTime = DeliveryTime;
-            Data.owneruid = currentuser.uid;
-            Data.ownerName = currentuser.Name;
-            Data.owneremail = currentuser.email;
-            Data.uid = Math.random().toString(16).slice(2);
-            Data.image1 = imageUrl;
-            Data.secimageUrl = secimageUrl;
-            Data.thirdimageUrl = thirdimageUrl;
-            Data.fourthimageUrl = fourthimageUrl;
-            Data.fifthimageUrl = fifthimageUrl;
-            Data.sixthimageUrl = sixthimageUrl;
-            // console.log(Data.category);
-            // return;
-            firestore()
-                .collection('Foods')
-                .doc(Data.uid)
-                .set(Data)
-                .then(() => {
-                    ToastAndroid.show('Food created successfully', ToastAndroid.SHORT)
-                    RefereshForm();
-                })
-            // // setImage(null)
-            setUploading(false)
-        } catch (error) {
-            console.log('error test1', error);
+        if(Eventid){
+
+            try {
+                setUploading(true)
+                const imageUrl = await uploadImage();
+                const secimageUrl = await uploadSecondImage();
+                const thirdimageUrl = await uploadThirdImage();
+                const fourthimageUrl = await uploadFourthImage();
+                const fifthimageUrl = await uploadFifthImage();
+                const sixthimageUrl = await uploadSixthImage();
+                var Data = new Object();
+                Data.categoryid = categoryid;
+                Data.categoryName = categoryName;
+                Data.Eventid = Eventid;
+                Data.name = name;
+                Data.description = description;
+                Data.PricePerItem = PricePerItem;
+                Data.DeliveryTime = DeliveryTime;
+                Data.owneruid = currentuser?.userDetails?.uid;
+                Data.ownerName = currentuser?.userDetails?.Name;
+                Data.owneremail = currentuser?.userDetails?.email;
+                Data.uid = Math.random().toString(16).slice(2);
+                Data.image1 = imageUrl;
+                Data.secimageUrl = secimageUrl;
+                Data.thirdimageUrl = thirdimageUrl;
+                Data.fourthimageUrl = fourthimageUrl;
+                Data.fifthimageUrl = fifthimageUrl;
+                Data.sixthimageUrl = sixthimageUrl;
+                // console.log(Data.category);
+                // return;
+                firestore()
+                    .collection('Foods')
+                    .doc(Data.uid)
+                    .set(Data)
+                    .then(() => {
+                        ToastAndroid.show('Food created successfully', ToastAndroid.SHORT)
+                        RefereshForm();
+                        setUploading(false)
+                    })
+                // // setImage(null)
+            } catch (error) {
+                console.log('error test1', error);
+            }
+        }
+        else{
+            ToastAndroid.show('Events cannot be empty please add event before adding food menu', ToastAndroid.SHORT)
+            // console.log('Events cannot be empty please add event before adding food menu');
         }
     }
 
@@ -712,7 +719,7 @@ const MediatorCreateFoodScreen = ({ navigation }) => {
         setImage4(null)
         setImage5(null)
         setImage6(null)
-        // setYourEvents('')
+        setYourEvents([])
         // console.log('change location ==>', location.latitude);
     }
 

@@ -16,13 +16,19 @@ const MediatorApprovalScreen = ({ navigation }) => {
     // console.log(MediatorUser.userDetails.MediatorId);
     if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 1) {
       setTimeout(() => {
-        navigation.navigate('MediatorTalentAgencyBT');
+        navigation.navigate('MediatorInfluencersBT');
         console.log('Approval Accepted');
       }, 1000);
     }
     else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 2) {
       setTimeout(() => {
         navigation.navigate('MediatorMatchCoordinatorBT');
+        console.log('Approval Accepted');
+      }, 1000);
+    }
+    else if (MediatorUser?.userDetails?.PanelAccess == true && MediatorUser?.userDetails?.MediatorId == 3) {
+      setTimeout(() => {
+        navigation.navigate('MediatorEventStaffChekInBT');
         console.log('Approval Accepted');
       }, 1000);
     }

@@ -6,39 +6,19 @@ import SVGimage1 from '../../assets/influencermain.svg';
 import SVGimage2 from '../../assets/influencerfeed.svg';
 import SVGimage3 from '../../assets/manage.svg';
 import SVGimage4 from '../../assets/profile.svg';
-import HomeScreen from '../screens/MediatorLogin/ProfileOptimizer/HomeScreen';
-import ProfileScreen from '../screens/MediatorLogin/ProfileOptimizer/ProfileScreen';
-import AddedScreen from '../screens/MediatorLogin/ProfileOptimizer/AddedScreen';
-import SubmitTermAndCondition from '../screens/MediatorLogin/ProfileOptimizer/SubmitTermAndCondition';
-import SuggestionScreen from '../screens/MediatorLogin/ProfileOptimizer/SuggestionScreen';
+import HomeScreen from '../screens/MediatorLogin/Influencers/HomeScreen';
+import ProfileScreen from '../screens/MediatorLogin/Influencers/ProfileScreen';
+import EventScreen from '../screens/MediatorLogin/Influencers/EventScreen';
+import AccountScreen from '../screens/MediatorLogin/Influencers/AccountScreen';
+import CustomeEfilatedCode from '../screens/MediatorLogin/Influencers/CustomeEfilatedCode';
+import YourClients from '../screens/MediatorLogin/Influencers/YourClients';
+import AddSocialMediaAccount from '../screens/MediatorLogin/Influencers/AddSocialMediaAccount';
 
 
 const Tab = createBottomTabNavigator();
-const CustomTabBarButton = ({ children, onPress }) => (
-    <TouchableOpacity
-        activeOpacity={0.8}
-        style={{
-            top: -30,
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}
-        onPress={onPress}
-    >
-        <View style={{
-            width: 60,
-            height: 60,
-            borderRadius: 35,
-            backgroundColor: COLORS.main,
-            borderColor: 'white',
-            borderWidth: 2,
-        }}>
-            {children}
-        </View>
-    </TouchableOpacity>
-)
 
 
-const ClientStack = ({ navigation }) => (
+const HomeStack = ({ navigation }) => (
     <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBar: false,
@@ -53,11 +33,11 @@ const ClientStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name='HomeScreen' component={HomeScreen} />
-        <Tab.Screen name='SuggestionScreen' component={SuggestionScreen} />
-        {/* <Tab.Screen name='YourClients' component={YourClients} /> */}
+        <Tab.Screen name='CustomeEfilatedCode' component={CustomeEfilatedCode} />
+        <Tab.Screen name='YourClients' component={YourClients} />
     </Tab.Navigator>
 )
-const AddedStack = ({ navigation }) => (
+const EventStack = ({ navigation }) => (
     <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBar: false,
@@ -71,7 +51,25 @@ const AddedStack = ({ navigation }) => (
             borderTopLeftRadius: 20,
         },
     }}>
-        <Tab.Screen name="AddedScreen" component={AddedScreen} />
+        <Tab.Screen name="EventScreen" component={EventScreen} />
+        {/* <Tab.Screen name="ArticalDetailScreen" component={ArticalDetailScreen} /> */}
+    </Tab.Navigator>
+)
+const AccountStack = ({ navigation }) => (
+    <Tab.Navigator screenOptions={{
+        headerShown: false,
+        tabBar: false,
+        tabBarStyle: {
+            paddingHorizontal: 20,
+            paddingTop: 0,
+            backgroundColor: COLORS.white,
+            borderTopWidth: 0,
+            elevation: 20,
+            borderTopRightRadius: 20,
+            borderTopLeftRadius: 20,
+        },
+    }}>
+        <Tab.Screen name="AccountScreen" component={AccountScreen} />
     </Tab.Navigator>
 )
 const ProfileStack = ({ navigation }) => (
@@ -89,13 +87,14 @@ const ProfileStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Tab.Screen name="AddSocialMediaAccount" component={AddSocialMediaAccount} />
         {/* <Tab.Screen name="PaymentTypeDetail" component={PaymentTypeDetail} />
         <Tab.Screen name="TermsAndCondition" component={TermsAndCondition} />
         <Tab.Screen name="ReligionsWorkWith" component={ReligionsWorkWith} /> */}
     </Tab.Navigator>
 )
 
-const MediatorProfileOptimizerBT = () => {
+const MediatorInfluencersBT = () => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -113,7 +112,7 @@ const MediatorProfileOptimizerBT = () => {
                     borderTopLeftRadius: 20,
                 },
             }}>
-            <Tab.Screen name="ClientStack" component={ClientStack}
+            <Tab.Screen name="HomeStack" component={HomeStack}
                 options={{
                     tabBarIcon: ({ focused, color }) => (
                         <View>
@@ -127,8 +126,11 @@ const MediatorProfileOptimizerBT = () => {
                                     padding: 5,
                                     borderRadius: 5
                                 }}>
+                                    {/* <SVGimage1 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -136,7 +138,7 @@ const MediatorProfileOptimizerBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12, color: COLORS.black }}>Clients</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 , color:COLORS.black }}>Home</Text>
                                 </View>
                             ) : (
                                 <View style={{
@@ -145,7 +147,57 @@ const MediatorProfileOptimizerBT = () => {
                                     flexDirection: 'row',
                                 }}>
                                     <Image
-                                        source={require('../../assets/Friends.png')}
+                                        source={require('../../assets/home.png')}
+                                        resizeMode='contain'
+                                        style={{
+                                            height: 20,
+                                            width: 20,
+                                            tintColor: focused ? COLORS.black : COLORS.gray2,
+                                        }}
+                                    />
+                                    {/* <SVGimage1 width={20} height={20} color='red'/> */}
+                                </View>
+                            )
+                            }
+                        </View>
+                    )
+                }} />
+
+            <Tab.Screen name="EventStack" component={EventStack}
+                options={{
+                    tabBarIcon: ({ focused, color }) => (
+                        <View>
+                            {focused == true ? (
+                                <View style={{
+                                    alignItems: 'center', justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    backgroundColor: COLORS.mainlight,
+                                    padding: 5,
+                                    borderRadius: 5
+                                }}>
+                                    {/* <SVGimage2 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
+                                    <Image
+                                        source={require('../../assets/events.png')}
+                                        resizeMode='contain'
+                                        style={{
+                                            height: 20,
+                                            width: 20,
+                                            tintColor: focused ? COLORS.black : COLORS.gray2,
+                                        }}
+                                    />
+                                    <Text style={{ paddingLeft: 5, fontSize: 12, color:COLORS.black}}>Events</Text>
+                                </View>
+                            ) : (
+                                <View style={{
+                                    alignItems: 'center', justifyContent: 'center',
+                                }}>
+                                    {/* <SVGimage2 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
+                                    <Image
+                                        source={require('../../assets/events.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
@@ -155,58 +207,63 @@ const MediatorProfileOptimizerBT = () => {
                                     />
                                 </View>
                             )
+
                             }
                         </View>
                     )
                 }} />
 
-            {/* <Tab.Screen name="AddedStack" component={AddedStack}
+
+            <Tab.Screen name="AccountStack" component={AccountStack}
                 options={{
+                    // tabBarBadge: 3,
                     tabBarIcon: ({ focused, color }) => (
                         <View>
                             {focused == true ? (
                                 <View style={{
                                     alignItems: 'center', justifyContent: 'center',
                                     flexDirection: 'row',
-                                    // backgroundColor: COLORS.mainlight,
+                                    backgroundColor: COLORS.mainlight,
                                     padding: 5,
                                     borderRadius: 5
                                 }}>
+                                    {/* <SVGimage3 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
                                     <Image
-                                        source={require('../../assets/plus.png')}
+                                        source={require('../../assets/feed.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
                                             width: 20,
-                                            backgroundColor: COLORS.main,
-                                            tintColor: COLORS.black,
+                                            tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
+                                    <Text style={{ paddingLeft: 5, fontSize: 12 , color:COLORS.black}}>Account</Text>
                                 </View>
+
                             ) : (
                                 <View style={{
                                     alignItems: 'center', justifyContent: 'center',
                                 }}>
+                                    {/* <SVGimage3 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
                                     <Image
-                                        source={require('../../assets/plus.png')}
+                                        source={require('../../assets/feed.png')}
                                         resizeMode='contain'
                                         style={{
                                             height: 20,
                                             width: 20,
-                                            // color:COLORS.white
-                                            tintColor: COLORS.white,
+                                            tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
                                 </View>
-                            )
-
-                            }
+                            )}
                         </View>
-                    ),
-                    tabBarButton: (props) => (
-                        <CustomTabBarButton {...props} />
                     )
-                }} /> */}
+                }} />
+
 
             <Tab.Screen name="ProfileStack" component={ProfileStack}
                 options={{
@@ -220,6 +277,9 @@ const MediatorProfileOptimizerBT = () => {
                                     padding: 5,
                                     borderRadius: 5
                                 }}>
+                                    {/* <SVGimage4 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
                                     <Image
                                         source={require('../../assets/profile.png')}
                                         resizeMode='contain'
@@ -229,13 +289,16 @@ const MediatorProfileOptimizerBT = () => {
                                             tintColor: focused ? COLORS.black : COLORS.gray2,
                                         }}
                                     />
-                                    <Text style={{ paddingLeft: 5, fontSize: 12, color: COLORS.black }}>Profile</Text>
+                                    <Text style={{ paddingLeft: 5, fontSize: 12, color:COLORS.black }}>Profile</Text>
                                 </View>
 
                             ) : (
                                 <View style={{
                                     alignItems: 'center', justifyContent: 'center',
                                 }}>
+                                    {/* <SVGimage4 width={20} height={20} style={{
+                                        tintColor: focused ? COLORS.black : COLORS.gray2,
+                                    }} /> */}
                                     <Image
                                         source={require('../../assets/profile.png')}
                                         resizeMode='contain'
@@ -255,6 +318,6 @@ const MediatorProfileOptimizerBT = () => {
     )
 }
 
-export default MediatorProfileOptimizerBT
+export default MediatorInfluencersBT
 
 const styles = StyleSheet.create({})

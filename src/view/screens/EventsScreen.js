@@ -125,7 +125,7 @@ const EventsScreen = ({ navigation }) => {
       })
       data.sort(function (a, b) {
         // let test = timeStamp.toDate().toTimeString()
-        return new Date(b.timeStamp?.toDate().toDateString() + " " + b.timeStamp.toDate().toTimeString()) - new Date(a.timeStamp?.toDate().toDateString() + " " + a.timeStamp.toDate().toTimeString());
+        return new Date(b.timeStamp?.toDate()?.toDateString() + " " + b.timeStamp?.toDate()?.toTimeString()) - new Date(a.timeStamp?.toDate()?.toDateString() + " " + a.timeStamp?.toDate()?.toTimeString());
         // return a.timeStamp.toDate().toTimeString().localeCompare(b.timeStamp.toDate().toTimeString());
       });
       setMyEvents(data)
@@ -154,7 +154,7 @@ const EventsScreen = ({ navigation }) => {
         });
         data.sort(function (a, b) {
           // let test = timeStamp.toDate().toTimeString()
-          return new Date(b.timeStamp?.toDate().toDateString() + " " + b.timeStamp.toDate().toTimeString()) - new Date(a.timeStamp?.toDate().toDateString() + " " + a.timeStamp.toDate().toTimeString());
+          return new Date(b.timeStamp?.toDate()?.toDateString() + " " + b.timeStamp?.toDate()?.toTimeString()) - new Date(a.timeStamp?.toDate()?.toDateString() + " " + a.timeStamp?.toDate()?.toTimeString());
           // return a.timeStamp.toDate().toTimeString().localeCompare(b.timeStamp.toDate().toTimeString());
         });
 
@@ -170,9 +170,9 @@ const EventsScreen = ({ navigation }) => {
     // Check if searched text is not blank
     if (text) {
       const newData = allEvents.filter((item) => {
-        const itemData = item.Title ? item.Title.toUpperCase()
+        const itemData = item?.Title ? item?.Title?.toUpperCase()
           : ''.toUpperCase();
-        const textData = text.toUpperCase();
+        const textData = text?.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       // setFilteredDataSource(newData);
@@ -226,7 +226,7 @@ const EventsScreen = ({ navigation }) => {
                 <Text style={{
                   fontFamily: '',
                   color: COLORS.black
-                }}>{item.name}</Text>
+                }}>{item?.name}</Text>
               </TouchableOpacity>
             ))}
           </View>

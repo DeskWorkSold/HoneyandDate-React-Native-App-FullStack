@@ -176,7 +176,7 @@ const ScanDoc = ({ navigation }) => {
                                 flashMode={RNCamera.Constants.FlashMode.torch}
                                 topContent={
                                     <Text style={styles.centerText}>
-                                        Scan your QRCode!
+                                        Scan your License QRCode!
                                     </Text>
                                 }
                                 bottomContent={
@@ -250,6 +250,6 @@ const styles = StyleSheet.create({
     },
     centerText: {
         color: COLORS.black,
-        fontFamily: 16,
+        fontSize: 16,
     }
 })

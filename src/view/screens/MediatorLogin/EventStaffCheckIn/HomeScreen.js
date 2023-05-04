@@ -74,8 +74,9 @@ const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState(null);
   const [selectUser, setSelectUser] = useState(null);
 
-  const [rUser, setRUser] = useState(null);
-  const [rUserTemp, setRUserTemp] = useState(null);
+  const [TicketBuyUsersId, setTicketBuyUsersId] = useState(null);
+  const [TicketBuyUsers, setTicketBuyUsers] = useState([]);
+  const [TicketBuyUsersTemp, setTicketBuyUsersTemp] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [modal, setModal] = useState(false);
   const [AdvFilter, setAdvFilter] = useState(false);
@@ -96,76 +97,111 @@ const HomeScreen = ({ navigation }) => {
 
   const AttendeeDetails = (item) => {
     console.log(item)
-    navigation.navigate('AttendeDetails', { data: item })
   }
 
+
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => AttendeeDetails(item)} style={{
-      backgroundColor: 'white',
-      borderRadius: 10,
-      elevation: 5,
-      marginHorizontal: 20,
-      marginVertical: 10,
-      padding: 10,
-    }}>
-      <Text style={{
-        fontWeight: 'bold',
-        color: COLORS.black,
-        fontSize: 16,
-      }}>{item.Name}</Text>
-      <Text style={{
-        fontSize: 12,
-        color: COLORS.gray,
-      }}>{item.MediatorType}</Text>
-    </TouchableOpacity>
-  );
-
-
-  const renderSectionHeader = ({ section }) => (
-    <View style={{
-      paddingHorizontal: 20, backgroundColor: COLORS.white,
-    }}>
-      <Text style={{
-        fontWeight: 'bold', color: COLORS.black,
-        fontSize: 16,
-      }}>{section.title}</Text>
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemHead}>{item?.Name}</Text>
+      <Text style={styles.itemText}>{item?.TicketAddToCard?.Tickets?.ticketTitle}</Text>
     </View>
   );
 
 
-  const sections = rUserTemp?.reduce((acc, contact) => {
-    const firstLetter = contact?.Name[0]?.toUpperCase();
-    const index = acc?.findIndex((section) => section?.title === firstLetter);
-    if (index !== -1) {
-      acc[index]?.data?.push(contact);
-    } else {
-      acc?.push({ title: firstLetter, data: [contact] });
+  const renderSectionHeader = ({ section: { title } }) => (
+    <View style={styles.sectionHeaderContainer}>
+      <Text style={styles.sectionHeaderText}>{title}</Text>
+    </View>
+  );
+
+
+  const data = TicketBuyUsersTemp.reduce((acc, contact) => {
+    const firstLetter = contact?.Name?.charAt(0)?.toUpperCase();
+    if (!acc[firstLetter]) {
+      acc[firstLetter] = [];
     }
+    acc[firstLetter]?.push(contact);
     return acc;
-  }, []);
+  }, {});
+
+  const sections = Object.keys(data)?.sort()?.map((letter) => ({
+    title: letter,
+    data: data[letter],
+  }));
 
 
-  const fetchUsers = async () => {
-    setUploadingTwo(true)
-    await firestore()
-      .collection('Users')
+  const fetchRecentTickets = () => {
+    // console.log('test');
+    setUploading(true)
+    firestore()
+      .collection('SellTickets')
+      .orderBy('createdAt', 'desc')
+      // .limit(1)
       .onSnapshot(querySnapshot => {
-        const users = [];
+        const UserbuyTicket = []
         querySnapshot.forEach((documentSnapshot) => {
-          const data = documentSnapshot.data().userDetails;
-          if (data?.uid != CurrentUser && data?.Category == 'Mediator') {
-            users.push(data);
-            // console.log(data);
+          const recentdata = documentSnapshot?.data();
+          // console.log('hello' , recentdata);
+          if (recentdata?.CheckIn == true && recentdata?.CheckedUserId == CurrentUser) {
+            UserbuyTicket?.push(recentdata)
+            // console.log(recentdata , CurrentUser);
           }
-          // if (data.Category == 'Mediator') {
-          // }
+          // setRecentData(MatchedUser[0])
         })
-        setRUser(users)
-        setRUserTemp(users)
-        // console.log(users);
-        setUploadingTwo(false)
+        if (UserbuyTicket?.length > 0) {
+          let uniqueArr = removeDuplicates(UserbuyTicket);
+          // console.log(uniqueArr); 
+          // setTicketBuyUsersId(uniqueArr)
+          if (uniqueArr?.length > 0) {
+            const dataOne = []
+            uniqueArr?.map((item) => {
+              // console.log(j);
+              firestore()
+                .collection('Users')
+                .doc(item?.useruid)
+                .onSnapshot(querySnapshot => {
+                  if (querySnapshot.exists) {
+                    const userData = querySnapshot.data()?.userDetails;
+
+                    const concatenatedObj = { ...userData, ...item };
+                    // console.log('===>',concatenatedObj);
+                    // return
+                    // let newUpdate = [{ ...TicketBuyUsersTemp, data }]
+                    dataOne.push(concatenatedObj)
+                    // console.log(newSelectedItems);
+
+                    // console.log('dataOne===>', dataOne.length);
+                  }
+                  else {
+                    setTicketBuyUsersTemp(dataOne)
+                    setTicketBuyUsers(dataOne)
+                    setUploading(true)
+                  }
+                })
+            })
+            // GetTicketBuyUser(TicketBuyUsersId);
+          }
+          else {
+            ToastAndroid.show("Network issue, please check your internet!", ToastAndroid.SHORT);
+            // setUploading(false)
+          }
+        }
+        else {
+          setUploading(false)
+        }
       })
   }
+
+  function removeDuplicates(arr) {
+    let result = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (!result.includes(arr[i])) {
+        result.push(arr[i]);
+      }
+    }
+    return result;
+  }
+
 
 
   // console.log(reqUser);
@@ -206,7 +242,8 @@ const HomeScreen = ({ navigation }) => {
 
 
   useEffect(() => {
-    fetchUsers();
+    fetchRecentTickets();
+    // fetchUsers();
     locationPermission();
     getCurrentLocation();
 
@@ -274,19 +311,19 @@ const HomeScreen = ({ navigation }) => {
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
     if (text) {
-      const newData = rUser.filter((item) => {
+      const newData = TicketBuyUsers.filter((item) => {
         const itemData = item.Name ? item.Name.toUpperCase()
           : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       // setFilteredDataSource(newData);
-      setRUserTemp(newData);
+      setTicketBuyUsersTemp(newData);
       setSearch(text);
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setRUserTemp(rUser);
+      setTicketBuyUsersTemp(TicketBuyUsers);
       setSearch(text);
     }
   };
@@ -336,32 +373,58 @@ const HomeScreen = ({ navigation }) => {
             }}
           />
         </View>
+        {uploading ?
+          <>
+            {TicketBuyUsersTemp?.length > 0 ?
 
+              <View style={{
+                // marginVertical: 20,
+                // paddingHorizontal: 20
+              }}>
+                {/* <ScrollView vertical showsVerticalScrollIndicator={false} > */}
+                {/* <SectionList
+                  sections={sections}
+                  renderItem={renderItem}
+                  renderSectionHeader={renderSectionHeader}
+                  keyExtractor={(item) => item.uid}
+                  stickySectionHeadersEnabled={true}
+                  ItemSeparatorComponent={FlatListItemSeparator}
+                /> */}
 
-        {rUserTemp?.length > 0 ?
-
-          <View style={{
-            // marginVertical: 20,
-            // paddingHorizontal: 20
-          }}>
-            {/* <ScrollView vertical showsVerticalScrollIndicator={false} > */}
-            <SectionList
-              sections={sections}
-              renderItem={renderItem}
-              renderSectionHeader={renderSectionHeader}
-              keyExtractor={(item) => item.uid}
-              stickySectionHeadersEnabled={true}
-              ItemSeparatorComponent={FlatListItemSeparator}
-            />
-            {/* </ScrollView> */}
-          </View>
+                <SectionList
+                  sections={sections}
+                  renderItem={renderItem}
+                  renderSectionHeader={renderSectionHeader}
+                  keyExtractor={(item) => item.uid}
+                />
+                {/* </ScrollView> */}
+              </View>
+              :
+              <View style={{
+                padding: 20,
+                alignItems: 'center'
+              }}>
+                <Text>No check-In users found!</Text>
+                {/* <ActivityIndicator size="small" color={COLORS.main} animating={uploadingTwo} /> */}
+              </View>
+            }
+          </>
           :
           <View style={{
-            paddingVertical: 20,
+            padding: 20,
+            alignItems: 'center'
           }}>
-            <ActivityIndicator size="small" color={COLORS.main} animating={uploadingTwo} />
+            <ActivityIndicator size="small" color={COLORS.main} animating={uploading} />
           </View>
         }
+
+        <>
+        {TicketBuyUsersTemp.map((j,i) => {
+          console.log(j.Name);
+        })}
+        </>
+
+
       </View>
     </SafeAreaView>
   )
@@ -392,4 +455,30 @@ const styles = StyleSheet.create({
   listItemSeparatorStyle: {
     width: 20,
   },
+
+  itemContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    padding: 10,
+  },
+  itemHead: {
+    fontWeight: 'bold',
+    color: COLORS.black,
+    fontSize: 16,
+  }
+  ,
+  itemText: {
+    fontSize: 12,
+    color: COLORS.gray,
+  },
+  sectionHeaderContainer: {
+    paddingHorizontal: 20, backgroundColor: COLORS.white,
+  },
+  sectionHeaderText: {
+    fontWeight: 'bold', color: COLORS.black,
+    fontSize: 16,
+  }
 })

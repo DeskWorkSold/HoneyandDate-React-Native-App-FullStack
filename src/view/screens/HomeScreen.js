@@ -13,7 +13,7 @@ import SVGImg1 from '../../assets/diamond.svg';
 import SVGImg2 from '../../assets/dot.svg';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
-import { getDistance, getPreciseDistance } from 'geolib';
+import { getPreciseDistance } from 'geolib';
 import GoogleMapKey from '../../consts/GoogleMapKey';
 const { height, width } = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
@@ -26,6 +26,8 @@ Geocoder.init(GoogleMapKey.GOOGLE_MAP_KEY); // use a valid API key
 
 function RenderCard({ data, navigation }) {
     const user2 = useSelector(selectUser);
+    // console.log('===>',user2.Location?.latitude);
+    // console.log('===>',data?.userDetails?.Location.latitude);
     const [flake, setFlake] = useState('')
     const years = new Date().getFullYear() - new Date(data?.userDetails?.Dates).getFullYear();
     const distance = getPreciseDistance(

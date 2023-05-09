@@ -144,7 +144,6 @@ const QuestionDrugsScreen = ({ navigation, route }) => {
 
         <View style={styles.footer}>
           <View style={{
-            paddingTop: 100,
             // flexDirection: 'row'
           }}>
             <View style={{ marginBottom: 5 }}>

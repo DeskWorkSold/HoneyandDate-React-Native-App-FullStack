@@ -17,6 +17,7 @@ import { getPreciseDistance } from 'geolib';
 import GoogleMapKey from '../../consts/GoogleMapKey';
 const { height, width } = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
+// import NetInfo from "@react-native-community/netinfo";
 
 // console.log(GoogleMapKey.GOOGLE_MAP_KEY);
 
@@ -348,6 +349,7 @@ const HomeScreen = ({ navigation }) => {
     const [actionTrigger, setActionTrigger] = useState([]);
     // const [unreadMessage, setUnreadMessage] = useState([]);
     const user = useSelector(selectUser);
+    // console.log(user);
     const userPackage = useSelector(selectPackages);
     const CurrentUser = auth().currentUser.uid;
     const chatUser = useSelector(selectChatuser);
@@ -500,7 +502,6 @@ const HomeScreen = ({ navigation }) => {
                                     // console.log(UserDetailLock);
                                     docSnapshot.data()?.PrivateChat.map(secUser => {
                                         if (secUser.ChatuserDetails.uid == CurrentUser) {
-
                                             MatchedUser.push(docSnapshot.data().userDetails)
                                         } else {
                                             console.log('no match found');
@@ -717,11 +718,12 @@ const HomeScreen = ({ navigation }) => {
         // console.log(user.Gender);
         setLoading(true)
         if (user.Gender == 'Male') {
+            // console.log(user.Gender);
             fetchFemaleUsers();
         }
         else {
             fetchMaleUsers();
-            // console.log('male');
+            // console.log(user.Gender);
         }
         setLoading(false)
 
@@ -731,6 +733,7 @@ const HomeScreen = ({ navigation }) => {
         // const Package = userPackage.otherCategory;
         // console.log(Package);
         if (!userPackage == '') {
+            let distance
             const Package = userPackage.id;
             // console.log('male filter', Package);
             // for basic package 
@@ -746,14 +749,17 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
-                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             // console.log('distance234==>', distance );
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -764,11 +770,9 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -798,13 +802,16 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
-                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -815,11 +822,9 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -849,13 +854,16 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
-                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.data()) 
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -867,11 +875,9 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -890,8 +896,6 @@ const HomeScreen = ({ navigation }) => {
             }
         }
         else {
-            // try {
-            // console.log('hello');
             await firestore()
                 .collection('Users')
                 // .where("userDetails.Gender", '==', "Male")
@@ -903,16 +907,21 @@ const HomeScreen = ({ navigation }) => {
                     querySnapshot.forEach((documentSnapshot) => {
                         const data = documentSnapshot.data().userDetails;
                         const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                        // if (data?.Location?.latitude && data?.Location?.longitude) {
+                        //     distance = getPreciseDistance(
+                        //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                        //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                        //     ) * 0.000621;
+                        // }
                         // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                         if (data.Gender == `${user.filterGender ? user.filterGender : "Male"}`) {
-                            const distance = getPreciseDistance(
-                                { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                            ) * 0.000621.toFixed(2);
-                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                            if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                // || distance > 0 ? distance : 0 <= user.filterDistance
+                                ) {
                                 // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
+                                // console.log('test');
                             }
                             else if (!user.filterMinAge || !user.filterMinAge || !user?.filterDistance) {
                                 users.push(documentSnapshot.data());
@@ -920,11 +929,9 @@ const HomeScreen = ({ navigation }) => {
                             }
                         }
                         else if (user.filterGender == 'Both') {
-                            const distance = getPreciseDistance(
-                                { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                            ) * 0.000621.toFixed(2);
-                            if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                            if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                // || distance > 0 ? distance : 0 <= user.filterDistance
+                                ) {
                                 // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
@@ -933,20 +940,12 @@ const HomeScreen = ({ navigation }) => {
                                 users.push(documentSnapshot.data());
                                 modalDataUid.push(documentSnapshot.id);
                             }
-                            // console.log('User ID=======================: ', documentSnapshot.id, documentSnapshot.data());
-                            // users.push(documentSnapshot.data());
                         }
                     });
                     setUsers(users.slice(0, 1))
                     setModalDataUid(modalDataUid.slice(0, 1))
                 })
-            // console.log('MaleUsers: ', users);
-
-            // } catch (e) {
-            //   console.log(e);
-            // }
         }
-
     };
 
     const fetchFemaleUsers = async () => {
@@ -954,8 +953,8 @@ const HomeScreen = ({ navigation }) => {
         if (!userPackage == '') {
             const Package = userPackage.id;
             // for basic package 
+            let distance
             if (Package == 123) {
-                // console.log('female filter', Package);
                 await firestore()
                     .collection('Users')
                     // .where("userDetails.Gender", '==', "Female")
@@ -967,15 +966,19 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
 
 
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location.latitude, longitude: data?.Location.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -986,11 +989,9 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -1021,13 +1022,17 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -1039,11 +1044,9 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -1056,8 +1059,8 @@ const HomeScreen = ({ navigation }) => {
                                 // users.push(documentSnapshot.data());
                             }
                         });
-                        setUsers(users.slice(0, 3))
-                        setModalDataUid(modalDataUid.slice(0, 3))
+                        setUsers(users.slice(0, 5))
+                        setModalDataUid(modalDataUid.slice(0, 5))
                     })
             }
             // for premium package 
@@ -1073,14 +1076,17 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
-
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
                             if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                ) * 0.000621.toFixed(2);
                                 // console.log(distance); 
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -1088,19 +1094,12 @@ const HomeScreen = ({ navigation }) => {
                                 else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
-
-                                    // const distance = geolib.getPreciseDistance(user.Location, data.Location)
-
-                                    // console.log('distance==>', distance * 0.000621);
-                                    // console.log('distance==>', geolib.convertDistance('mi', distance));
                                 }
                             }
                             else if (user.filterGender == 'Both') {
-                                const distance = getPreciseDistance(
-                                    { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                    { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                ) * 0.000621.toFixed(2);
-                                if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
+                                if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                    // || distance > 0 ? distance : 0 <= user?.filterDistance
+                                    ) {
                                     // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                     users.push(documentSnapshot.data());
                                     modalDataUid.push(documentSnapshot.id);
@@ -1131,40 +1130,40 @@ const HomeScreen = ({ navigation }) => {
                         querySnapshot.forEach((documentSnapshot) => {
                             const data = documentSnapshot.data().userDetails;
                             const years = new Date().getFullYear() - new Date(data.Dates).getFullYear();
-                            // const distance = geolib.getPreciseDistance(user?.Location, data?.Location) * 0.000621
-                            // console.log('=====>',data.Gender);
+                            // if (data?.Location?.latitude && data?.Location?.longitude) {
+                            //     distance = getPreciseDistance(
+                            //         { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude },
+                            //         { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude },
+                            //     ) * 0.000621;
+                            // }
+                            // console.log(distance);
                             if (data.Gender == 'Female') {
                                 // console.log('asdjk'); 
                                 if (data.Gender == `${user.filterGender ? user.filterGender : "Female"}`) {
-                                    const distance = getPreciseDistance(
-                                        { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                        { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                    ) * 0.000621.toFixed(2);
-
-                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
+                                    if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                        // || distance > 0 ? distance : 0 <= user?.filterDistance
+                                        ) {
                                         // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                         // console.log('yetduh');
                                     }
-                                    else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
+                                    else if (!user.filterMinAge || !user.filterMaxAge || !user.filterDistance) {
+                                        // console.log('User ID=======================2: ', documentSnapshot.id, documentSnapshot.data());
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                         // console.log('etg');
                                     }
                                 }
                                 else if (user.filterGender == 'Both') {
-                                    const distance = getPreciseDistance(
-                                        { latitude: user?.Location?.latitude, longitude: user?.Location?.longitude, },
-                                        { latitude: data?.Location?.latitude, longitude: data?.Location?.longitude }
-                                    ) * 0.000621.toFixed(2);
-
-                                    if (years >= user.filterMinAge && typeof years == typeof user.filterMinAge && typeof years == typeof user.filterMaxAge && years <= user.filterMaxAge && distance <= user?.filterDistance) {
+                                    if (years >= user.filterMinAge || typeof years == typeof user.filterMinAge || typeof years == typeof user.filterMaxAge || years <= user.filterMaxAge 
+                                        // || distance > 0 ? distance : 0 <= user?.filterDistance
+                                        ) {
                                         // console.log('User ID=======================1: ', documentSnapshot.id, documentSnapshot.data());
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                     }
-                                    else if (!user.filterMinAge || !user.filterMinAge || !user.filterDistance) {
+                                    else if (!user.filterMinAge || !user.filterMaxAge || !user.filterDistance) {
                                         users.push(documentSnapshot.data());
                                         modalDataUid.push(documentSnapshot.id);
                                     }
@@ -1183,7 +1182,25 @@ const HomeScreen = ({ navigation }) => {
         };
     }
 
+    // const CheckConnection = () => {
+    //     NetInfo.addEventListener(state => {
+    //         if (state.isConnected) {
+    //             fetchusersMain();
+    //             fetchUsersUid();
+    //             locationPermission();
+    //             getCurrentLocation();
+    //             GetFcmToken();
+    //             // user is online, do something here
+    //         } else {
+    //             // user is offline, show network error screen
+    //             // for example:
+    //             navigation.navigate('NetworkErrorScreen');
+    //         }
+    //     });
+    // }
+
     useEffect(() => {
+        // CheckConnection();
         fetchusersMain();
         fetchUsersUid();
         // if (user.Location) {

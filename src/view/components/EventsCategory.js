@@ -14,19 +14,23 @@ const EventsCategory = ({ navigation, data, value, setValue, filterdata, setfilt
 
     const ShowCategory = (index) => {
         const showCategory = data[index].name
+        // console.log(showCategory);
+        // return
         setValue(index)
         if (showCategory) {
             const test = [];
             if (showCategory == 'New Events') {
                 // setfilterdata(filterdata);
-                const newData = filterdata.filter((item) => {
+                const newData = filterdata?.filter((item) => {
                     test.push(item);
                 });
             }
             else if (showCategory == 'Todays Event') {
                 const today = new Date().toDateString()
-                const newData = filterdata.filter((item) => {
-                    let edate = item.timeStamp.toDate().toDateString()
+                const newData = filterdata?.filter((item) => {
+                    let edate = item?.timeStamp?.toDate().toDateString()
+                    // console.log(edate , today);
+                    // return
                     if (edate == today) {
                         console.log(item);
                         test.push(item);
@@ -36,8 +40,8 @@ const EventsCategory = ({ navigation, data, value, setValue, filterdata, setfilt
             }
             else if (showCategory == 'Last Events') {
                 const today = new Date().toDateString()
-                const newData = filterdata.filter((item) => {
-                    let edate = item.timeStamp.toDate().toDateString()
+                const newData = filterdata?.filter((item) => {
+                    let edate = item?.timeStamp?.toDate().toDateString()
                     if (edate != today) {
                         test.push(item);
                     }

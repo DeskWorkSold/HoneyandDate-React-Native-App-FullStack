@@ -109,74 +109,75 @@ const QuestionPIntroandExtroScreen = ({ navigation, route }) => {
             }}>
             </View>
           </View>
-          <View style={{
-            paddingTop: 0,
-          }}>
-            <Image source={require('../../assets/group.png')}
-              resizeMode='contain' />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingTop: 20,
-            paddingHorizontal: 70,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Would you be open to date introvert/extrovert?</Text>
-          </View>
-
-          <View style={{
-            alignItems: 'center',
-            paddingHorizontal: 70,
-          }}>
-            <Text style={{
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>(select all that apply)</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 20
-          }}>
-            <View>
-              <ListPIntroExtro data={IntroExtroData} value={selectedCategoryIndex}
-                setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
-            </View>
-          </View>
-
         </View>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
 
-        <View style={styles.footer}>
-
-          <View style={{
-            paddingTop: 0,
-          }}>
-            <View style={{ marginBottom: 5 }}>
-              <CustomeButton onpress={() => onTypeofRelation()}
-                title={'Continue'} />
+          <View style={styles.footer}>
+            <View style={{
+              paddingTop: 0,
+            }}>
+              <Image source={require('../../assets/group.png')}
+                resizeMode='contain' />
             </View>
-            <View style={{ marginHorizontal: 0 }}>
-              <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
-                title={'Skip'} />
+
+
+            <View style={{
+              paddingTop: 20,
+              paddingHorizontal: 70,
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Would you be open to date introvert/extrovert?</Text>
             </View>
-          </View>
 
-          <View style={{
-            paddingTop: 5,
-            width: 310,
-          }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
-          </View>
+            <View style={{
+              paddingHorizontal: 70,
+            }}>
+              <Text style={{
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>(select all that apply)</Text>
+            </View>
 
-        </View>
+            <View style={{
+              paddingTop: 20
+            }}>
+              <View>
+                <ListPIntroExtro data={IntroExtroData} value={selectedCategoryIndex}
+                  setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
+              </View>
+            </View>
+
+
+
+
+            <View style={{
+              marginTop: 20,
+            }}>
+              <View style={{ marginBottom: 5 }}>
+                <CustomeButton onpress={() => onTypeofRelation()}
+                  title={'Continue'} />
+              </View>
+              <View style={{ marginHorizontal: 0 }}>
+                <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+                  title={'Skip'} />
+              </View>
+            </View>
+
+            <View style={{
+              paddingTop: 5,
+            }}>
+              <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                By continue you agree our Terms and Privacy Policy.
+              </Text>
+            </View>
+
+          </View>
+        </ScrollView>
 
 
       </View>
@@ -191,16 +192,18 @@ export default QuestionPIntroandExtroScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '80%',
-    alignItems: 'center',
+    // height: '80%',
+    // alignItems: 'center',
   },
   footer: {
-    height: '20%',
-    alignItems: 'center'
+    // height: '20%',
+    alignItems: 'center',
+    // alignSelf:'center'
+    marginBottom:90,
   },
   NumberInput: {
     flexDirection: 'row',

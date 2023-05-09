@@ -33,6 +33,7 @@ import FoodmenuDetail from '../screens/FoodmenuDetail';
 import CartItems from '../screens/CartItems';
 import ProfileTierManagement from '../screens/ProfileTierManagement';
 import AdditonalPackages from '../screens/AdditonalPackages';
+import NetworkErrorScreen from '../screens/NetworkErrorScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -84,6 +85,7 @@ const HomeStack = ({ navigation }) => (
         },
     }}>
         <Tab.Screen name='HomeScreen' component={HomeScreen} />
+        <Tab.Screen name='NetworkErrorScreen' component={NetworkErrorScreen} />
         <Tab.Screen name='CongratsMatchScreen' component={CongratsMatchScreen} />
         <Tab.Screen name='MessageScreen' component={MessageScreen} />
         <Tab.Screen name='ChatingScreen' component={ChatingScreen} />

@@ -113,7 +113,8 @@ const EventItems = ({ navigation, data, btn, widths, onpress }) => {
                                 }} />
                             </View>
                             <View style={{
-                                // width: width / 1.2
+                                width: '90%',
+                                // backgroundColor:COLORS.gray
                             }}>
                                 <Text style={{
                                     color: COLORS.black,

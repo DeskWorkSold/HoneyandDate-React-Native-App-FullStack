@@ -1,10 +1,11 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../../redux/reducers/Reducers';
 import SVGImg1 from '../../assets/arrowleft.svg';
+const { width, height } = Dimensions.get("window");
 
 
 
@@ -123,13 +124,12 @@ const NameScreen = ({ navigation, route }) => {
           <View style={{
             paddingTop: 20,
           }}>
-            <CustomeButton onpress={() => OnDateOnBirthScreen(name)}
+            <CustomeButton width={width /1.1} onpress={() => OnDateOnBirthScreen(name)}
               title={'Continue'} />
           </View>
 
           <View style={{
-            paddingTop: 20,
-            width: 310,
+            paddingTop: 10,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
               By continue you agree our Terms and Privacy Policy.
@@ -155,7 +155,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    height: '20%'
+    height: '20%',
+    alignItems:'center'
   },
   NumberInput: {
     marginTop: 60,

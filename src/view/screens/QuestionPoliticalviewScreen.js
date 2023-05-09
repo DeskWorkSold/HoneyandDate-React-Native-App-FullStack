@@ -85,75 +85,72 @@ const QuestionPoliticalviewScreen = ({ navigation, route }) => {
     )
   }
 
-
   return (
     <SafeAreaView>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
 
-        <View style={styles.contentContainer}>
-          <View style={{
-            alignItems: 'center',
-            paddingTop: 20,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            paddingHorizontal: 20,
-
-          }}>
+          <View style={styles.contentContainer}>
             <View style={{
-              flex: 1,
-              // backgroundColor: COLORS.gray2
-            }}>
-              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
-            </View>
-            <View style={{
-              flex: 2,
-              // backgroundColor: COLORS.gray,
               alignItems: 'center',
+              paddingTop: 20,
               flexDirection: 'row',
-              paddingHorizontal: 20
+              justifyContent: 'center',
+              paddingHorizontal: 20,
+
             }}>
+              <View style={{
+                flex: 1,
+                // backgroundColor: COLORS.gray2
+              }}>
+                <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+              </View>
+              <View style={{
+                flex: 2,
+                // backgroundColor: COLORS.gray,
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingHorizontal: 20
+              }}>
+              </View>
+              <View style={{
+                flex: 1,
+                backgroundColor: COLORS.gray2
+              }}>
+              </View>
             </View>
+
+
             <View style={{
-              flex: 1,
-              backgroundColor: COLORS.gray2
+              paddingTop: 0,
             }}>
+              <Image source={require('../../assets/vote.png')}
+                resizeMode='contain' style={{
+                  width: 180,
+                  height: 180
+                }} />
+            </View>
+
+
+            <View style={{
+              alignItems: 'center',
+              paddingVertical: 20,
+              paddingHorizontal: 70,
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Political Views</Text>
             </View>
           </View>
 
 
-          <View style={{
-            paddingTop: 0,
-          }}>
-            <Image source={require('../../assets/vote.png')}
-              resizeMode='contain' style={{
-                width: 180,
-                height: 180
-              }} />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingVertical: 20,
-            paddingHorizontal: 70,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Political Views</Text>
-          </View>
-        </View>
-
-
-        <View style={styles.footer}>
-
-          <ScrollView showsVerticalScrollIndicator={false}>
-
-
+          <View style={styles.footer}>
+            {/* <ScrollView showsVerticalScrollIndicator={false}> */}
             <View style={{
               alignItems: 'center'
             }}>
@@ -181,7 +178,6 @@ const QuestionPoliticalviewScreen = ({ navigation, route }) => {
 
               <View style={{
                 paddingTop: 5,
-                width: 310,
               }}>
                 <Text style={{ textAlign: 'center', fontSize: 10 }}>
                   By continue you agree our Terms and Privacy Policy.
@@ -189,16 +185,13 @@ const QuestionPoliticalviewScreen = ({ navigation, route }) => {
               </View>
 
             </View>
-          </ScrollView>
-
-        </View>
-
-
+          </View>
+        </ScrollView>
       </View>
 
 
 
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
@@ -206,15 +199,15 @@ export default QuestionPoliticalviewScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '40%',
+    // height: '40%',
     alignItems: 'center',
   },
   footer: {
-    height: '60%',
+    // height: '60%',
     // alignItems: 'center'
   },
   NumberInput: {

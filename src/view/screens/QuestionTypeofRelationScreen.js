@@ -24,10 +24,10 @@ const DatesData = [
 const QuestionTypeofRelationScreen = ({ navigation, route }) => {
   const { email, PartnerNature, IntroandExtro, PoliticalPartnerView, PoliticalView, Music, filterMinAge, filterMaxAge, name, image1, image2, image3, image4, image5, DateOfBirth, Gender, PartnerGender, Kids, Bio, Experince, InTenYear } = route.params;
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  console.log(DateOfBirth);
+  // console.log(DateOfBirth);
 
   const onSmokeScreen = () => {
-    console.log(DatesData[selectedCategoryIndex].name);
+    // console.log(DatesData[selectedCategoryIndex].name);
     const selectedPolitics = DatesData[selectedCategoryIndex].name;
     if (selectedPolitics) {
       navigation.navigate('QuestionSmokeScreen', { Lookingfor: selectedPolitics, email: email, PartnerNature: PartnerNature, IntroandExtro: IntroandExtro, PoliticalPartnerView: PoliticalPartnerView, PoliticalView: PoliticalView, Music: Music, filterMinAge: filterMinAge, filterMaxAge: filterMaxAge, Experince: Experince, InTenYear: InTenYear, Bio: Bio, name: name, image1: image1, image2: image2, image3: image3, image4: image4, image5: image5, DateOfBirth: DateOfBirth, Gender: Gender, PartnerGender: PartnerGender, Kids: Kids })

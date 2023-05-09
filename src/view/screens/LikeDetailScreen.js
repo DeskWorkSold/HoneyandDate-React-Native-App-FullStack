@@ -212,6 +212,7 @@ const LikeDetailScreen = ({ navigation }) => {
           }
         });
         setLikedUser(likedUser)
+        console.log(likedUser);
         setModalDataUid(modalDataUid)
       })
     // console.log('==>' , likedusers);
@@ -717,12 +718,12 @@ const LikeDetailScreen = ({ navigation }) => {
                             }}>Modal at Instagaram</Text>
                           </View>
                         </View>
-                        <BlurView
+                        {/* <BlurView
                           style={styles.absolute}
                           blurType="light"
                           blurAmount={10}
                           reducedTransparencyFallbackColor="white"
-                        />
+                        /> */}
 
 
 
@@ -875,8 +876,98 @@ const LikeDetailScreen = ({ navigation }) => {
                         width: '45%',
                         marginHorizontal: 5,
                       }}>
-                      <LikesCard image={{ uri: item.image1 }} name={item.Name} navigation={navigation}
-                        description='Model at Instagram' item={item} />
+                      <View style={{
+                        height: 200,
+                        // width: '100%',-+ 
+                        borderRadius: 10,
+                        backgroundColor: COLORS.white,
+                        elevation: 5,
+                      }}>
+                        <View>
+                          <Image source={{ uri: item.image1 }} resizeMode='cover'
+                            blurRadius={10}
+                            style={{
+                              height: 150,
+                              width: '100%',
+                              borderRadius: 10,
+                            }}
+                          />
+                          <View style={{
+                            position: 'absolute',
+                            marginTop: 110,
+                            paddingHorizontal: 5,
+                          }}>
+                            <Text style={{
+                              color: COLORS.white,
+                              fontWeight: 'bold',
+                            }}>{item.Name}</Text>
+                          </View>
+                          <View style={{
+                            position: 'absolute',
+                            marginTop: 125,
+                            paddingHorizontal: 5
+                          }}>
+                            <Text style={{
+                              color: COLORS.white,
+                              fontSize: 12
+                            }}>Modal at Instagaram</Text>
+                          </View>
+                        </View>
+                        {/* <BlurView
+                         style={styles.absolute}
+                         blurType="light"
+                         blurAmount={10}
+                         reducedTransparencyFallbackColor="white"
+                       /> */}
+
+
+
+                        <View style={{
+                          flexDirection: 'row',
+                          paddingHorizontal: 20,
+                          paddingVertical: 5,
+                          justifyContent: 'center'
+                        }}>
+                          <TouchableOpacity disabled style={{
+                            padding: 5,
+                            marginHorizontal: 10,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            elevation: 5,
+                            backgroundColor: COLORS.white,
+                            borderColor: COLORS.light,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                            <Image source={require('../../assets/message.png')} resizeMode='contain'
+                              style={{
+                                width: 20,
+                                height: 20,
+                              }} />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            disabled
+                            style={{
+                              padding: 5,
+                              borderRadius: 20,
+                              borderWidth: 1,
+                              marginHorizontal: 10,
+                              elevation: 5,
+                              backgroundColor: COLORS.white,
+                              borderColor: COLORS.light,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Image source={require('../../assets/heart.png')} resizeMode='contain'
+                              style={{
+                                tintColor: 'red',
+                                width: 20,
+                                height: 20,
+                              }} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
                     </View>
                   ))}
                 </View>

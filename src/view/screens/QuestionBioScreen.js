@@ -1,8 +1,9 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, Alert } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, Alert, Dimensions, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
 import SVGImg1 from '../../assets/arrowleft.svg';
+const { width, height } = Dimensions.get("window");
 
 
 const QuestionBioScreen = ({ navigation, route }) => {
@@ -34,112 +35,114 @@ const QuestionBioScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      flex:1,
+      backgroundColor:COLORS.white
+    }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
-
-        <View style={styles.contentContainer}>
-          <View style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingTop: 20,
-            flexDirection: 'row',
-            height: 40,
-            justifyContent: 'center',
-            paddingHorizontal: 20,
-
-          }}>
+        <ScrollView showsVerticalScrollIndicator={false} >
+          <View style={styles.contentContainer}>
             <View style={{
-              flex: 1,
-              // backgroundColor: COLORS.gray2
-            }}>
-              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
-            </View>
-            <View style={{
-              flex: 2,
-              // backgroundColor: COLORS.gray,
               alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 10,
               flexDirection: 'row',
-              paddingHorizontal: 20
+              height: 40,
+              justifyContent: 'center',
             }}>
+              <View style={{
+                flex: 1,
+                // backgroundColor: COLORS.gray2
+              }}>
+                <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+              </View>
+              <View style={{
+                flex: 2,
+                // backgroundColor: COLORS.gray,
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingHorizontal: 20
+              }}>
+              </View>
+              <View style={{
+                flex: 1,
+                backgroundColor: COLORS.gray2
+              }}>
+              </View>
             </View>
+
             <View style={{
-              flex: 1,
-              backgroundColor: COLORS.gray2
+              paddingTop: 0
             }}>
+              <Image source={require('../../assets/bio.png')}
+                resizeMode='contain' style={{
+                  width: width / 1.6
+                }} />
+            </View>
+
+
+            <View style={{
+              paddingTop: 10,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>Public Bio</Text>
+            </View>
+
+
+            <View style={{
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                color: COLORS.black
+              }}>(200 Characters)</Text>
+            </View>
+
+            <View style={{
+              paddingTop: 20,
+            }}>
+              <TextInput
+                placeholder='Type Here!'
+                multiline
+                numberOfLines={8}
+                value={bio}
+                onChangeText={bio => setbio(bio)}
+                style={styles.TextInput} />
+            </View>
+
+
+          </View>
+
+
+          <View style={styles.footer}>
+
+            <View style={{
+              marginBottom: 5,
+            }}>
+              <CustomeButton onpress={() => onQuestionProfessionally()}
+                title={'Continue'} />
+            </View>
+            <View style={{ marginHorizontal: 0 }}>
+              <CustomeButton onpress={() => onSkip()}
+                title={'Skip'} bcolor={COLORS.light} />
+            </View>
+
+
+
+            <View style={{
+              paddingTop: 10,
+            }}>
+              <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                By continue you agree our Terms and Privacy Policy.
+              </Text>
             </View>
           </View>
 
-          <View style={{
-            paddingTop: 0
-          }}>
-            <Image source={require('../../assets/bio.png')}
-              resizeMode='contain' />
-          </View>
-
-
-          <View style={{
-            paddingTop: 20,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              fontSize: 25,
-              fontWeight: 'bold',
-              color: COLORS.black
-            }}>Public Bio</Text>
-          </View>
-
-
-          <View style={{
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              color: COLORS.black
-            }}>(200 Characters)</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 20,
-          }}>
-            <TextInput
-              placeholder='Type Here!'
-              multiline
-              numberOfLines={8}
-              value={bio}
-              onChangeText={bio => setbio(bio)}
-              style={styles.TextInput} />
-          </View>
-
-
-        </View>
-
-
-        <View style={styles.footer}>
-
-          <View style={{
-            marginBottom: 5,
-          }}>
-            <CustomeButton onpress={() => onQuestionProfessionally()}
-              title={'Continue'} />
-          </View>
-          <View style={{ marginHorizontal: 0 }}>
-            <CustomeButton onpress={() => onSkip()}
-              title={'Skip'} bcolor={COLORS.light} />
-          </View>
-
-
-
-          <View style={{
-            paddingTop: 10,
-            width: 310,
-          }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
-          </View>
-        </View>
-
-
+        </ScrollView>
       </View>
 
 
@@ -157,12 +160,13 @@ const styles = StyleSheet.create({
 
   },
   contentContainer: {
-    height: '80%',
+    // height: '70%',
     alignItems: 'center',
     // justifyContent: 'center',
   },
   footer: {
-    height: '20%'
+    // height: '30%',
+    marginTop: 20
   },
   NumberInput: {
     marginTop: 60,

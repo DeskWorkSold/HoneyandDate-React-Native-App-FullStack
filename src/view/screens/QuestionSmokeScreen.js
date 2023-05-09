@@ -122,35 +122,36 @@ const QuestionSmokeScreen = ({ navigation, route }) => {
             </View>
           </View>
 
-          <View style={{
-            paddingTop: 0,
-          }}>
-            <Image source={require('../../assets/smoke2.png')}
-              resizeMode='contain' style={{
-                width: 200,
-                height: 180,
-              }} />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingVertical: 20,
-            paddingHorizontal: 70,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Do you Smoke?</Text>
-          </View>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.footer}>
+
+            <View style={{
+              paddingTop: 0,
+            }}>
+              <Image source={require('../../assets/smoke2.png')}
+                resizeMode='contain' style={{
+                  width: 200,
+                  height: 180,
+                }} />
+            </View>
 
 
-        <View style={styles.footer}>
+            <View style={{
+              alignItems: 'center',
+              paddingVertical: 20,
+              paddingHorizontal: 70,
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Do you Smoke?</Text>
+            </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
+
+
 
             <View style={{
               alignItems: 'center'
@@ -190,15 +191,11 @@ const QuestionSmokeScreen = ({ navigation, route }) => {
               </View>
 
             </View>
-          </ScrollView>
+          </View>
 
-        </View>
-
+        </ScrollView>
 
       </View>
-
-
-
     </SafeAreaView>
   )
 }
@@ -207,16 +204,17 @@ export default QuestionSmokeScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '40%',
+    // height: '40%',
     alignItems: 'center',
   },
   footer: {
-    height: '60%',
-    // alignItems: 'center',
+    // height: '60%',
+    marginBottom:80,
+    alignItems: 'center',
   },
   NumberInput: {
     flexDirection: 'row',

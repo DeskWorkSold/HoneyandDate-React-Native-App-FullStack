@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableNativeFeedback, ScrollView, TouchableOpacity } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput, ToastAndroid, TouchableNativeFeedback, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../consts/Colors'
 import CustomeButton from '../components/CustomeButton';
@@ -8,8 +8,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import SVGImg1 from '../../assets/arrowleft.svg';
-
-
+const { width, height } = Dimensions.get("window");
 
 
 const DateOfBirthScreen = ({ navigation, route }) => {
@@ -51,19 +50,17 @@ const DateOfBirthScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
-
+        <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.contentContainer}>
 
           <View style={{
             alignItems: 'center',
-            paddingTop: 20,
+            padding: 10,
             flexDirection: 'row',
             justifyContent: 'center',
-            paddingHorizontal: 20,
-
           }}>
             <View style={{
               flex: 1,
@@ -88,57 +85,73 @@ const DateOfBirthScreen = ({ navigation, route }) => {
 
 
           <View style={{
-            paddingTop: 10
+            // height: '32%',
+            // backgroundColor: COLORS.main,
+            alignSelf: 'center'
           }}>
-            <Image source={require('../../assets/dateofbirth.png')} resizeMode='contain' />
-          </View>
-
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black
-            }}>When were you born?</Text>
-          </View>
-
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              color: COLORS.black
-            }}>Enter the full name</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 10,
-            alignItems: 'center'
-          }}>
-            <Text style={{
-              color: COLORS.black
+            <View style={{
+              paddingTop: 0,
+              alignItems: 'center'
             }}>
-              Birthday
-            </Text>
+              <Image source={require('../../assets/dateofbirth.png')} resizeMode='contain' style={{
+                width: width - 240,
+                // height:'70%'
+              }} />
+            </View>
+
+
+            <View style={{
+              paddingTop: 10,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black
+              }}>When were you born?</Text>
+            </View>
+
+
+            <View style={{
+              paddingTop: 5,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                color: COLORS.black,
+                fontSize: 12,
+              }}>Enter the full name</Text>
+            </View>
+
+            <View style={{
+              paddingTop: 0,
+              alignItems: 'center'
+            }}>
+              <Text style={{
+                color: COLORS.black,
+                fontSize: 12,
+              }}>
+                Birthday
+              </Text>
+            </View>
           </View>
+
 
 
           <View style={styles.NumberInput}>
-            <Calendar style={{
-              width: 300,
-              backgroundColor: COLORS.transparent,
-            }}
+            <Calendar
+              // calendarHeight={150}
+              style={{
+                // height: 250,
+                width: width / 1.3,
+                backgroundColor: COLORS.transparent,
+              }}
               renderHeader={(year) => (
                 <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
                   <View>
                     <Text style={{
                       color: COLORS.main,
                       fontWeight: 'bold',
-                      fontSize: 20
+                      fontSize: 16
                     }}>
                       {date.month() + 1}Month {date.year()}
                     </Text>
@@ -183,7 +196,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
                       alignItems: 'center'
                     }}
                   >
-                    <Text style={{ fontSize: 20 }}>Select Year</Text>
+                    <Text style={{ fontSize: 16, color:COLORS.gray }}>Select Year</Text>
                   </TouchableNativeFeedback>
                   {/* <TouchableNativeFeedback onPress={() => setIsModalVisible(false)}>
                     <View
@@ -199,7 +212,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
                     </View>
                   </TouchableNativeFeedback> */}
                 </View>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
                   <View
                     style={{
                       alignItems: 'center',
@@ -220,7 +233,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
                         }}
                       >
                         <View style={{ padding: 20, width: '100%' }}>
-                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{year}</Text>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.black }}>{year}</Text>
                         </View>
                       </TouchableOpacity>
                     ))}
@@ -238,13 +251,15 @@ const DateOfBirthScreen = ({ navigation, route }) => {
 
           <View style={{
             paddingTop: 20,
+            alignItems: 'center',
+
           }}>
-            <CustomeButton onpress={() => onGenderPress()}
+            <CustomeButton width={width / 1.1} onpress={() => onGenderPress()}
               title={'Continue'} />
           </View>
 
           <View style={{
-            paddingTop: 20,
+            paddingTop: 10,
             // width: 310,
           }}>
             <Text style={{ textAlign: 'center', fontSize: 10 }}>
@@ -252,6 +267,7 @@ const DateOfBirthScreen = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
+        </ScrollView>
       </View>
 
 
@@ -264,18 +280,26 @@ export default DateOfBirthScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%',
+    height: '100%'
   },
   contentContainer: {
     height: '80%',
     alignItems: 'center',
+    // backgroundColor: COLORS.gray
   },
   footer: {
-    height: '20%'
+    marginTop: 20,
+    height: '20%',
+    alignItems: 'center'
+
   },
   NumberInput: {
     alignItems: 'center',
-    width: 300,
+    width: '100%',
+    height: '58%',
+    // backgroundColor:COLORS.main
   },
   TextInput: {
     padding: 0,

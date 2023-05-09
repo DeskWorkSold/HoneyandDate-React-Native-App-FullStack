@@ -133,45 +133,46 @@ const QuestionMusicScreen = ({ navigation, route }) => {
             }}>
             </View>
           </View>
-
-          <View style={{
-            paddingTop: 10,
-          }}>
-            <Image source={require('../../assets/music.png')}
-              resizeMode='contain' />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingTop: 10,
-            paddingHorizontal: 70,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>What type of music you like to listen too?</Text>
-          </View>
-
-          <View style={{
-            alignItems: 'center',
-          }}>
-            <Text style={{
-              fontSize: 12,
-              color: COLORS.black
-            }}>(Select all that apply)</Text>
-          </View>
-
         </View>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
 
-        <View style={styles.footer}>
+          <View style={styles.footer}>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{
-              alignItems: 'center'
+              paddingTop: 10,
+            }}>
+              <Image source={require('../../assets/music.png')}
+                resizeMode='contain' />
+            </View>
+
+
+            <View style={{
+              alignItems: 'center',
+              paddingTop: 10,
+              paddingHorizontal: 70,
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>What type of music you like to listen too?</Text>
+            </View>
+
+            <View style={{
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 12,
+                color: COLORS.black
+              }}>(Select all that apply)</Text>
+            </View>
+
+
+
+            <View style={{
+              // alignItems: 'center'
             }}>
               <ListMusic data={MusicData} value={selectedCategoryIndex}
                 setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
@@ -197,7 +198,6 @@ const QuestionMusicScreen = ({ navigation, route }) => {
 
               <View style={{
                 paddingTop: 5,
-                width: 310,
               }}>
                 <Text style={{ textAlign: 'center', fontSize: 10 }}>
                   By continue you agree our Terms and Privacy Policy.
@@ -205,14 +205,13 @@ const QuestionMusicScreen = ({ navigation, route }) => {
               </View>
             </View>
 
-
-          </ScrollView>
-        </View>
+          </View>
+        </ScrollView>
       </View>
 
 
 
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
@@ -220,16 +219,18 @@ export default QuestionMusicScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '40%',
+    // height: '40%',
     alignItems: 'center',
   },
   footer: {
-    height: '60%',
+    // height: '60%',
     // alignItems: 'center'
+    alignSelf:'center',
+    marginBottom:90
   },
   NumberInput: {
     flexDirection: 'row',

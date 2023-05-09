@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
   footer: {
     height: '25%',
     alignItems: 'center',
+    justifyContent:'flex-end'
   },
   NumberInput: {
     flexDirection: 'row',

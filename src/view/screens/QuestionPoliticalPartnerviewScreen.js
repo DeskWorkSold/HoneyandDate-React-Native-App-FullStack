@@ -126,82 +126,79 @@ const QuestionPoliticalPartnerviewScreen = ({ navigation, route }) => {
             </View>
           </View>
 
+          <ScrollView showsVerticalScrollIndicator={true}>
 
-          <View style={{
-            paddingTop: 0,
-          }}>
-            <Image source={require('../../assets/vote.png')}
-              resizeMode='contain' style={{
-                width: 180,
-                height: 180
-              }} />
-          </View>
+            <View style={styles.footer}>
+              <View style={{
+                paddingTop: 0,
+              }}>
+                <Image source={require('../../assets/vote.png')}
+                  resizeMode='contain' style={{
+                    width: 180,
+                    height: 180
+                  }} />
+              </View>
 
 
-          <View style={{
-            alignItems: 'center',
-            paddingVertical: 20,
-            paddingHorizontal: 50,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Which Political views are you okay with dating?</Text>
-            <Text style={{
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>(Select all that apply)</Text>
-          </View>
+              <View style={{
+                alignItems: 'center',
+                paddingVertical: 20,
+                paddingHorizontal: 50,
+              }}>
+                <Text style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: COLORS.black,
+                  textAlign: 'center',
+                }}>Which Political views are you okay with dating?</Text>
+                <Text style={{
+                  color: COLORS.black,
+                  textAlign: 'center',
+                }}>(Select all that apply)</Text>
+              </View>
 
-          {/* <View style={{
+              {/* <View style={{
             alignItems: 'center',
             paddingHorizontal: 50,
           }}>
             
           </View> */}
-        </View>
-
-
-        <View style={styles.footer}>
-
-          <ScrollView showsVerticalScrollIndicator={false}>
-
-            <View style={{
-              alignItems: 'center'
-            }}>
-              <ListPolitics data={PoliticalData} value={selectedCategoryIndex}
-                setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
-            </View>
-
-            <View style={{
-              alignItems: 'center',
-              paddingBottom: 50
-            }}>
 
               <View style={{
-                paddingTop: 60,
+                alignItems: 'center'
               }}>
-                <View style={{ marginBottom: 5 }}>
-                  <CustomeButton onpress={() => onIntroandExtro()}
-                    title={'Continue'} />
-                </View>
-                <View style={{ marginHorizontal: 0 }}>
-                  <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
-                    title={'Skip'} />
-                </View>
+                <ListPolitics data={PoliticalData} value={selectedCategoryIndex}
+                  setValue={setSelectedCategoryIndex} cancle={require('../../assets/cross.png')} />
               </View>
 
               <View style={{
-                paddingTop: 5,
-                width: 310,
+                alignItems: 'center',
+                paddingBottom: 50
               }}>
-                <Text style={{ textAlign: 'center', fontSize: 10 }}>
-                  By continue you agree our Terms and Privacy Policy.
-                </Text>
-              </View>
 
+                <View style={{
+                  paddingTop: 60,
+                }}>
+                  <View style={{ marginBottom: 5 }}>
+                    <CustomeButton onpress={() => onIntroandExtro()}
+                      title={'Continue'} />
+                  </View>
+                  <View style={{ marginHorizontal: 0 }}>
+                    <CustomeButton bcolor={COLORS.light} onpress={() => onSkip()}
+                      title={'Skip'} />
+                  </View>
+                </View>
+
+                <View style={{
+                  paddingTop: 5,
+                  width: 310,
+                }}>
+                  <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                    By continue you agree our Terms and Privacy Policy.
+                  </Text>
+                </View>
+
+              </View>
             </View>
           </ScrollView>
 
@@ -220,16 +217,17 @@ export default QuestionPoliticalPartnerviewScreen
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '40%',
-    alignItems: 'center',
+    // height: '40%',
+    // alignItems: 'center',
   },
   footer: {
-    height: '60%',
-    // alignItems: 'center',
+    // height: '60%',
+    marginBottom:80,
+    alignItems: 'center',
     paddingTop: 20,
   },
   NumberInput: {

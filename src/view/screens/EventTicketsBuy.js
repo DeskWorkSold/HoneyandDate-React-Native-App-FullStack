@@ -189,16 +189,22 @@ const EventTicketsBuy = ({ navigation, route }) => {
           width: '20%',
           alignItems: 'center',
         }}>
+          {qrCode ?
             <QRCode
               value={qrCode}
               // logo={{ uri: base64Logo }}
-              // logoSize={30}
-              // logoBackgroundColor='transparent'
+              logoSize={30}
+              logoBackgroundColor='transparent'
               backgroundColor='black'
               color={'white'}
               size={100}
             />
-            {/* // <Image source={{ uri: qrCode }} resizeMode='contain'
+            :
+            <View>
+              <ActivityIndicator size='large' color={COLORS.main} />
+            </View>
+          }
+          {/* // <Image source={{ uri: qrCode }} resizeMode='contain'
             //   style={{
             //     width: 100,
             //     height: 100,
@@ -235,9 +241,9 @@ const EventTicketsBuy = ({ navigation, route }) => {
           paddingTop: 70
         }}>
           <TouchableOpacity
-          onPress={() => navigation.navigate('Foodmenu', {
-            EventsId: EventsFood,
-          })}
+            onPress={() => navigation.navigate('Foodmenu', {
+              EventsId: EventsFood,
+            })}
           >
             <View style={{
               backgroundColor: COLORS.main,

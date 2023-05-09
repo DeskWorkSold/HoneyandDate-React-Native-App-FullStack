@@ -31,129 +31,132 @@ const QuestionProfessionallyScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      flex:1,
+      backgroundColor:COLORS.white
+    }}>
       <StatusBar backgroundColor={COLORS.black} />
       <View style={styles.container}>
 
+        <ScrollView showsVerticalScrollIndicator={true}>
+          <View style={styles.contentContainer}>
 
-        <View style={styles.contentContainer}>
-
-          <View style={{
-            alignItems: 'center',
-            paddingTop: 20,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            paddingHorizontal: 20,
-
-          }}>
             <View style={{
-              flex: 1,
-              // backgroundColor: COLORS.gray2
-            }}>
-              <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
-            </View>
-            <View style={{
-              flex: 2,
-              // backgroundColor: COLORS.gray,
               alignItems: 'center',
+              paddingTop: 20,
               flexDirection: 'row',
-              paddingHorizontal: 20
+              justifyContent: 'center',
+              paddingHorizontal: 20,
+
             }}>
-              <SVGImg width={19} height={19} />
-              <Text style={{
-                color: COLORS.black,
-                paddingLeft: 5,
-                textAlign: 'center'
-              }}>Response is Not Public</Text>
+              <View style={{
+                flex: 1,
+                // backgroundColor: COLORS.gray2
+              }}>
+                <SVGImg1 width={20} height={20} onPress={() => navigation.goBack()} />
+              </View>
+              <View style={{
+                flex: 2,
+                // backgroundColor: COLORS.gray,
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingHorizontal: 20
+              }}>
+                <SVGImg width={19} height={19} />
+                <Text style={{
+                  color: COLORS.black,
+                  paddingLeft: 5,
+                  textAlign: 'center'
+                }}>Response is Not Public</Text>
+              </View>
+              <View style={{
+                flex: 1,
+                backgroundColor: COLORS.gray2
+              }}>
+              </View>
             </View>
+
+
             <View style={{
-              flex: 1,
-              backgroundColor: COLORS.gray2
+              alignItems: 'center',
+              paddingHorizontal: 50,
+              paddingTop: 20,
             }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Where do you see yourself professionally and personally in five years?</Text>
+            </View>
+
+            <View style={{
+              paddingTop: 20,
+            }}>
+              <TextInput
+                placeholder='Type Here!'
+                multiline
+                value={experince}
+                numberOfLines={4}
+                onChangeText={experince => setExperince(experince)}
+                style={styles.TextInput} />
+            </View>
+
+
+            <View style={{
+              alignItems: 'center',
+              paddingHorizontal: 50,
+              paddingTop: 20,
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>Where do you see yourself
+                professionally  and personally
+                in ten years?</Text>
+            </View>
+
+            <View style={{
+              paddingTop: 20,
+            }}>
+              <TextInput
+                placeholder='Type Here!'
+                multiline
+                value={experince2}
+                numberOfLines={4}
+                onChangeText={experince2 => setExperince2(experince2)}
+                style={styles.TextInput} />
+            </View>
+
+          </View>
+
+          <View style={styles.footer}>
+
+            <View style={{
+              paddingTop: 20,
+              // flexDirection: 'row'
+            }}>
+              <View style={{ marginBottom: 5 }}>
+                <CustomeButton onpress={() => onMusicSelect()}
+                  title={'Continue'} />
+              </View>
+              <View>
+                <CustomeButton onpress={() => onSkip()}
+                  title={'Skip'} bcolor={COLORS.light} />
+              </View>
+            </View>
+
+            <View style={{
+              paddingTop: 10,
+            }}>
+              <Text style={{ textAlign: 'center', fontSize: 10 }}>
+                By continue you agree our Terms and Privacy Policy.
+              </Text>
             </View>
           </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingHorizontal: 50,
-            paddingTop: 20,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Where do you see yourself professionally and personally in five years?</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 20,
-          }}>
-            <TextInput
-              placeholder='Type Here!'
-              multiline
-              value={experince}
-              numberOfLines={4}
-              onChangeText={experince => setExperince(experince)}
-              style={styles.TextInput} />
-          </View>
-
-
-          <View style={{
-            alignItems: 'center',
-            paddingHorizontal: 50,
-            paddingTop: 20,
-          }}>
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>Where do you see yourself
-              professionally  and personally
-              in ten years?</Text>
-          </View>
-
-          <View style={{
-            paddingTop: 20,
-          }}>
-            <TextInput
-              placeholder='Type Here!'
-              multiline
-              value={experince2}
-              numberOfLines={4}
-              onChangeText={experince2 => setExperince2(experince2)}
-              style={styles.TextInput} />
-          </View>
-
-        </View>
-
-        <View style={styles.footer}>
-
-          <View style={{
-            paddingTop: 20,
-            // flexDirection: 'row'
-          }}>
-            <View style={{ marginBottom: 5 }}>
-              <CustomeButton onpress={() => onMusicSelect()}
-                title={'Continue'} />
-            </View>
-            <View>
-              <CustomeButton onpress={() => onSkip()}
-                title={'Skip'} bcolor={COLORS.light} />
-            </View>
-          </View>
-
-          <View style={{
-            paddingTop: 10,
-            width: 310,
-          }}>
-            <Text style={{ textAlign: 'center', fontSize: 10 }}>
-              By continue you agree our Terms and Privacy Policy.
-            </Text>
-          </View>
-        </View>
+        </ScrollView>
       </View>
 
 
@@ -170,11 +173,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   contentContainer: {
-    height: '75%',
+    // height: '75%',
     alignItems: 'center',
   },
   footer: {
-    height: '25%',
+    marginTop: 20,
+    // height: '25%',
     alignItems: 'center'
   },
   NumberInput: {

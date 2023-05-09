@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HeaderTabOne from '../components/HeaderTabOne';
 import COLORS from '../../consts/Colors';
@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/reducers/Reducers';
+const { height, width } = Dimensions.get('window');
 
 
 const LikeScreen = ({ navigation }) => {
@@ -75,12 +76,12 @@ const LikeScreen = ({ navigation }) => {
           paddingTop: 80
         }}>
           <View style={{ paddingVertical: 5 }}>
-            <CustomeButton title={'Get extra match'} width={329}
+            <CustomeButton title={'Get extra match'} width={width / 1.1}
               onpress={() => navigation.navigate('LikeDetailScreen')}
             />
           </View>
           <View style={{ paddingVertical: 5 }}>
-            <CustomeButton title={'Premium Options'} image={require('../../assets/Crown.png')}
+            <CustomeButton title={'Premium Options'} width={width / 1.1} image={require('../../assets/Crown.png')}
               bcolor={COLORS.transparent} border={COLORS.main} />
           </View>
 
